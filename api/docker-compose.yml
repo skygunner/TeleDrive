@@ -1,0 +1,48 @@
+version: "3.6"
+services:
+
+  postgres:
+    image: postgres:13.2
+    hostname: postgres
+    container_name: postgres
+    networks:
+      - base-api
+    environment:
+      POSTGRES_DB: baseapi
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: baseapi
+    ports:
+      - 5432:5432
+
+  base-api:
+    image: local/base-api:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: base-api
+    container_name: base-api
+    depends_on:
+      - postgres
+    networks:
+      - base-api
+    environment:
+      DATABASE_HOST: postgres
+    volumes:
+      - ${PWD}:/home/app/base-api
+    command: bash -c "while !</dev/tcp/postgres/5432; do sleep 1; done; make db-migrate && make runserver"
+
+  nginx:
+    image: nginx:1.23.0-alpine
+    hostname: nginx
+    container_name: nginx
+    networks:
+      - base-api
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8000:80
+
+networks:
+  base-api:
+    name: base-api
+    driver: bridge

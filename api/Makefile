@@ -1,0 +1,44 @@
+local: dependencies-lock translations code-format lint
+
+dependencies-lock:
+	poetry lock --no-update
+
+code-format:
+	isort .
+	black .
+
+translations:
+	python manage.py makemessages -l en_US
+	python manage.py compilemessages -l en_US
+
+lint:
+	flake8
+	isort --check .
+	black --check .
+
+test:
+	pytest
+
+pre-commit:
+	pre-commit install
+
+db-makemigrations:
+	python manage.py makemigrations
+
+db-migrate:
+	python manage.py migrate
+
+db-shell:
+	python manage.py dbshell
+
+runserver:
+	python manage.py runserver 0.0.0.0:8000
+
+gunicorn:
+	gunicorn -c gunicorn.conf.py
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
