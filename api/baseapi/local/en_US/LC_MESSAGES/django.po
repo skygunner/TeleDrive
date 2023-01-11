@@ -1,23 +1,11 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-11 13:32+0000\n"
+"POT-Creation-Date: 2023-01-11 17:20+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-
-#: apps/auth/user/validators.py:14 apps/auth/user/validators.py:17
-msgid "Invalid first name."
-msgstr ""
-
-#: apps/auth/user/validators.py:26
-msgid "Your current password is invalid."
-msgstr ""
-
-#: apps/auth/user/validators.py:29
-msgid "Your new password is invalid."
-msgstr ""
 
 #: baseapi/settings.py:20
 msgid "English"

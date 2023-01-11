@@ -13,7 +13,7 @@ env = Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
-TEMPLATE_DIR = os.path.join(BASE_DIR, "apps", "templates")
+TEMPLATE_DIR = os.path.join(BASE_DIR, "apps", "tmpls")
 
 LOCALE_PATHS = (os.path.join(BASE_DIR, "baseapi", "local"),)
 LANGUAGES = [

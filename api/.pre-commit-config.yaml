@@ -19,4 +19,4 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-        args: ['--config=setup.cfg']
+        args: ['--config=api/setup.cfg']
