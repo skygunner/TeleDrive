@@ -1,0 +1,10 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    ".cache": true,
+    "dist": true,
+    "lib": true,
+    "coverage": true,
+    "temp": true
+  }
+}

@@ -3,10 +3,9 @@ from datetime import datetime
 from django.db import transaction
 from django.utils import timezone
 
-from auth.models import InvalidToken
-from auth.tokens import JWTRefreshTokenAuthentication, generate_user_access_token
+from auth.models import InvalidToken, User
+from auth.tokens import generate_user_token
 from auth.validators import validate_sign_in_request
-from rest_framework.authentication import get_authorization_header
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -21,24 +20,30 @@ def sign_in(request: Request) -> Response:
     request_data = request.data
     validate_sign_in_request(request_data)
 
-    response = {"refresh_token": "refresh_token", "access_token": "access_token"}
-    return api_success(response)
+    user = User.find_by_telegram_id(telegram_id=request_data["id"])
+    if user is None:
+        user = User.create(
+            telegram_id=request_data["id"],
+            first_name=request_data["first_name"],
+            last_name=request_data["last_name"],
+            username=request_data["username"],
+            photo_url=request_data["photo_url"],
+        )
+    else:
+        user.update(
+            first_name=request_data["first_name"],
+            last_name=request_data["last_name"],
+            username=request_data["username"],
+            photo_url=request_data["photo_url"],
+        )
 
+    jwt_token, expire_at = generate_user_token(user)
 
-@api_view(["GET"])
-@authentication_classes([JWTRefreshTokenAuthentication])
-@transaction.atomic
-def refresh_access_token(request: Request) -> Response:
-    auth = get_authorization_header(request).split()
-    refresh_token = auth[1].decode()
-    access_token = generate_user_access_token(refresh_token)
-
-    response = {"access_token": access_token}
+    response = {"jwt_token": jwt_token, "expire_at": expire_at}
     return api_success(response)
 
 
 @api_view(["POST"])
-@authentication_classes([JWTRefreshTokenAuthentication])
 @transaction.atomic
 def sign_out(request: Request) -> Response:
     token_id = request.auth["jti"]

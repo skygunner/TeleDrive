@@ -1,11 +1,19 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-11 17:20+0000\n"
+"POT-Creation-Date: 2023-01-12 16:29+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: apps/auth/validators.py:38
+msgid "The authentication data is from more than a day ago."
+msgstr ""
+
+#: apps/auth/validators.py:41
+msgid "The authentication data is not related to the Telegram user!"
+msgstr ""
 
 #: baseapi/settings.py:20
 msgid "English"

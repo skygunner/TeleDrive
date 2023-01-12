@@ -6,8 +6,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            "id",
+            "telegram_id",
             "first_name",
             "last_name",
+            "username",
+            "photo_url",
             "created_at",
             "updated_at",
         ]

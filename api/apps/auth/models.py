@@ -7,8 +7,11 @@ from utils.models import BaseModelMixin
 class User(BaseModelMixin):
     history = HistoricalRecords(table_name="historical_users", custom_model_name="HistoricalUser", app="auth")
 
+    telegram_id = models.BigIntegerField(null=False, blank=False, unique=True, db_index=True)
     first_name = models.CharField(max_length=255, null=False, blank=False)
-    last_name = models.CharField(max_length=255, null=False, blank=False)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    username = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    photo_url = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = "users"
@@ -26,14 +29,22 @@ class User(BaseModelMixin):
         return self.objects.filter(id=id).first()
 
     @classmethod
-    def create(self, first_name: str, last_name: str):
-        user = User(first_name=first_name, last_name=last_name)
+    def find_by_telegram_id(self, telegram_id: str):
+        return self.objects.filter(telegram_id=telegram_id).first()
+
+    @classmethod
+    def create(self, telegram_id: int, first_name: str, last_name: str, username: str, photo_url: str):
+        user = User(
+            telegram_id=telegram_id, first_name=first_name, last_name=last_name, username=username, photo_url=photo_url
+        )
         user.save()
         return user
 
-    def update_first_and_last_name(self, first_name: str, last_name: str):
+    def update(self, first_name: str, last_name: str, username: str, photo_url: str):
         self.first_name = first_name
         self.last_name = last_name
+        self.username = username
+        self.photo_url = photo_url
         self.save()
 
 

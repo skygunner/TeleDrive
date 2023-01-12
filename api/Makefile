@@ -19,9 +19,6 @@ lint:
 test:
 	pytest
 
-pre-commit:
-	pre-commit install
-
 db-makemigrations:
 	python manage.py makemigrations
 

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "apps.auth.tokens.JWTAccessTokenAuthentication",
+        "apps.auth.tokens.JWTTokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [],
     "UNAUTHENTICATED_USER": None,
@@ -92,13 +92,11 @@ APPEND_SLASH = False
 
 VARCHAR_LENGTH_LIMIT = 200
 
-JWT_REFRESH_TOKEN_KEY = env.str("JWT_REFRESH_TOKEN_KEY", default="jwt_refresh_token_key")
-JWT_REFRESH_TOKEN_KEY_ID = "1"
-JWT_REFRESH_TOKEN_EXP_HOURS = 365 * 24
+TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default="5950355685:AAEfIMYShR6BQ4xveKi2qOOI6UG9H_02HDw")
 
-JWT_ACCESS_TOKEN_KEY = env.str("JWT_ACCESS_TOKEN_KEY", default="jwt_access_token_key")
-JWT_ACCESS_TOKEN_KEY_ID = "1"
-JWT_ACCESS_TOKEN_EXP_HOURS = 1
+JWT_TOKEN_KEY = env.str("JWT_TOKEN_KEY", default="secret")
+JWT_TOKEN_KEY_ID = "1"
+JWT_TOKEN_EXP_HOURS = 5 * 365 * 24
 
 TEMPLATES = [
     {
