@@ -1,5 +1,6 @@
-import "./App.css";
 import TelegramLoginButton from "react-telegram-login";
+
+import "./App.css";
 import { post } from "./api";
 
 const onTelegramResponse = async (data) => {

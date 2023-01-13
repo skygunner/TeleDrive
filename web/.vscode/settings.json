@@ -6,5 +6,7 @@
     "lib": true,
     "coverage": true,
     "temp": true
-  }
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
 }
