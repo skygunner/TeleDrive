@@ -28,6 +28,9 @@ db-migrate:
 db-shell:
 	python manage.py dbshell
 
+generate_telegram_bot_session:
+	python generate_telegram_bot_session.py
+
 runserver:
 	python manage.py runserver 0.0.0.0:8000
 
