@@ -24,7 +24,7 @@ APP_NAME = "TeleDrive"
 
 SECRET_KEY = env.str("SECRET_KEY", default="secret")
 
-DEBUG = env.bool("DEBUG", default=True)
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -72,26 +72,24 @@ DATABASES = {
         "NAME": env.str("DATABASE_NAME", default="baseapi"),
         "USER": env.str("DATABASE_USER", default="baseapi"),
         "PASSWORD": env.str("DATABASE_PASSWORD", default="secret"),
-        "HOST": env.str("DATABASE_HOST", default="127.0.0.1"),
+        "HOST": env.str("DATABASE_HOST", default="localhost"),
         "PORT": env.int("DATABASE_PORT", default=5432),
     }
 }
 
 AUTH_PASSWORD_VALIDATORS = []
 
-LANGUAGE_CODE = env.str("LANGUAGE_CODE", "en-US")
+USE_TZ = True
+TIME_ZONE = "UTC"
 
-TIME_ZONE = env.str("TIME_ZONE", "UTC")
-
-USE_I18N = env.bool("USE_I18N", True)
-
-USE_TZ = env.bool("USE_TZ", True)
+USE_I18N = True
+LANGUAGE_CODE = "en-US"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 APPEND_SLASH = False
 
-VARCHAR_LENGTH_LIMIT = 200
+VARCHAR_LENGTH_LIMIT = 255
 
 TELEGRAM_API_ID = env.int("TELEGRAM_API_ID", default=None)
 TELEGRAM_API_HASH = env.str("TELEGRAM_API_HASH", default=None)
@@ -100,7 +98,7 @@ TELEGRAM_BOT_SESSION = env.str("TELEGRAM_BOT_SESSION", default=None)
 
 JWT_TOKEN_KEY = env.str("JWT_TOKEN_KEY", default="secret")
 JWT_TOKEN_KEY_ID = "1"
-JWT_TOKEN_EXP_HOURS = 5 * 365 * 24
+JWT_TOKEN_EXP_HOURS = 5 * 365 * 24  # 5 years
 
 TEMPLATES = [
     {
@@ -115,7 +113,7 @@ TEMPLATES = [
 # References
 # https://docs.python.org/3/library/logging.html#logrecord-attributes
 
-LOG_LEVEL = env.str("LOG_LEVEL", default="INFO")
+LOG_LEVEL = env.str("LOG_LEVEL", default="WARNING")
 
 LOGGING = {
     "version": 1,

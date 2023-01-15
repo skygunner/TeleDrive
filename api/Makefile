@@ -37,6 +37,9 @@ runserver:
 gunicorn:
 	gunicorn -c gunicorn.conf.py
 
+dependencies-up:
+	docker-compose up -d postgres
+
 up:
 	docker-compose up -d
 
