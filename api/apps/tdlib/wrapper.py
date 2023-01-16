@@ -8,10 +8,8 @@ from telethon.sync import TelegramClient
 
 logger = logging.getLogger(__name__)
 
-global TD_CLIENT
 
-
-def get_tdlib_client():
+def td_client():
     global TD_CLIENT
 
     if "TD_CLIENT" in globals():

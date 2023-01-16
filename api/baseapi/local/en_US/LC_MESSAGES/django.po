@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-16 17:08+0000\n"
+"POT-Creation-Date: 2023-01-16 19:25+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,55 +15,71 @@ msgstr ""
 msgid "The authentication data is not related to the Telegram user!"
 msgstr ""
 
-#: apps/tdlib/views.py:27
+#: apps/tdlib/views.py:28
 msgid "Invalid file_part"
 msgstr ""
 
-#: apps/tdlib/views.py:32
+#: apps/tdlib/views.py:33
 msgid "Invalid file object"
 msgstr ""
 
-#: apps/tdlib/views.py:37
+#: apps/tdlib/views.py:38
 msgid "Invalid total_parts"
 msgstr ""
 
-#: apps/tdlib/views.py:41
-msgid "Invalid filename"
-msgstr ""
-
-#: apps/tdlib/views.py:45
+#: apps/tdlib/views.py:43
 msgid "Invalid file_size"
 msgstr ""
 
-#: apps/tdlib/views.py:48
+#: apps/tdlib/views.py:46
 msgid "file_size must be less or equal to 2GB"
 msgstr ""
 
-#: apps/tdlib/views.py:53
+#: apps/tdlib/views.py:51
 msgid "The file part size must be evenly divisible by 1024"
 msgstr ""
 
-#: apps/tdlib/views.py:55
+#: apps/tdlib/views.py:53
 msgid "The file part size must be less or equal to 512KB"
 msgstr ""
 
-#: apps/tdlib/views.py:60
+#: apps/tdlib/views.py:58
 msgid "total_parts must be {}"
 msgstr ""
 
-#: apps/tdlib/views.py:65
+#: apps/tdlib/views.py:63
 msgid "Provided file_size is not equal to the actual file size"
 msgstr ""
 
-#: apps/tdlib/views.py:81
+#: apps/tdlib/views.py:68
+msgid "Invalid md5_checksum"
+msgstr ""
+
+#: apps/tdlib/views.py:74
+msgid "Invalid parent"
+msgstr ""
+
+#: apps/tdlib/views.py:78
+msgid "Parent folder not found"
+msgstr ""
+
+#: apps/tdlib/views.py:81 apps/tdlib/views.py:110
+msgid "Invalid filename"
+msgstr ""
+
+#: apps/tdlib/views.py:84
+msgid "A file with this name already exists"
+msgstr ""
+
+#: apps/tdlib/views.py:102
 msgid "Invalid file_id"
 msgstr ""
 
-#: apps/tdlib/views.py:86
+#: apps/tdlib/views.py:107
 msgid "file_id not found."
 msgstr ""
 
-#: apps/tdlib/views.py:90
+#: apps/tdlib/views.py:114
 msgid "You must upload part {} now"
 msgstr ""
 

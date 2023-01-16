@@ -16,5 +16,11 @@
         }
     },
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "cSpell.words": [
+        "base-api",
+        "baseapi",
+        "TeleDrive",
+        "tdlib"
+    ]
 }

@@ -29,13 +29,13 @@ DEBUG = False
 ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
-    # Django apps.
+    # Django apps
     "api",
     "auth",
     "baseapi",
     "tdlib",
     "utils",
-    # Third party apps.
+    # Third party apps
     "rest_framework",
     "simple_history",
 ]

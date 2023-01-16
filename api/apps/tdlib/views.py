@@ -1,3 +1,5 @@
+import re
+
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import transaction
 from django.utils.translation import gettext as _
@@ -7,7 +9,7 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import FileUploadParser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from tdlib.models import File
+from tdlib.models import File, Folder
 from telethon.helpers import generate_random_long
 from utils.validators import is_integer
 
@@ -18,9 +20,8 @@ from api.views import api_error, api_success
 @parser_classes([FileUploadParser])
 @transaction.atomic
 def upload(request: Request) -> Response:
+    file_id = None
     request_data = request.query_params
-
-    file_id = request_data.get("file_id", None)
 
     file_part = request_data.get("file_part", None)
     if file_part is None or not is_integer(file_part) or not int(file_part) > 0:
@@ -36,9 +37,6 @@ def upload(request: Request) -> Response:
         if total_parts is None or not is_integer(total_parts) or not int(total_parts) > 0:
             return api_error(_("Invalid total_parts"), status.HTTP_400_BAD_REQUEST)
         total_parts = int(total_parts)
-
-        if file_obj.name is None:
-            return api_error(_("Invalid filename"), status.HTTP_400_BAD_REQUEST)
 
         file_size = request_data.get("file_size", None)
         if file_size is None or not is_integer(file_size) or not int(file_size) > 0:
@@ -65,6 +63,26 @@ def upload(request: Request) -> Response:
                     _("Provided file_size is not equal to the actual file size"), status.HTTP_400_BAD_REQUEST
                 )
 
+        md5_checksum = request_data.get("md5_checksum", None)
+        if md5_checksum is None or not re.findall(r"([a-fA-F\d]{32})", md5_checksum):
+            return api_error(_("Invalid md5_checksum"), status.HTTP_400_BAD_REQUEST)
+
+        parent = None
+        parent_id = request_data.get("parent", None)
+        if parent_id is not None:
+            if not is_integer(parent_id) or not int(parent_id) > 0:
+                return api_error(_("Invalid parent"), status.HTTP_400_BAD_REQUEST)
+
+            parent = Folder.find_by_id(parent_id)
+            if parent is None:
+                return api_error(_("Parent folder not found"), status.HTTP_404_NOT_FOUND)
+
+        if file_obj.name is None:
+            return api_error(_("Invalid filename"), status.HTTP_400_BAD_REQUEST)
+
+        if not File.is_unique_name(user=request.user, parent=parent, file_name=file_obj.name):
+            return api_error(_("A file with this name already exists"), status.HTTP_400_BAD_REQUEST)
+
         generated_file_id = generate_random_long()
         file_id = generated_file_id
 
@@ -75,8 +93,11 @@ def upload(request: Request) -> Response:
             file_size=file_size,
             part_size=part_size,
             total_parts=total_parts,
+            md5_checksum=md5_checksum,
+            parent=parent,
         )
 
+    file_id = file_id or request_data.get("file_id", None)
     if file_id is None or not is_integer(file_id):
         return api_error(_("Invalid file_id"), status.HTTP_400_BAD_REQUEST)
     file_id = int(file_id)
@@ -84,6 +105,9 @@ def upload(request: Request) -> Response:
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
     if file is None:
         return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
+
+    if file_obj.name is None or file_obj.name != file.file_name:
+        return api_error(_("Invalid filename"), status.HTTP_400_BAD_REQUEST)
 
     if file_part != file.last_uploaded_part + 1:
         return api_error(

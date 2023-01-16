@@ -6,6 +6,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as original_exception_handler
+from tdlib.wrapper import td_client
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 @api_view(["GET"])
 @authentication_classes([])
 def health(request: Request) -> Response:
+    td_client().get_me()  # Initialize td client
     return api_success({})
 
 
