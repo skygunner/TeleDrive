@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-15 18:30+0000\n"
+"POT-Creation-Date: 2023-01-16 17:08+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,6 +13,58 @@ msgstr ""
 
 #: apps/auth/validators.py:41
 msgid "The authentication data is not related to the Telegram user!"
+msgstr ""
+
+#: apps/tdlib/views.py:27
+msgid "Invalid file_part"
+msgstr ""
+
+#: apps/tdlib/views.py:32
+msgid "Invalid file object"
+msgstr ""
+
+#: apps/tdlib/views.py:37
+msgid "Invalid total_parts"
+msgstr ""
+
+#: apps/tdlib/views.py:41
+msgid "Invalid filename"
+msgstr ""
+
+#: apps/tdlib/views.py:45
+msgid "Invalid file_size"
+msgstr ""
+
+#: apps/tdlib/views.py:48
+msgid "file_size must be less or equal to 2GB"
+msgstr ""
+
+#: apps/tdlib/views.py:53
+msgid "The file part size must be evenly divisible by 1024"
+msgstr ""
+
+#: apps/tdlib/views.py:55
+msgid "The file part size must be less or equal to 512KB"
+msgstr ""
+
+#: apps/tdlib/views.py:60
+msgid "total_parts must be {}"
+msgstr ""
+
+#: apps/tdlib/views.py:65
+msgid "Provided file_size is not equal to the actual file size"
+msgstr ""
+
+#: apps/tdlib/views.py:81
+msgid "Invalid file_id"
+msgstr ""
+
+#: apps/tdlib/views.py:86
+msgid "file_id not found."
+msgstr ""
+
+#: apps/tdlib/views.py:90
+msgid "You must upload part {} now"
 msgstr ""
 
 #: baseapi/settings.py:20

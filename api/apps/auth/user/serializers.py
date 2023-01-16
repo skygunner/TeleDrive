@@ -7,7 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             "id",
-            "telegram_id",
             "first_name",
             "last_name",
             "username",

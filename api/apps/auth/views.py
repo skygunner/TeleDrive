@@ -20,10 +20,10 @@ def sign_in(request: Request) -> Response:
     request_data = request.data
     validate_sign_in_request(request_data)
 
-    user = User.find_by_telegram_id(telegram_id=request_data["id"])
+    user = User.find_by_id(id=request_data["id"])
     if user is None:
         user = User.create(
-            telegram_id=request_data["id"],
+            id=request_data["id"],
             first_name=request_data["first_name"],
             last_name=request_data["last_name"],
             username=request_data["username"],

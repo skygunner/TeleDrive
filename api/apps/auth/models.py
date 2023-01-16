@@ -7,8 +7,8 @@ from utils.models import BaseModelMixin
 class User(BaseModelMixin):
     history = HistoricalRecords(table_name="historical_users", custom_model_name="HistoricalUser", app="auth")
 
-    telegram_id = models.BigIntegerField(null=False, blank=False, unique=True, db_index=True)
-    first_name = models.CharField(max_length=255, null=False, blank=False)
+    id = models.BigIntegerField(primary_key=True)
+    first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     username = models.CharField(max_length=255, null=True, blank=True, db_index=True)
     photo_url = models.TextField(null=True, blank=True)
@@ -29,14 +29,8 @@ class User(BaseModelMixin):
         return self.objects.filter(id=id).first()
 
     @classmethod
-    def find_by_telegram_id(self, telegram_id: str):
-        return self.objects.filter(telegram_id=telegram_id).first()
-
-    @classmethod
-    def create(self, telegram_id: int, first_name: str, last_name: str, username: str, photo_url: str):
-        user = User(
-            telegram_id=telegram_id, first_name=first_name, last_name=last_name, username=username, photo_url=photo_url
-        )
+    def create(self, id: int, first_name: str, last_name: str, username: str, photo_url: str):
+        user = User(id=id, first_name=first_name, last_name=last_name, username=username, photo_url=photo_url)
         user.save()
         return user
 
@@ -52,10 +46,10 @@ class InvalidToken(BaseModelMixin):
     REASON_SIGN_OUT = "SignOut"
     REASONS = ((REASON_SIGN_OUT, REASON_SIGN_OUT),)
 
-    token_id = models.CharField(primary_key=True, max_length=255, null=False, blank=False)
+    token_id = models.CharField(primary_key=True, max_length=255)
     user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE)
-    reason = models.CharField(max_length=255, null=False, blank=False, choices=REASONS)
-    expire_at = models.DateTimeField(null=False, blank=False)
+    reason = models.CharField(max_length=255, choices=REASONS)
+    expire_at = models.DateTimeField()
 
     class Meta:
         db_table = "invalid_tokens"

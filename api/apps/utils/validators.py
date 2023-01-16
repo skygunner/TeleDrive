@@ -9,3 +9,12 @@ def request_validator(func):
             raise ValidationError(errors)
 
     return _wrapper
+
+
+def is_integer(value):
+    try:
+        int(value)
+    except (ValueError, TypeError):
+        return False
+
+    return True
