@@ -15,18 +15,6 @@ def td_client():
     if "TD_CLIENT" in globals():
         return TD_CLIENT
 
-    if (
-        not settings.TELEGRAM_BOT_SESSION
-        or not settings.TELEGRAM_API_ID
-        or not settings.TELEGRAM_API_HASH
-        or not settings.TELEGRAM_BOT_TOKEN
-    ):
-        logger.warning(
-            "You must set all these variables to setup the Telegram client: "
-            + "[TELEGRAM_BOT_SESSION, TELEGRAM_API_ID, TELEGRAM_API_HASH, TELEGRAM_BOT_TOKEN]"
-        )
-        return None
-
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
@@ -39,6 +27,9 @@ def td_client():
     )
 
     TD_CLIENT.connect()
-    TD_CLIENT.sign_in(bot_token=settings.TELEGRAM_BOT_TOKEN)
+
+    if not TD_CLIENT.is_user_authorized():
+        print("here")
+        TD_CLIENT.sign_in(bot_token=settings.TELEGRAM_BOT_TOKEN)
 
     return TD_CLIENT

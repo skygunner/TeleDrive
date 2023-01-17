@@ -91,10 +91,10 @@ APPEND_SLASH = False
 
 VARCHAR_LENGTH_LIMIT = 255
 
-TELEGRAM_API_ID = env.int("TELEGRAM_API_ID", default=None)
-TELEGRAM_API_HASH = env.str("TELEGRAM_API_HASH", default=None)
-TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default=None)
-TELEGRAM_BOT_SESSION = env.str("TELEGRAM_BOT_SESSION", default=None)
+TELEGRAM_API_ID = env.int("TELEGRAM_API_ID", default=123456)
+TELEGRAM_API_HASH = env.str("TELEGRAM_API_HASH", default="secret")
+TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default="secret")
+TELEGRAM_BOT_SESSION = env.str("TELEGRAM_BOT_SESSION", default="secret")
 
 JWT_TOKEN_KEY = env.str("JWT_TOKEN_KEY", default="secret")
 JWT_TOKEN_KEY_ID = "1"
