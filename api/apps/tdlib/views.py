@@ -58,7 +58,7 @@ def upload(request: Request) -> Response:
             if file_size <= part_size:
                 return api_error(_("Invalid file_size."), status.HTTP_400_BAD_REQUEST)
 
-            calculated_total_parts = (file_size + part_size - 1) / part_size
+            calculated_total_parts = (file_size + part_size - 1) // part_size
             if total_parts != calculated_total_parts:
                 return api_error(
                     _("total_parts must be {}.".format(calculated_total_parts)), status.HTTP_400_BAD_REQUEST
@@ -128,7 +128,7 @@ def upload(request: Request) -> Response:
             _("You must upload part {} now.".format(file.last_uploaded_part + 1)), status.HTTP_400_BAD_REQUEST
         )
 
-    if file_part <= file.total_parts and file_obj.size != file.part_size:
+    if file_part < file.total_parts and file_obj.size != file.part_size:
         return api_error(
             _("The file part size must be equal to {}KB.".format(file.part_size / 1024)), status.HTTP_400_BAD_REQUEST
         )

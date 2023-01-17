@@ -29,7 +29,6 @@ def td_client():
     TD_CLIENT.connect()
 
     if not TD_CLIENT.is_user_authorized():
-        print("here")
         TD_CLIENT.sign_in(bot_token=settings.TELEGRAM_BOT_TOKEN)
 
     return TD_CLIENT
