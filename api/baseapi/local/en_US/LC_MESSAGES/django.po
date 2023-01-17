@@ -1,86 +1,102 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 09:47+0000\n"
+"POT-Creation-Date: 2023-01-17 13:53+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: apps/auth/validators.py:38
+#: apps/auth/validators.py:36
 msgid "The authentication data is from more than a day ago."
 msgstr ""
 
-#: apps/auth/validators.py:41
+#: apps/auth/validators.py:39
 msgid "The authentication data is not related to the Telegram user!"
 msgstr ""
 
-#: apps/tdlib/views.py:28
-msgid "Invalid file_part"
+#: apps/tdlib/views.py:30
+msgid "Invalid file_part."
 msgstr ""
 
-#: apps/tdlib/views.py:33
-msgid "Invalid file object"
+#: apps/tdlib/views.py:35
+msgid "Invalid file object."
 msgstr ""
 
-#: apps/tdlib/views.py:38
-msgid "Invalid total_parts"
+#: apps/tdlib/views.py:40
+msgid "Invalid total_parts."
 msgstr ""
 
-#: apps/tdlib/views.py:43
-msgid "Invalid file_size"
+#: apps/tdlib/views.py:45 apps/tdlib/views.py:59
+msgid "Invalid file_size."
 msgstr ""
 
-#: apps/tdlib/views.py:46
-msgid "file_size must be less or equal to 2GB"
+#: apps/tdlib/views.py:48
+msgid "The file size must be less or equal to 2GB."
 msgstr ""
 
-#: apps/tdlib/views.py:51
-msgid "The file part size must be evenly divisible by 1024"
+#: apps/tdlib/views.py:52
+msgid "The file part size must be less or equal to 512KB."
 msgstr ""
 
-#: apps/tdlib/views.py:53
-msgid "The file part size must be less or equal to 512KB"
+#: apps/tdlib/views.py:56
+msgid "The file part size must be evenly divisible by 1024."
 msgstr ""
 
-#: apps/tdlib/views.py:58
-msgid "total_parts must be {}"
+#: apps/tdlib/views.py:64
+msgid "total_parts must be {}."
 msgstr ""
 
-#: apps/tdlib/views.py:63
-msgid "Provided file_size is not equal to the actual file size"
-msgstr ""
-
-#: apps/tdlib/views.py:68
-msgid "Invalid md5_checksum"
+#: apps/tdlib/views.py:69
+msgid "Provided file_size is not equal to the actual file size."
 msgstr ""
 
 #: apps/tdlib/views.py:74
-msgid "Invalid parent"
+msgid "Invalid md5_checksum."
 msgstr ""
 
-#: apps/tdlib/views.py:78
-msgid "Parent folder not found"
-msgstr ""
-
-#: apps/tdlib/views.py:81 apps/tdlib/views.py:110
-msgid "Invalid filename"
+#: apps/tdlib/views.py:80
+msgid "Invalid parent."
 msgstr ""
 
 #: apps/tdlib/views.py:84
-msgid "A file with this name already exists"
+msgid "Parent folder not found."
 msgstr ""
 
-#: apps/tdlib/views.py:102
-msgid "Invalid file_id"
+#: apps/tdlib/views.py:87 apps/tdlib/views.py:124
+msgid "Invalid file name."
 msgstr ""
 
-#: apps/tdlib/views.py:107
+#: apps/tdlib/views.py:90
+msgid "A file with this name already exists."
+msgstr ""
+
+#: apps/tdlib/views.py:93
+msgid "A file with this name temporarily reserved."
+msgstr ""
+
+#: apps/tdlib/views.py:111
+msgid "Invalid file_id."
+msgstr ""
+
+#: apps/tdlib/views.py:116
 msgid "file_id not found."
 msgstr ""
 
-#: apps/tdlib/views.py:114
-msgid "You must upload part {} now"
+#: apps/tdlib/views.py:120
+msgid "File with id {} successfully uploaded before."
+msgstr ""
+
+#: apps/tdlib/views.py:128
+msgid "You must upload part {} now."
+msgstr ""
+
+#: apps/tdlib/views.py:133
+msgid "The file part size must be equal to {}KB."
+msgstr ""
+
+#: apps/tdlib/views.py:138
+msgid "The file part size must be less or equal to {}KB."
 msgstr ""
 
 #: baseapi/settings.py:20

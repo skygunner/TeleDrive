@@ -45,7 +45,7 @@ def exception_handler(exception, context) -> Response:
     response = original_exception_handler(exception, context)
 
     if response is None:
-        logger.error(f"unhandled exception: {exception}")
+        logger.error("unhandled exception", exc_info=True)
         return exception_handler(APIException(), context)
 
     details = response.data

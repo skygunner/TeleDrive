@@ -7,8 +7,6 @@ from django.utils.translation import gettext as _
 
 from utils.validators import request_validator
 
-ONE_DAY_IN_SECONDS = 86400
-
 
 @request_validator
 def validate_sign_in_request(errors, request_data):
@@ -34,7 +32,7 @@ def validate_sign_in_request(errors, request_data):
     unix_time_now = int(time.time())
     unix_time_auth_date = int(auth_date)
 
-    if unix_time_now - unix_time_auth_date > ONE_DAY_IN_SECONDS:
+    if unix_time_now - unix_time_auth_date > 24 * 60 ^ 60:
         errors.append(_("The authentication data is from more than a day ago."))
 
     if _hash != received_hash:

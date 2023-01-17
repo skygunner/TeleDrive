@@ -1,9 +1,13 @@
+import os
+from datetime import timedelta
+
 from django.db import models
+from django.utils import timezone
 
 from auth.models import User
 from simple_history.models import HistoricalRecords
 from tdlib.wrapper import td_client
-from telethon.tl.functions.upload import SaveBigFilePartRequest, SaveFilePartRequest
+from telethon.tl import functions, types
 from utils.models import BaseModelMixin
 
 
@@ -39,6 +43,7 @@ class File(BaseModelMixin):
     parent = models.ForeignKey(
         to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
+    message = models.BinaryField(blank=True, null=True)
 
     class Meta:
         db_table = "files"
@@ -51,7 +56,19 @@ class File(BaseModelMixin):
 
     @classmethod
     def is_unique_name(self, user: User, parent: Folder, file_name: str):
-        return self.objects.filter(user=user, parent=parent, file_name=file_name).first() is None
+        return self.objects.filter(user=user, parent=parent, file_name=file_name, message__isnull=False).first() is None
+
+    @classmethod
+    def is_temporarily_reserved_name(self, user: User, parent: Folder, file_name: str):
+        temp_file = self.objects.filter(user=user, parent=parent, file_name=file_name, message__isnull=True).first()
+        if temp_file is None:
+            return False
+
+        if temp_file.updated_at + timedelta(minutes=15) < timezone.now():
+            temp_file.delete()
+            return False
+
+        return True
 
     @classmethod
     def create(
@@ -78,17 +95,22 @@ class File(BaseModelMixin):
         file.save()
         return file
 
+    def get_unique_name(self):
+        return str(self.id) + os.path.splitext(self.file_name)[-1]
+
     def upload_part(self, file_bytes: bytes, file_part: int):
         is_big = self.file_size > 10 * 1024 * 1024  # 10MB
         if is_big:
-            request = SaveBigFilePartRequest(
+            request = functions.upload.SaveBigFilePartRequest(
                 file_id=self.file_id,
-                file_part=file_part,
+                file_part=file_part - 1,
                 file_total_parts=self.total_parts,
                 bytes=file_bytes,
             )
         else:
-            request = SaveFilePartRequest(file_id=self.file_id, file_part=file_part, bytes=file_bytes)
+            request = functions.upload.SaveFilePartRequest(
+                file_id=self.file_id, file_part=file_part - 1, bytes=file_bytes
+            )
 
         result = td_client()(request)
         if not result:
@@ -96,3 +118,17 @@ class File(BaseModelMixin):
 
         self.last_uploaded_part = file_part
         self.save()
+
+        if self.last_uploaded_part == self.total_parts:
+            if is_big:
+                input_file = types.InputFileBig(id=self.file_id, parts=self.total_parts, name=self.get_unique_name())
+            else:
+                input_file = types.InputFile(
+                    id=self.file_id, parts=self.total_parts, name=self.get_unique_name(), md5_checksum=self.md5_checksum
+                )
+
+            message = td_client().send_file(
+                entity=self.user.id, file=input_file, force_document=True, file_size=self.file_size, silent=True
+            )
+            self.message = bytes(message)
+            self.save()
