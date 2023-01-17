@@ -46,12 +46,16 @@ class File(BaseModelMixin):
     parent = models.ForeignKey(
         to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
-    message = models.BinaryField(blank=True, null=True)
+    binary_message = models.BinaryField(blank=True, null=True)
 
     class Meta:
         db_table = "files"
         unique_together = (("user", "file_id"),)
         index_together = (("user", "file_id"),)
+
+    @property
+    def message(self):
+        return BinaryReader(self.binary_message).tgread_object()
 
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
@@ -59,11 +63,16 @@ class File(BaseModelMixin):
 
     @classmethod
     def is_unique_name(self, user: User, parent: Folder, file_name: str):
-        return self.objects.filter(user=user, parent=parent, file_name=file_name, message__isnull=False).first() is None
+        return (
+            self.objects.filter(user=user, parent=parent, file_name=file_name, binary_message__isnull=False).first()
+            is None
+        )
 
     @classmethod
     def is_temporarily_reserved_name(self, user: User, parent: Folder, file_name: str):
-        temp_file = self.objects.filter(user=user, parent=parent, file_name=file_name, message__isnull=True).first()
+        temp_file = self.objects.filter(
+            user=user, parent=parent, file_name=file_name, binary_message__isnull=True
+        ).first()
         if temp_file is None:
             return False
 
@@ -133,12 +142,10 @@ class File(BaseModelMixin):
             message = td_client().send_file(
                 entity=self.user.id, file=input_file, force_document=True, file_size=self.file_size, silent=True
             )
-            self.message = bytes(message)
+            self.binary_message = bytes(message)
             self.save()
 
     def download_range(self, start: int, end: int):
-        file = BinaryReader(self.message).tgread_object()
-
         limit = 1
         if end - start > MAX_CHUNK_SIZE:
             limit = ((end - start) + MAX_CHUNK_SIZE - 1) // MAX_CHUNK_SIZE
@@ -147,15 +154,21 @@ class File(BaseModelMixin):
         if limit > 1:
             chunk_size = MAX_CHUNK_SIZE
 
+        request_size = end - start
+
         bytes_io = io.BytesIO()
 
         for chunk in td_client().iter_download(
-            file=file, offset=start, limit=limit, chunk_size=chunk_size, request_size=chunk_size
+            file=self.message,
+            offset=start,
+            limit=limit,
+            chunk_size=chunk_size,
+            request_size=request_size,
+            file_size=self.file_size,
         ):
             bytes_io.write(chunk)
 
-        if callable(getattr(bytes_io, "flush", None)):
-            bytes_io.flush()
+        bytes_io.flush()
         range_bytes = bytes_io.getvalue()
         bytes_io.close()
 

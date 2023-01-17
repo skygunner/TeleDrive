@@ -3,6 +3,7 @@ import re
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
+from django.http import HttpResponse
 from django.utils.translation import gettext as _
 
 from rest_framework import status
@@ -12,10 +13,13 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from tdlib.models import File, Folder
 from tdlib.serializers import FileSerializer
+from telethon.client.downloads import MAX_CHUNK_SIZE
 from telethon.helpers import generate_random_long
 from utils.validators import is_integer
 
 from api.views import api_error, api_success
+
+range_re = re.compile(r"bytes\s*=\s*(\d+)\s*-\s*(\d*)", re.I)
 
 
 @api_view(["POST"])
@@ -92,7 +96,7 @@ def upload(request: Request) -> Response:
         if File.is_temporarily_reserved_name(user=request.user, parent=parent, file_name=file_obj.name):
             return api_error(_("A file with this name temporarily reserved."), status.HTTP_409_CONFLICT)
 
-        generated_file_id = generate_random_long()
+        generated_file_id = generate_random_long(signed=False)
         file_id = generated_file_id
 
         file = File.create(
@@ -139,7 +143,7 @@ def upload(request: Request) -> Response:
             status.HTTP_400_BAD_REQUEST,
         )
 
-    file.upload_part(file_obj.file.read(), file_part)
+    file.upload_part(file_bytes=file_obj.file.read(), file_part=file_part)
 
     return api_success(FileSerializer(file).data)
 
@@ -147,4 +151,30 @@ def upload(request: Request) -> Response:
 @api_view(["GET"])
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
-    pass
+    file = File.find_by_user_and_id(user=request.user, file_id=file_id)
+    if file is None:
+        return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
+
+    start = 0
+    end = file.file_size - 1
+    if end > MAX_CHUNK_SIZE:
+        end = MAX_CHUNK_SIZE
+
+    range_header = request.META.get("HTTP_RANGE", "").strip()
+    range_match = range_re.match(range_header)
+    if range_match:
+        start, end = range_match.groups()
+        start = int(start) if start else 0
+        end = int(end) if end else file.file_size - 1
+        if end >= file.file_size:
+            end = file.file_size - 1
+
+    range_bytes = file.download_range(start=start, end=end)
+
+    response = HttpResponse(
+        content=range_bytes, content_type="application/octet-stream", status=status.HTTP_206_PARTIAL_CONTENT
+    )
+    response["Content-Length"] = len(range_bytes)
+    response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
+    response["Content-Range"] = "bytes %s-%s/%s" % (start, end, file.file_size)
+    return response
