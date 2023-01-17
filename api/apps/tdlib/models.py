@@ -1,3 +1,4 @@
+import io
 import os
 from datetime import timedelta
 
@@ -7,6 +8,8 @@ from django.utils import timezone
 from auth.models import User
 from simple_history.models import HistoricalRecords
 from tdlib.wrapper import td_client
+from telethon.client.downloads import MAX_CHUNK_SIZE
+from telethon.extensions import BinaryReader
 from telethon.tl import functions, types
 from utils.models import BaseModelMixin
 
@@ -132,3 +135,28 @@ class File(BaseModelMixin):
             )
             self.message = bytes(message)
             self.save()
+
+    def download_range(self, start: int, end: int):
+        file = BinaryReader(self.message).tgread_object()
+
+        limit = 1
+        if end - start > MAX_CHUNK_SIZE:
+            limit = ((end - start) + MAX_CHUNK_SIZE - 1) // MAX_CHUNK_SIZE
+
+        chunk_size = end - start
+        if limit > 1:
+            chunk_size = MAX_CHUNK_SIZE
+
+        bytes_io = io.BytesIO()
+
+        for chunk in td_client().iter_download(
+            file=file, offset=start, limit=limit, chunk_size=chunk_size, request_size=chunk_size
+        ):
+            bytes_io.write(chunk)
+
+        if callable(getattr(bytes_io, "flush", None)):
+            bytes_io.flush()
+        range_bytes = bytes_io.getvalue()
+        bytes_io.close()
+
+        return range_bytes
