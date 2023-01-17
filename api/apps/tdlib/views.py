@@ -130,12 +130,12 @@ def upload(request: Request) -> Response:
 
     if file_part < file.total_parts and file_obj.size != file.part_size:
         return api_error(
-            _("The file part size must be equal to {}KB.".format(file.part_size / 1024)), status.HTTP_400_BAD_REQUEST
+            _("The file part size must be equal to {}KB.".format(file.part_size // 1024)), status.HTTP_400_BAD_REQUEST
         )
 
     if file_part == file.total_parts and file_obj.size > file.part_size:
         return api_error(
-            _("The file part size must be less or equal to {}KB.".format(file.part_size / 1024)),
+            _("The file part size must be less or equal to {}KB.".format(file.part_size // 1024)),
             status.HTTP_400_BAD_REQUEST,
         )
 
