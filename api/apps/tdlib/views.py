@@ -148,7 +148,7 @@ def upload(request: Request) -> Response:
     return api_success(FileSerializer(file).data)
 
 
-@api_view(["GET"])
+@api_view(["HEAD", "GET"])
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
@@ -157,16 +157,24 @@ def download(request: Request, file_id: int) -> Response:
 
     etag = quote_etag("{}-{}".format(file.id, file.file_id))
 
-    def add_headers(response):
+    def add_headers(response, content_length, content_range=None):
         response["Accept-Ranges"] = "bytes"
-        response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
-        response["Content-Type"] = "application/octet-stream"
         response["Cache-Control"] = "public, max-age=604800"
+        response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
+        response["Content-Length"] = content_length
+        if content_range is not None:
+            response["Content-Range"] = content_range
+        response["Content-Type"] = "application/octet-stream"
         response["ETag"] = etag
+
+    if request.method == "HEAD":
+        response = HttpResponse(status=status.HTTP_200_OK)
+        add_headers(response=response, content_length=file.file_size)
+        return response
 
     start = 0
     end = file.file_size - 1
-    content_range = "bytes */{}".format(file.file_size)
+    status_code = status.HTTP_200_OK
 
     if_range = request.META.get("HTTP_IF_RANGE", "").strip()
     if not if_range or if_range == etag:
@@ -182,12 +190,30 @@ def download(request: Request, file_id: int) -> Response:
             if start > end:
                 return api_error(_("Invalid Range header."), status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)
 
-            content_range = "bytes {}-{}/{}".format(start, end, file.file_size)
+            if end - start + 1 > 1 * 1024 * 1024:  # 1MB
+                headers = {"Accept-Ranges": "bytes"}
+                return api_error(
+                    _("Range length must be less or equal to 1MB."),
+                    status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                    headers,
+                )
+
+            status_code = status.HTTP_206_PARTIAL_CONTENT
+
+    if status_code == status.HTTP_200_OK and file.file_size > 1 * 1024 * 1024:  # 1MB
+        headers = {"Accept-Ranges": "bytes"}
+        return api_error(
+            _("The requested file is too big. Please use range request instead."),
+            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            headers,
+        )
 
     byte_ranges = file.download_range(start=start, end=end)
 
-    response = HttpResponse(content=byte_ranges, status=status.HTTP_206_PARTIAL_CONTENT)
-    add_headers(response=response)
-    response["Content-Length"] = len(byte_ranges)
-    response["Content-Range"] = content_range
+    response = HttpResponse(content=byte_ranges, status=status_code)
+    add_headers(
+        response=response,
+        content_length=len(byte_ranges),
+        content_range="bytes {}-{}/{}".format(start, end, file.file_size),
+    )
     return response

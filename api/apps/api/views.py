@@ -18,17 +18,17 @@ def health(request: Request) -> Response:
     return api_success({})
 
 
-def api_success(data, status_code: int = status.HTTP_200_OK) -> Response:
+def api_success(data, status_code: int = status.HTTP_200_OK, headers=None) -> Response:
     data = {
         "status": "SUCCESS",
         "status_code": status_code,
         "data": data,
     }
 
-    return Response(data=data, status=status_code)
+    return Response(data=data, status=status_code, headers=headers)
 
 
-def api_error(details, status_code: int) -> Response:
+def api_error(details, status_code: int, headers=None) -> Response:
     if not isinstance(details, list):
         details = [details]
 
@@ -38,7 +38,7 @@ def api_error(details, status_code: int) -> Response:
         "details": details,
     }
 
-    return Response(data=data, status=status_code)
+    return Response(data=data, status=status_code, headers=headers)
 
 
 def exception_handler(exception, context) -> Response:
