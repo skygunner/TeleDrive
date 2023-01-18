@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 23:01+0000\n"
+"POT-Creation-Date: 2023-01-18 15:39+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -97,6 +97,10 @@ msgstr ""
 
 #: apps/tdlib/views.py:142
 msgid "The file part size must be less or equal to {}KB."
+msgstr ""
+
+#: apps/tdlib/views.py:183
+msgid "Invalid Range header."
 msgstr ""
 
 #: baseapi/settings.py:20

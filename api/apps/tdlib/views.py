@@ -4,6 +4,7 @@ import re
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 from django.http import HttpResponse
+from django.utils.http import quote_etag
 from django.utils.translation import gettext as _
 
 from rest_framework import status
@@ -13,7 +14,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from tdlib.models import File, Folder
 from tdlib.serializers import FileSerializer
-from telethon.client.downloads import MAX_CHUNK_SIZE
 from telethon.helpers import generate_random_long
 from utils.validators import is_integer
 
@@ -155,26 +155,39 @@ def download(request: Request, file_id: int) -> Response:
     if file is None:
         return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
 
+    etag = quote_etag("{}:{}".format(file.id, file.file_id))
+
+    def add_headers(response):
+        response["Accept-Ranges"] = "bytes"
+        response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
+        response["Content-Type"] = "application/octet-stream"
+        response["Cache-Control"] = "public, max-age=604800"
+        response["ETag"] = etag
+
     start = 0
     end = file.file_size - 1
-    if end > MAX_CHUNK_SIZE:
-        end = MAX_CHUNK_SIZE
+    content_range = "bytes */{}".format(file.file_size)
 
-    range_header = request.META.get("HTTP_RANGE", "").strip()
-    range_match = range_re.match(range_header)
-    if range_match:
-        start, end = range_match.groups()
-        start = int(start) if start else 0
-        end = int(end) if end else file.file_size - 1
-        if end >= file.file_size:
-            end = file.file_size - 1
+    if_range = request.META.get("HTTP_IF_RANGE", "").strip()
+    if not if_range or if_range == etag:
+        rage = request.META.get("HTTP_RANGE", "").strip()
+        range_match = range_re.match(rage)
+        if range_match:
+            start, end = range_match.groups()
+            start = int(start) if start else 0
+            end = int(end) if end else file.file_size - 1
+            if end >= file.file_size:
+                end = file.file_size - 1
 
-    range_bytes = file.download_range(start=start, end=end)
+            if start > end:
+                return api_error(_("Invalid Range header."), status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)
 
-    response = HttpResponse(
-        content=range_bytes, content_type="application/octet-stream", status=status.HTTP_206_PARTIAL_CONTENT
-    )
-    response["Content-Length"] = len(range_bytes)
-    response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
-    response["Content-Range"] = "bytes %s-%s/%s" % (start, end, file.file_size)
+            content_range = "bytes {}-{}/{}".format(start, end, file.file_size)
+
+    byte_ranges = file.download_range(start=start, end=end)
+
+    response = HttpResponse(content=byte_ranges, status=status.HTTP_206_PARTIAL_CONTENT)
+    add_headers(response=response)
+    response["Content-Length"] = len(byte_ranges)
+    response["Content-Range"] = content_range
     return response
