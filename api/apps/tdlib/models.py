@@ -59,7 +59,7 @@ class File(BaseModelMixin):
 
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
-        return self.objects.filter(user=user, file_id=file_id).first()
+        return self.objects.filter(user=user, file_id=file_id, binary_message__isnull=False).first()
 
     @classmethod
     def is_unique_name(self, user: User, parent: Folder, file_name: str):
@@ -108,7 +108,7 @@ class File(BaseModelMixin):
         return file
 
     def get_unique_name(self):
-        return str(self.id) + os.path.splitext(self.file_name)[-1]
+        return str(self.id) + "-" + str(self.file_id) + os.path.splitext(self.file_name)[-1]
 
     def upload_part(self, file_bytes: bytes, file_part: int):
         is_big = self.file_size > 10 * 1024 * 1024  # 10MB

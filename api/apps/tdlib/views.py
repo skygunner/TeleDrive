@@ -155,7 +155,7 @@ def download(request: Request, file_id: int) -> Response:
     if file is None:
         return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
 
-    etag = quote_etag("{}:{}".format(file.id, file.file_id))
+    etag = quote_etag("{}-{}".format(file.id, file.file_id))
 
     def add_headers(response):
         response["Accept-Ranges"] = "bytes"
