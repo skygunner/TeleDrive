@@ -13,6 +13,7 @@ class FileSerializer(serializers.ModelSerializer):
             "total_parts",
             "last_uploaded_part",
             "md5_checksum",
+            "thumbnail",
             "parent_id",
             "created_at",
             "updated_at",

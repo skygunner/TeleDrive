@@ -14,7 +14,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from tdlib.models import File, Folder
 from tdlib.serializers import FileSerializer
-from telethon.helpers import generate_random_long
 from utils.validators import is_integer
 
 from api.views import api_error, api_success
@@ -49,11 +48,11 @@ def upload(request: Request) -> Response:
             return api_error(_("Invalid file_size."), status.HTTP_400_BAD_REQUEST)
         file_size = int(file_size)
         if file_size > 2 * 1024 * 1024 * 1024:  # 2GB
-            return api_error(_("The file size must be less or equal to 2GB."), status.HTTP_400_BAD_REQUEST)
+            return api_error(_("The file size must be less or equal to 2 GB."), status.HTTP_400_BAD_REQUEST)
 
         part_size = file_obj.size
         if part_size / 1024 > 512:
-            return api_error(_("The file part size must be less or equal to 512KB."), status.HTTP_400_BAD_REQUEST)
+            return api_error(_("The file part size must be less or equal to 512 KB."), status.HTTP_400_BAD_REQUEST)
 
         if file_part != total_parts:
             if part_size % 1024 != 0:
@@ -96,8 +95,7 @@ def upload(request: Request) -> Response:
         if File.is_temporarily_reserved_name(user=request.user, parent=parent, file_name=file_obj.name):
             return api_error(_("A file with this name temporarily reserved."), status.HTTP_409_CONFLICT)
 
-        generated_file_id = generate_random_long(signed=False)
-        file_id = generated_file_id
+        file_id = int.from_bytes(os.urandom(7), signed=False, byteorder="little")
 
         file = File.create(
             user=request.user,
@@ -134,12 +132,12 @@ def upload(request: Request) -> Response:
 
     if file_part < file.total_parts and file_obj.size != file.part_size:
         return api_error(
-            _("The file part size must be equal to {}KB.".format(file.part_size // 1024)), status.HTTP_400_BAD_REQUEST
+            _("The file part size must be equal to {} KB.".format(file.part_size // 1024)), status.HTTP_400_BAD_REQUEST
         )
 
     if file_part == file.total_parts and file_obj.size > file.part_size:
         return api_error(
-            _("The file part size must be less or equal to {}KB.".format(file.part_size // 1024)),
+            _("The file part size must be less or equal to {} KB.".format(file.part_size // 1024)),
             status.HTTP_400_BAD_REQUEST,
         )
 
@@ -152,7 +150,7 @@ def upload(request: Request) -> Response:
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
-    if file is None:
+    if file is None or file.binary_message is None:
         return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
 
     etag = quote_etag("{}-{}".format(file.id, file.file_id))
@@ -164,7 +162,7 @@ def download(request: Request, file_id: int) -> Response:
         response["Content-Length"] = content_length
         if content_range is not None:
             response["Content-Range"] = content_range
-        response["Content-Type"] = "application/octet-stream"
+        response["Content-Type"] = file.mime_type
         response["ETag"] = etag
 
     if request.method == "HEAD":
@@ -193,7 +191,7 @@ def download(request: Request, file_id: int) -> Response:
             if end - start + 1 > 1 * 1024 * 1024:  # 1MB
                 headers = {"Accept-Ranges": "bytes"}
                 return api_error(
-                    _("Range length must be less or equal to 1MB."),
+                    _("Range length must be less or equal to 1 MB."),
                     status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
                     headers,
                 )

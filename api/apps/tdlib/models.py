@@ -1,3 +1,4 @@
+import base64
 import io
 import os
 from datetime import timedelta
@@ -36,17 +37,18 @@ class File(BaseModelMixin):
     history = HistoricalRecords(table_name="historical_files", custom_model_name="HistoricalFile", app="tdlib")
 
     user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE)
-    file_id = models.BigIntegerField()
+    file_id = models.PositiveBigIntegerField()
     file_name = models.CharField(max_length=255, db_index=True)
-    file_size = models.BigIntegerField()
-    part_size = models.BigIntegerField()
-    total_parts = models.BigIntegerField()
-    last_uploaded_part = models.BigIntegerField(default=0)
+    file_size = models.PositiveBigIntegerField()
+    part_size = models.PositiveBigIntegerField()
+    total_parts = models.PositiveIntegerField()
+    last_uploaded_part = models.PositiveIntegerField(default=0)
     md5_checksum = models.CharField(max_length=255)
     parent = models.ForeignKey(
         to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     binary_message = models.BinaryField(blank=True, null=True)
+    binary_thumbnail = models.BinaryField(blank=True, null=True)
 
     class Meta:
         db_table = "files"
@@ -57,9 +59,22 @@ class File(BaseModelMixin):
     def message(self):
         return BinaryReader(self.binary_message).tgread_object()
 
+    @property
+    def mime_type(self):
+        try:
+            return self.message.media.document.mime_type
+        except TypeError:
+            return "application/octet-stream"
+
+    @property
+    def thumbnail(self):
+        if self.binary_thumbnail:
+            return "data:image/jpg;base64,{}".format(base64.b64encode(self.binary_thumbnail).decode("UTF-8"))
+        return None
+
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
-        return self.objects.filter(user=user, file_id=file_id, binary_message__isnull=False).first()
+        return self.objects.filter(user=user, file_id=file_id).first()
 
     @classmethod
     def is_unique_name(self, user: User, parent: Folder, file_name: str):
@@ -126,7 +141,7 @@ class File(BaseModelMixin):
 
         result = td_client()(request)
         if not result:
-            raise RuntimeError("Failed to upload file part {} for file id {}".format(file_part, self.file_id))
+            raise RuntimeError("Failed to upload part {} for file {}".format(file_part, self.id))
 
         self.last_uploaded_part = file_part
         self.save()
@@ -142,7 +157,11 @@ class File(BaseModelMixin):
             message = td_client().send_file(
                 entity=self.user.id, file=input_file, force_document=True, file_size=self.file_size, silent=True
             )
+            binary_thumbnail = td_client().download_media(message=message, file=bytes, thumb=0)  # Smallest thumbnail
+
             self.binary_message = bytes(message)
+            self.binary_thumbnail = binary_thumbnail
+
             self.save()
 
     def download_range(self, start: int, end: int):
