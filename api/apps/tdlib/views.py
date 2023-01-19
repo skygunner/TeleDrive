@@ -56,6 +56,15 @@ def create_folder(request: Request) -> Response:
     return api_success(FolderSerializer(folder).data)
 
 
+@api_view(["PUT", "DELETE"])
+@transaction.atomic
+def ud_folder(request: Request, folder_id: int) -> Response:
+    if request.method == "PUT":
+        return update_folder(request=request, folder_id=folder_id)
+    elif request.method == "DELETE":
+        return delete_folder(request=request, folder_id=folder_id)
+
+
 @request_validator
 def validate_update_folder_request(errors, request_data):
     folder_id = request_data.get("folder_id", None)
@@ -72,19 +81,10 @@ def validate_update_folder_request(errors, request_data):
         errors.append(_("Invalid parent_id."))
 
 
-@api_view(["PUT", "DELETE"])
-@transaction.atomic
-def ud_folder(request: Request, folder_id: int) -> Response:
-    if request.method == "PUT":
-        return update_folder(request=request, folder_id=folder_id)
-    elif request.method == "DELETE":
-        return delete_folder(request=request, folder_id=folder_id)
-
-
 def update_folder(request: Request, folder_id: int) -> Response:
     request_data = request.data
     request_data["folder_id"] = folder_id
-    validate_create_folder_request(request_data)
+    validate_update_folder_request(request_data)
 
     folder_name = request_data["folder_name"]
     parent_id = request_data.get("parent_id", None)
@@ -116,6 +116,78 @@ def delete_folder(request: Request, folder_id: int) -> Response:
         return api_error(_("folder_id not found."), status.HTTP_404_NOT_FOUND)
 
     folder.delete()
+
+    return api_success({})
+
+
+@api_view(["PUT", "DELETE"])
+@transaction.atomic
+def ud_file(request: Request, file_id: int) -> Response:
+    if request.method == "PUT":
+        return update_file(request=request, file_id=file_id)
+    elif request.method == "DELETE":
+        return delete_file(request=request, file_id=file_id)
+
+
+@request_validator
+def validate_update_file_request(errors, request_data):
+    file_id = request_data.get("file_id", None)
+    file_name = request_data.get("file_name", None)
+    parent_id = request_data.get("parent_id", None)
+
+    if file_id is None or not isinstance(file_id, int) or file_id < 1:
+        errors.append(_("Invalid file_id."))
+
+    if (
+        not isinstance(file_name, str)
+        or len(file_name) < 3
+        or len(file_name) > 255
+        or not os.path.splitext(file_name)[-1]
+    ):
+        errors.append(_("Invalid file_name."))
+
+    if parent_id is not None and (not isinstance(parent_id, int) or parent_id < 1):
+        errors.append(_("Invalid parent_id."))
+
+
+def update_file(request: Request, file_id: int) -> Response:
+    request_data = request.data
+    request_data["file_id"] = file_id
+    validate_update_file_request(request_data)
+
+    file_name = request_data["file_name"]
+    parent_id = request_data.get("parent_id", None)
+
+    file = File.find_by_user_and_id(user=request.user, file_id=file_id)
+    if file is None or file.binary_message is None:
+        return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
+
+    parent = None
+    if parent_id is not None:
+        parent = Folder.find_by_user_and_id(user=request.user, id=parent_id)
+        if parent is None:
+            return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
+
+    if not File.is_unique_name(user=request.user, parent=parent, file_name=file_name):
+        return api_error(_("A file with this name already exists."), status.HTTP_400_BAD_REQUEST)
+
+    if File.is_temporarily_reserved_name(user=request.user, parent=parent, file_name=file_name):
+        return api_error(_("A file with this name temporarily reserved."), status.HTTP_409_CONFLICT)
+
+    file.update(parent=parent, file_name=file_name)
+
+    return api_success(FileSerializer(file).data)
+
+
+def delete_file(request: Request, file_id: int) -> Response:
+    if file_id is None or not isinstance(file_id, int) or file_id < 1:
+        return api_error(_("Invalid file_id."), status.HTTP_400_BAD_REQUEST)
+
+    file = File.find_by_user_and_id(user=request.user, file_id=file_id)
+    if file is None or file.binary_message is None:
+        return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
+
+    file.delete()
 
     return api_success({})
 

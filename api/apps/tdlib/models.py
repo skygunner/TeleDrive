@@ -140,6 +140,11 @@ class File(BaseModelMixin):
         file.save()
         return file
 
+    def update(self, parent: Folder, file_name: str):
+        self.parent = parent
+        self.file_name = file_name
+        self.save()
+
     def get_unique_name(self):
         return str(self.id) + "-" + str(self.file_id) + os.path.splitext(self.file_name)[-1]
 
