@@ -4,6 +4,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
+from corsheaders.defaults import default_headers, default_methods
 from dotenv import load_dotenv
 from environ import Env
 
@@ -36,22 +37,26 @@ INSTALLED_APPS = [
     "tdlib",
     "utils",
     # Third party apps
+    "corsheaders",
     "rest_framework",
     "simple_history",
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "apps.auth.tokens.JWTTokenAuthentication",
+        "apps.auth.jwt.JWTTokenAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [],
     "UNAUTHENTICATED_USER": None,
     "EXCEPTION_HANDLER": "apps.api.views.exception_handler",
+    "DEFAULT_METADATA_CLASS": "apps.api.metadata.MinimalMetadata",
 }
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "apps.api.middleware.AcceptRangesMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -99,6 +104,13 @@ TELEGRAM_BOT_SESSION = env.str("TELEGRAM_BOT_SESSION", default="secret")
 JWT_TOKEN_KEY = env.str("JWT_TOKEN_KEY", default="secret")
 JWT_TOKEN_KEY_ID = "1"
 JWT_TOKEN_EXP_HOURS = 5 * 365 * 24  # 5 years
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = list(default_methods) + ["HEAD"]
+CORS_ALLOW_HEADERS = list(default_headers)
+CORS_PREFLIGHT_MAX_AGE = 86400
+CORS_ALLOW_CREDENTIALS = False
+CORS_URLS_REGEX = r"^/v1/.*$"
 
 TEMPLATES = [
     {

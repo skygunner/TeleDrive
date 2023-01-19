@@ -30,17 +30,8 @@ services:
     volumes:
       - ${PWD}:/home/app/base-api
     command: bash -c "while !</dev/tcp/postgres/5432; do sleep 1; done; make db-migrate && make runserver"
-
-  nginx:
-    image: nginx:1.23.0-alpine
-    hostname: nginx
-    container_name: nginx
-    networks:
-      - base-api
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - 8000:80
+      - 8000:8080
 
 networks:
   base-api:

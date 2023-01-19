@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-19 13:57+0000\n"
+"POT-Creation-Date: 2023-01-19 15:49+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: apps/auth/validators.py:36
+#: apps/auth/views.py:46
 msgid "The authentication data is from more than a day ago."
 msgstr ""
 
-#: apps/auth/validators.py:39
+#: apps/auth/views.py:49
 msgid "The authentication data is not related to the Telegram user!"
 msgstr ""
 
@@ -111,6 +111,6 @@ msgstr ""
 msgid "The requested file is too big. Please use range request instead."
 msgstr ""
 
-#: baseapi/settings.py:20
+#: baseapi/settings.py:21
 msgid "English"
 msgstr ""
