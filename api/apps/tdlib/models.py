@@ -20,7 +20,7 @@ class Folder(BaseModelMixin):
 
     user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE, db_index=True)
     parent = models.ForeignKey(
-        to="self", to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
+        to="self", to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     folder_name = models.CharField(max_length=255, db_index=True)
 
@@ -41,6 +41,14 @@ class Folder(BaseModelMixin):
         folder.save()
         return folder
 
+    @classmethod
+    def list(self, user: User, parent: "Folder", offset: int, limit: int):
+        where = "WHERE user_id = {} AND parent_id is NULL".format(user.id)
+        if parent is not None:
+            where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
+
+        return self.objects.raw("SELECT * FROM folders {} LIMIT {} OFFSET {}".format(where, limit, offset))
+
     def update(self, parent: "Folder", folder_name: str):
         self.parent = parent
         self.folder_name = folder_name
@@ -56,7 +64,7 @@ class File(BaseModelMixin):
 
     user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE, db_index=True)
     parent = models.ForeignKey(
-        to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
+        to=Folder, to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     file_id = models.PositiveBigIntegerField()
     file_name = models.CharField(max_length=255, db_index=True)
@@ -139,6 +147,14 @@ class File(BaseModelMixin):
         )
         file.save()
         return file
+
+    @classmethod
+    def list(self, user: User, parent: Folder, offset: int, limit: int):
+        where = "WHERE user_id = {} AND parent_id is NULL".format(user.id)
+        if parent is not None:
+            where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
+
+        return self.objects.raw("SELECT * FROM folders {} LIMIT {} OFFSET {}".format(where, limit, offset))
 
     def update(self, parent: Folder, file_name: str):
         self.parent = parent

@@ -22,6 +22,71 @@ range_re = re.compile(r"bytes\s*=\s*(\d+)\s*-\s*(\d*)", re.I)
 
 
 @request_validator
+def validate_list_request(errors, request_data):
+    offset = request_data.get("offset", 0)
+    if offset is not None and (not is_integer(offset) or int(offset) < 0):
+        errors.append(_("Invalid offset."))
+
+    limit = request_data.get("limit", 20)
+    if limit is not None and (not is_integer(limit) or int(limit) < 1 or int(limit) > 100):
+        errors.append(_("Invalid limit."))
+
+    parent_id = request_data.get("parent_id", None)
+    if parent_id is not None and (not is_integer(parent_id) or int(parent_id) < 1):
+        errors.append(_("Invalid parent_id."))
+
+
+@api_view(["GET"])
+@transaction.atomic
+def list_folders(request: Request) -> Response:
+    request_data = request.query_params
+    validate_list_request(request_data)
+
+    offset = int(request_data.get("offset", 0))
+    limit = int(request_data.get("limit", 20))
+    parent_id = request_data.get("parent_id", None)
+
+    parent = None
+    if parent_id is not None:
+        parent = Folder.find_by_user_and_id(user=request.user, id=int(parent_id))
+        if parent is None:
+            return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
+
+    results = []
+
+    folders = Folder.list(user=request.user, parent=parent, offset=offset, limit=limit)
+    for folder in folders:
+        results.append(FolderSerializer(folder).data)
+
+    return api_success(results)
+
+
+@api_view(["GET"])
+@transaction.atomic
+def list_files(request: Request) -> Response:
+    request_data = request.query_params
+    validate_list_request(request_data)
+
+    offset = int(request_data.get("offset", 0))
+    limit = int(request_data.get("limit", 20))
+    parent_id = request_data.get("parent_id", None)
+
+    parent = None
+    if parent_id is not None:
+        parent = Folder.find_by_user_and_id(user=request.user, id=int(parent_id))
+        if parent is None:
+            return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
+
+    results = []
+
+    files = File.list(user=request.user, parent=parent, offset=offset, limit=limit)
+    for file in files:
+        results.append(FileSerializer(file).data)
+
+    return api_success(results)
+
+
+@request_validator
 def validate_create_folder_request(errors, request_data):
     folder_name = request_data.get("folder_name", None)
     parent_id = request_data.get("parent_id", None)
@@ -385,5 +450,4 @@ def download(request: Request, file_id: int) -> Response:
         content_length=len(byte_ranges),
         content_range="bytes {}-{}/{}".format(start, end, file.file_size),
     )
-    return response
     return response
