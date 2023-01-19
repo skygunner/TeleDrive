@@ -14,7 +14,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from tdlib.models import File, Folder
 from tdlib.serializers import FileSerializer
-from utils.validators import is_integer
+from utils.views import is_integer
 
 from api.views import api_error, api_success
 

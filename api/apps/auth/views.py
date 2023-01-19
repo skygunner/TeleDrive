@@ -13,7 +13,7 @@ from auth.models import InvalidToken, User
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
-from utils.validators import request_validator
+from utils.views import request_validator
 
 from api.views import api_success
 
