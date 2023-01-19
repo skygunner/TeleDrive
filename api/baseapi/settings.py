@@ -94,8 +94,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 APPEND_SLASH = False
 
-VARCHAR_LENGTH_LIMIT = 255
-
 TELEGRAM_API_ID = env.int("TELEGRAM_API_ID", default=123456)
 TELEGRAM_API_HASH = env.str("TELEGRAM_API_HASH", default="secret")
 TELEGRAM_BOT_TOKEN = env.str("TELEGRAM_BOT_TOKEN", default="secret")

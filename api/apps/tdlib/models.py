@@ -18,25 +18,46 @@ from utils.models import BaseModelMixin
 class Folder(BaseModelMixin):
     history = HistoricalRecords(table_name="historical_folders", custom_model_name="HistoricalFolder", app="tdlib")
 
-    parent = models.ForeignKey(to="self", to_field="id", db_column="folder_id", on_delete=models.CASCADE)
-    folder_name = models.CharField(max_length=255)
+    user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE, db_index=True)
+    parent = models.ForeignKey(
+        to="self", to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
+    )
+    folder_name = models.CharField(max_length=255, db_index=True)
 
     class Meta:
         db_table = "folders"
 
     @classmethod
-    def find_by_id(self, id: int):
-        return self.objects.filter(id=id).first()
+    def find_by_user_and_id(self, user: User, id: str):
+        return self.objects.filter(user=user, id=id).first()
 
     @classmethod
-    def is_unique_name(self, parent: "Folder", folder_name: str):
-        return self.objects.filter(parent=parent, folder_name=folder_name).first() is None
+    def is_unique_name(self, user: User, parent: "Folder", folder_name: str):
+        return self.objects.filter(user=user, parent=parent, folder_name=folder_name).first() is None
+
+    @classmethod
+    def create(self, user: User, parent: "Folder", folder_name: str):
+        folder = Folder(user=user, parent=parent, folder_name=folder_name)
+        folder.save()
+        return folder
+
+    def update(self, parent: "Folder", folder_name: str):
+        self.parent = parent
+        self.folder_name = folder_name
+        self.save()
+
+    def delete(self, *args, **kwargs):
+        File.objects.filter(parent=self).update(deleted_at=timezone.now())
+        return super().delete(*args, **kwargs)
 
 
 class File(BaseModelMixin):
     history = HistoricalRecords(table_name="historical_files", custom_model_name="HistoricalFile", app="tdlib")
 
-    user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, to_field="id", db_column="user_id", on_delete=models.CASCADE, db_index=True)
+    parent = models.ForeignKey(
+        to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
+    )
     file_id = models.PositiveBigIntegerField()
     file_name = models.CharField(max_length=255, db_index=True)
     file_size = models.PositiveBigIntegerField()
@@ -44,9 +65,6 @@ class File(BaseModelMixin):
     total_parts = models.PositiveIntegerField()
     last_uploaded_part = models.PositiveIntegerField(default=0)
     md5_checksum = models.CharField(max_length=255)
-    parent = models.ForeignKey(
-        to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
-    )
     binary_message = models.BinaryField(blank=True, null=True)
     binary_thumbnail = models.BinaryField(blank=True, null=True)
 
@@ -74,7 +92,7 @@ class File(BaseModelMixin):
 
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
-        return self.objects.filter(user=user, file_id=file_id).first()
+        return File.objects.filter(user=user, file_id=file_id).first()
 
     @classmethod
     def is_unique_name(self, user: User, parent: Folder, file_name: str):
@@ -101,23 +119,23 @@ class File(BaseModelMixin):
     def create(
         self,
         user: User,
+        parent: Folder,
         file_id: int,
         file_name: str,
         file_size: int,
         part_size: int,
         total_parts: int,
         md5_checksum: str,
-        parent=Folder,
     ):
         file = File(
             user=user,
+            parent=parent,
             file_id=file_id,
             file_name=file_name,
             file_size=file_size,
             part_size=part_size,
             total_parts=total_parts,
             md5_checksum=md5_checksum,
-            parent=parent,
         )
         file.save()
         return file
