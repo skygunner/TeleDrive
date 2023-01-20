@@ -11,7 +11,6 @@ class User(BaseModelMixin):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     username = models.CharField(max_length=255, null=True, blank=True, db_index=True)
-    photo_url = models.TextField(null=True, blank=True)
 
     class Meta:
         db_table = "users"
@@ -29,16 +28,15 @@ class User(BaseModelMixin):
         return self.objects.filter(id=id).first()
 
     @classmethod
-    def create(self, id: int, first_name: str, last_name: str, username: str, photo_url: str):
-        user = User(id=id, first_name=first_name, last_name=last_name, username=username, photo_url=photo_url)
+    def create(self, id: int, first_name: str, last_name: str, username: str):
+        user = User(id=id, first_name=first_name, last_name=last_name, username=username)
         user.save()
         return user
 
-    def update(self, first_name: str, last_name: str, username: str, photo_url: str):
+    def update(self, first_name: str, last_name: str, username: str):
         self.first_name = first_name
         self.last_name = last_name
         self.username = username
-        self.photo_url = photo_url
         self.save()
 
 

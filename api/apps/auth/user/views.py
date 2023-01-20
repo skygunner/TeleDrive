@@ -15,14 +15,19 @@ from api.views import api_success
 @transaction.atomic
 def get_user(request: Request) -> Response:
     user_entity = td_client().get_entity(request.user.id)
+
+    photo_url = None
     photo_bytes = td_client().download_profile_photo(entity=user_entity, file=bytes)
-    photo_url = "data:image/jpg;base64,{}".format(base64.b64encode(photo_bytes).decode("UTF-8"))
+    if photo_bytes is not None:
+        photo_url = "data:image/jpg;base64,{}".format(base64.b64encode(photo_bytes).decode("UTF-8"))
 
     request.user.update(
         first_name=user_entity.first_name,
         last_name=user_entity.last_name,
         username=user_entity.username,
-        photo_url=photo_url,
     )
 
-    return api_success(UserSerializer(request.user).data)
+    response = UserSerializer(request.user).data
+    response["photo_url"] = photo_url
+
+    return api_success(response)

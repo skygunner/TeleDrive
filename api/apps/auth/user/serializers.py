@@ -10,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "username",
-            "photo_url",
             "created_at",
             "updated_at",
         ]

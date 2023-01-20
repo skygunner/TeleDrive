@@ -8,6 +8,5 @@
     "temp": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "cSpell.words": ["TeleDrive", "tele-drive"]
+  "editor.formatOnSave": true
 }

@@ -63,14 +63,12 @@ def sign_in(request: Request) -> Response:
             first_name=request_data["first_name"],
             last_name=request_data["last_name"],
             username=request_data["username"],
-            photo_url=request_data["photo_url"],
         )
     else:
         user.update(
             first_name=request_data["first_name"],
             last_name=request_data["last_name"],
             username=request_data["username"],
-            photo_url=request_data["photo_url"],
         )
 
     jwt_token, expire_at = generate_user_token(user)
