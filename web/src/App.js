@@ -4,7 +4,7 @@ import "./App.css";
 import { post } from "./api";
 
 const onTelegramResponse = async (data) => {
-  const resp = await post("/v1/auth/signIn/", data);
+  const resp = await post("/v1/auth/signIn", data);
   if (resp) {
     localStorage.setItem("jwt_token", {
       token: resp.jwt_token,

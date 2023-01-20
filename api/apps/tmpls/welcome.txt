@@ -1,0 +1,5 @@
+{% load i18n %}
+Welcome to TeleDrive.
+This bot helps you store your files in the unlimited cloud storage that Telegram offers.
+Please do not remove files that this bot will send you in the future.
+Thank you.

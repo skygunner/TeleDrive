@@ -5,6 +5,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.db import transaction
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
@@ -13,6 +14,7 @@ from auth.models import InvalidToken, User
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
+from tdlib.wrapper import td_client
 from utils.views import request_validator
 
 from api.views import api_success
@@ -64,6 +66,9 @@ def sign_in(request: Request) -> Response:
             last_name=request_data["last_name"],
             username=request_data["username"],
         )
+
+        welcome_message = render_to_string(template_name="welcome.txt")
+        td_client().send_message(entity=user.id, message=welcome_message)
     else:
         user.update(
             first_name=request_data["first_name"],
