@@ -32,10 +32,11 @@ generate_telegram_bot_session:
 	python generate_telegram_bot_session.py
 
 runserver:
-	python manage.py runserver 0.0.0.0:8000
+	# python manage.py runserver 0.0.0.0:8000
+	gunicorn --config gunicorn.conf.py --workers 2 --reload
 
 gunicorn:
-	gunicorn -c gunicorn.conf.py
+	gunicorn --config gunicorn.conf.py
 
 dependencies-up:
 	docker-compose up -d postgres
