@@ -14,7 +14,6 @@ from auth.models import InvalidToken, User
 from rest_framework.decorators import api_view, authentication_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
-from tdlib.wrapper import td_client
 from utils.views import request_validator
 
 from api.views import api_success
@@ -55,6 +54,8 @@ def validate_sign_in_request(errors, request_data):
 @authentication_classes([])
 @transaction.atomic
 def sign_in(request: Request) -> Response:
+    from tdlib.wrapper import TD_CLIENT
+
     request_data = request.data
     validate_sign_in_request(request_data)
 
@@ -68,7 +69,7 @@ def sign_in(request: Request) -> Response:
         )
 
         welcome_message = render_to_string(template_name="welcome.txt")
-        td_client().send_message(entity=user.id, message=welcome_message)
+        TD_CLIENT.send_message(entity=user.id, message=welcome_message)
     else:
         user.update(
             first_name=request_data["first_name"],

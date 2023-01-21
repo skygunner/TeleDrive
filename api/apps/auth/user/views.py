@@ -6,7 +6,6 @@ from auth.user.serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from tdlib.wrapper import td_client
 
 from api.views import api_success
 
@@ -14,10 +13,12 @@ from api.views import api_success
 @api_view(["GET"])
 @transaction.atomic
 def get_user(request: Request) -> Response:
-    user_entity = td_client().get_entity(request.user.id)
+    from tdlib.wrapper import TD_CLIENT
+
+    user_entity = TD_CLIENT.get_entity(request.user.id)
 
     photo_url = None
-    photo_bytes = td_client().download_profile_photo(entity=user_entity, file=bytes)
+    photo_bytes = TD_CLIENT.download_profile_photo(entity=user_entity, file=bytes)
     if photo_bytes is not None:
         photo_url = "data:image/jpg;base64,{}".format(base64.b64encode(photo_bytes).decode("UTF-8"))
 

@@ -8,7 +8,6 @@ from django.utils import timezone
 
 from auth.models import User
 from simple_history.models import HistoricalRecords
-from tdlib.wrapper import td_client
 from telethon.client.downloads import MIN_CHUNK_SIZE
 from telethon.extensions import BinaryReader
 from telethon.tl import functions, types
@@ -165,6 +164,8 @@ class File(BaseModelMixin):
         return str(self.id) + "-" + str(self.file_id) + os.path.splitext(self.file_name)[-1]
 
     def upload_part(self, file_bytes: bytes, file_part: int):
+        from tdlib.wrapper import TD_CLIENT
+
         is_big = self.file_size > 10 * 1024 * 1024  # 10MB
         if is_big:
             request = functions.upload.SaveBigFilePartRequest(
@@ -178,7 +179,7 @@ class File(BaseModelMixin):
                 file_id=self.file_id, file_part=file_part - 1, bytes=file_bytes
             )
 
-        result = td_client()(request)
+        result = TD_CLIENT(request)
         if not result:
             raise RuntimeError("Failed to upload part {} for file {}".format(file_part, self.id))
 
@@ -193,10 +194,10 @@ class File(BaseModelMixin):
                     id=self.file_id, parts=self.total_parts, name=self.get_unique_name(), md5_checksum=self.md5_checksum
                 )
 
-            message = td_client().send_file(
+            message = TD_CLIENT.send_file(
                 entity=self.user.id, file=input_file, force_document=True, file_size=self.file_size, silent=True
             )
-            binary_thumbnail = td_client().download_media(message=message, file=bytes, thumb=0)  # Smallest thumbnail
+            binary_thumbnail = TD_CLIENT.download_media(message=message, file=bytes, thumb=0)  # Smallest thumbnail
 
             self.binary_message = bytes(message)
             self.binary_thumbnail = binary_thumbnail
@@ -204,6 +205,8 @@ class File(BaseModelMixin):
             self.save()
 
     def download_range(self, start: int, end: int):
+        from tdlib.wrapper import TD_CLIENT
+
         range_length = end - start + 1
 
         request_size = range_length
@@ -212,7 +215,7 @@ class File(BaseModelMixin):
 
         bytes_io = io.BytesIO()
 
-        for chunk in td_client().iter_download(
+        for chunk in TD_CLIENT.iter_download(
             file=self.message,
             offset=start,
             limit=1,

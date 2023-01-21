@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-20 17:52+0000\n"
+"POT-Creation-Date: 2023-01-21 15:10+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: apps/auth/views.py:48
+#: apps/auth/views.py:47
 msgid "The authentication data is from more than a day ago."
 msgstr ""
 
-#: apps/auth/views.py:51
+#: apps/auth/views.py:50
 msgid "The authentication data is not related to the Telegram user!"
 msgstr ""
 

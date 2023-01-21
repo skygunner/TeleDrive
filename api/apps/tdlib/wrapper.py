@@ -1,4 +1,3 @@
-import asyncio
 import logging
 
 from django.conf import settings
@@ -8,15 +7,26 @@ from telethon.sync import TelegramClient
 
 logger = logging.getLogger(__name__)
 
+global TD_CLIENT
 
-def td_client():
+
+def setup():
     global TD_CLIENT
 
     if "TD_CLIENT" in globals():
-        return TD_CLIENT
+        return
 
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    if (
+        not settings.TELEGRAM_BOT_SESSION
+        or not settings.TELEGRAM_API_ID
+        or not settings.TELEGRAM_API_HASH
+        or not settings.TELEGRAM_BOT_TOKEN
+    ):
+        logger.warning(
+            "You must set all these variables to setup the Telegram client: "
+            + "[TELEGRAM_BOT_SESSION, TELEGRAM_API_ID, TELEGRAM_API_HASH, TELEGRAM_BOT_TOKEN]"
+        )
+        return
 
     TD_CLIENT = TelegramClient(
         session=StringSession(settings.TELEGRAM_BOT_SESSION),
@@ -30,5 +40,3 @@ def td_client():
 
     if not TD_CLIENT.is_user_authorized():
         TD_CLIENT.sign_in(bot_token=settings.TELEGRAM_BOT_TOKEN)
-
-    return TD_CLIENT
