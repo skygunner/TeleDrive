@@ -5,9 +5,9 @@ import {
   FileUploadContainer,
   FormField,
   UploadFileBtn,
-} from "./FileUploadStyles";
+} from "./FileUploaderStyles";
 
-const FileUpload = ({ uploadFilesHandler, ...otherProps }) => {
+const FileUploader = ({ ...otherProps }) => {
   const fileInputField = useRef(null);
 
   const handleUploadBtnClick = () => {
@@ -20,6 +20,10 @@ const FileUpload = ({ uploadFilesHandler, ...otherProps }) => {
       const files = Object.keys(selectedFiles).map((key) => selectedFiles[key]);
       uploadFilesHandler(files);
     }
+  };
+
+  const uploadFilesHandler = (files) => {
+    console.log(files);
   };
 
   return (
@@ -43,4 +47,4 @@ const FileUpload = ({ uploadFilesHandler, ...otherProps }) => {
   );
 };
 
-export default FileUpload;
+export default FileUploader;
