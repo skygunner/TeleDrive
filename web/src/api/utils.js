@@ -60,9 +60,9 @@ export const getAuthHeaders = () => {
   return {};
 };
 
-export const post = async (url, data) => {
+export const post = async (url, data, headers = {}) => {
   try {
-    return responseData(await api.post(url, data));
+    return responseData(await api.post(url, data, { headers: headers }));
   } catch (error) {
     handleError(error);
   }

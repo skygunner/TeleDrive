@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { isUserLoggedIn } from "../../api/utils";
 import FileUploader from "./../../components/FileUploader/FileUploaderComponent";
 import LoginButton from "./../../components/Telegram/LoginButtonComponent";
 
 const HomePage = () => {
-  const loggedIn = isUserLoggedIn();
+  const [isLoggedIn, setIsLoggedIn] = useState(isUserLoggedIn());
 
-  return <>{loggedIn ? <FileUploader /> : <LoginButton />}</>;
+  const onUserLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  return (
+    <>
+      {isLoggedIn ? (
+        <FileUploader />
+      ) : (
+        <LoginButton onUserLogin={onUserLogin} />
+      )}
+    </>
+  );
 };
 
 export default HomePage;

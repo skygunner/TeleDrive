@@ -23,7 +23,9 @@ const FileUploader = ({ folderId }) => {
   };
 
   const uploadFilesHandler = (files) => {
-    console.log(files);
+    files.forEach((file) => {
+      console.log(file);
+    });
   };
 
   return (
