@@ -58,7 +58,6 @@ export const UploadFileBtn = styled.button`
   overflow: hidden;
   z-index: 1;
   transition: color 250ms ease-in-out;
-  font-family: "Open Sans", sans-serif;
   width: 45%;
   align-items: center;
   padding-right: 0;
