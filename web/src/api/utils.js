@@ -31,6 +31,35 @@ const handleError = (error) => {
   }
 };
 
+export const storeUserCredential = (jwtObject) => {
+  const jwtObjectStr = JSON.stringify({
+    jwt_token: jwtObject.jwt_token,
+    expire_at: jwtObject.expire_at,
+  });
+
+  localStorage.setItem("jwt_object", jwtObjectStr);
+};
+
+export const isUserLoggedIn = () => {
+  const jwtObjectStr = localStorage.getItem("jwt_object");
+  if (jwtObjectStr) {
+    const jwtObject = JSON.parse(jwtObjectStr);
+    if (jwtObject.expire_at > Math.floor(Date.now() / 1000)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const getAuthHeaders = () => {
+  if (isUserLoggedIn()) {
+    const jwtObjectStr = localStorage.getItem("jwt_object");
+    const jwtObject = JSON.parse(jwtObjectStr);
+    return { Authorization: "Bearer " + jwtObject.jwt_token };
+  }
+  return {};
+};
+
 export const post = async (url, data) => {
   try {
     return responseData(await api.post(url, data));

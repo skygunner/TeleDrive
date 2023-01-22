@@ -3,11 +3,11 @@ import React, { useRef } from "react";
 import {
   DragDropText,
   FileUploadContainer,
-  FormField,
-  UploadFileBtn,
+  UploadFileButton,
+  UploadFormField,
 } from "./FileUploaderStyles";
 
-const FileUploader = ({ ...otherProps }) => {
+const FileUploader = ({ folderId }) => {
   const fileInputField = useRef(null);
 
   const handleUploadBtnClick = () => {
@@ -29,18 +29,18 @@ const FileUploader = ({ ...otherProps }) => {
   return (
     <>
       <FileUploadContainer>
-        <DragDropText>Drag and drop your files anywhere or</DragDropText>
-        <UploadFileBtn type="button" onClick={handleUploadBtnClick}>
+        <DragDropText>Drag and drop your files anywhere here or</DragDropText>
+        <UploadFileButton type="button" onClick={handleUploadBtnClick}>
           <i className="fas fa-file-upload" />
-          <span> Upload {otherProps.multiple ? "files" : "a file"}</span>
-        </UploadFileBtn>
-        <FormField
+          <span>Upload files</span>
+        </UploadFileButton>
+        <UploadFormField
           type="file"
           ref={fileInputField}
           onChange={formFieldOnChange}
           title=""
           value=""
-          {...otherProps}
+          multiple
         />
       </FileUploadContainer>
     </>

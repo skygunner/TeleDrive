@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const FileUploadContainer = styled.section`
   position: relative;
   margin: 25px 0 15px;
-  border: 2px dotted lightgray;
+  border: 2px dotted lightGray;
   padding: 35px 20px;
   border-radius: 6px;
   flex-direction: column;
@@ -15,7 +15,7 @@ export const FileUploadContainer = styled.section`
   width: 50%;
 `;
 
-export const FormField = styled.input`
+export const UploadFormField = styled.input`
   font-size: 18px;
   display: block;
   width: 100%;
@@ -40,7 +40,7 @@ export const DragDropText = styled.p`
   text-align: center;
 `;
 
-export const UploadFileBtn = styled.button`
+export const UploadFileButton = styled.button`
   box-sizing: border-box;
   appearance: none;
   background-color: transparent;

@@ -1,15 +1,12 @@
 import TelegramLoginButton from "react-telegram-login";
 
-import { post } from "../../api/utils";
+import { post, storeUserCredential } from "../../api/utils";
 
 const LoginButton = () => {
   const onTelegramResponse = async (data) => {
     const resp = await post("/v1/auth/signIn", data);
     if (resp) {
-      localStorage.setItem("jwt_token", {
-        token: resp.jwt_token,
-        expire_at: resp.expire_at,
-      });
+      storeUserCredential(resp);
     }
   };
 
