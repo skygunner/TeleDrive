@@ -1,10 +1,9 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
 
 import { isUserLoggedIn } from "../../api/utils";
 import FileUploader from "../../components/FileUploader/FileUploaderComponent";
 
-const MainPage = () => {
+const DashboardPage = () => {
   const isLoggedIn = isUserLoggedIn();
   if (!isLoggedIn) {
     return <Navigate to="/login" />;
@@ -13,4 +12,4 @@ const MainPage = () => {
   return <FileUploader />;
 };
 
-export default MainPage;
+export default DashboardPage;
