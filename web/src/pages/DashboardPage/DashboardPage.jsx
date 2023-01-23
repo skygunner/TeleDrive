@@ -6,7 +6,7 @@ import FileUploader from "../../components/FileUploader/FileUploaderComponent";
 const DashboardPage = () => {
   const isLoggedIn = isUserLoggedIn();
   if (!isLoggedIn) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace={true} />;
   }
 
   return <FileUploader />;

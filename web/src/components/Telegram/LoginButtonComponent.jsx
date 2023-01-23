@@ -1,14 +1,16 @@
-import { redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TelegramLoginButton from "react-telegram-login";
 
 import { post, storeUserCredential } from "../../api/utils";
 
 const LoginButton = () => {
+  const navigate = useNavigate();
+
   const onTelegramResponse = async (data) => {
     const resp = await post("/v1/auth/signIn", data);
     if (resp) {
       storeUserCredential(resp);
-      redirect("/");
+      navigate("/dashboard", { replace: true });
     }
   };
 
