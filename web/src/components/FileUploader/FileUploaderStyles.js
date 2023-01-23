@@ -3,12 +3,12 @@ import styled from "styled-components";
 export const FileUploadContainer = styled.section`
   position: relative;
   margin: 25px 0 15px;
-  border: 2px dotted lightGray;
+  border: 2px dotted ${(props) => props.theme.border};
   padding: 35px 20px;
   border-radius: 6px;
   flex-direction: column;
   align-items: center;
-  background-color: white;
+  background-color: ${(props) => props.theme.bg};
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -38,13 +38,14 @@ export const DragDropText = styled.p`
   letter-spacing: 2.2px;
   margin-top: 0;
   text-align: center;
+  color: ${(props) => props.theme.fg};
 `;
 
 export const UploadFileButton = styled.button`
   box-sizing: border-box;
   appearance: none;
   background-color: transparent;
-  border: 2px solid #2aabee;
+  border: 2px solid ${(props) => props.theme.main};
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
@@ -53,7 +54,7 @@ export const UploadFileButton = styled.button`
   text-transform: uppercase;
   font-weight: 700;
   border-radius: 6px;
-  color: #2aabee;
+  color: ${(props) => props.theme.main};
   position: relative;
   overflow: hidden;
   z-index: 1;
@@ -75,7 +76,7 @@ export const UploadFileButton = styled.button`
     transform: translateX(-50%);
     width: 0;
     height: 100%;
-    background: #2aabee;
+    background: ${(props) => props.theme.main};
     z-index: -1;
     transition: width 250ms ease-in-out;
   }
@@ -104,7 +105,7 @@ export const UploadFileButton = styled.button`
   }
 
   &:hover {
-    color: #fff;
+    color: #ffffff;
     outline: 0;
     background: transparent;
 
