@@ -1,3 +1,4 @@
+import { redirect } from "react-router-dom";
 import TelegramLoginButton from "react-telegram-login";
 
 import { post, storeUserCredential } from "../../api/utils";
@@ -7,6 +8,7 @@ const LoginButton = () => {
     const resp = await post("/v1/auth/signIn", data);
     if (resp) {
       storeUserCredential(resp);
+      redirect("/");
     }
   };
 
