@@ -29,23 +29,21 @@ const FileUploader = ({ folderId }) => {
   };
 
   return (
-    <>
-      <FileUploadContainer>
-        <DragDropText>Drag and drop your files anywhere here or</DragDropText>
-        <UploadFileButton type="button" onClick={handleUploadBtnClick}>
-          <i className="fas fa-file-upload" />
-          <span>Upload files</span>
-        </UploadFileButton>
-        <UploadFormField
-          type="file"
-          ref={fileInputField}
-          onChange={formFieldOnChange}
-          title=""
-          value=""
-          multiple
-        />
-      </FileUploadContainer>
-    </>
+    <FileUploadContainer>
+      <DragDropText>Drag and drop your files anywhere here or</DragDropText>
+      <UploadFileButton type="button" onClick={handleUploadBtnClick}>
+        <i className="fas fa-file-upload" />
+        <span>Upload files</span>
+      </UploadFileButton>
+      <UploadFormField
+        type="file"
+        ref={fileInputField}
+        onChange={formFieldOnChange}
+        title=""
+        value=""
+        multiple
+      />
+    </FileUploadContainer>
   );
 };
 

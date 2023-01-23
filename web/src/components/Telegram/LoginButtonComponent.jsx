@@ -2,26 +2,23 @@ import TelegramLoginButton from "react-telegram-login";
 
 import { post, storeUserCredential } from "../../api/utils";
 
-const LoginButton = ({ onUserLogin }) => {
+const LoginButton = () => {
   const onTelegramResponse = async (data) => {
     const resp = await post("/v1/auth/signIn", data);
     if (resp) {
       storeUserCredential(resp);
-      onUserLogin();
     }
   };
 
   return (
-    <>
-      <TelegramLoginButton
-        botName={process.env.REACT_APP_TELEGRAM_BOT_NAME}
-        dataOnauth={onTelegramResponse}
-        buttonSize="large"
-        requestAccess="write"
-        usePic="true"
-        lang="en"
-      />
-    </>
+    <TelegramLoginButton
+      botName={process.env.REACT_APP_TELEGRAM_BOT_NAME}
+      dataOnauth={onTelegramResponse}
+      buttonSize="large"
+      requestAccess="write"
+      usePic="true"
+      lang="en"
+    />
   );
 };
 
