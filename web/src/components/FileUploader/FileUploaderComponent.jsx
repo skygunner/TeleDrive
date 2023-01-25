@@ -1,4 +1,4 @@
-import { InboxOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import { Upload } from "antd";
 
 const { Dragger } = Upload;
@@ -12,7 +12,7 @@ const FileUploader = () => {
   return (
     <Dragger {...props}>
       <p className="ant-upload-drag-icon">
-        <InboxOutlined />
+        <UploadOutlined />
       </p>
       <p className="ant-upload-text">
         Click or drag files to this area to upload

@@ -40,6 +40,10 @@ export const storeUserCredential = (jwtObject) => {
   localStorage.setItem("jwt_object", jwtObjectStr);
 };
 
+export const removeUserCredential = () => {
+  localStorage.removeItem("jwt_object");
+};
+
 export const isUserLoggedIn = () => {
   const jwtObjectStr = localStorage.getItem("jwt_object");
   if (jwtObjectStr) {

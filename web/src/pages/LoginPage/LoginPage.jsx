@@ -6,7 +6,7 @@ import LoginButton from "../../components/Telegram/LoginButtonComponent";
 const LoginPage = () => {
   const isLoggedIn = isUserLoggedIn();
   if (isLoggedIn) {
-    return <Navigate to="/dashboard" replace={true} />;
+    return <Navigate to="/files" replace={true} />;
   }
 
   return <LoginButton />;
