@@ -1,49 +1,27 @@
-import { useRef } from "react";
+import { InboxOutlined } from "@ant-design/icons";
+import { Upload } from "antd";
 
-import {
-  DragDropText,
-  FileUploadContainer,
-  UploadFileButton,
-  UploadFormField,
-} from "./FileUploaderStyles";
+const { Dragger } = Upload;
 
-const FileUploader = ({ folderId }) => {
-  const fileInputField = useRef(null);
-
-  const handleUploadBtnClick = () => {
-    fileInputField.current.click();
-  };
-
-  const formFieldOnChange = (e) => {
-    const { files: selectedFiles } = e.target;
-    if (selectedFiles.length) {
-      const files = Object.keys(selectedFiles).map((key) => selectedFiles[key]);
-      uploadFilesHandler(files);
-    }
-  };
-
-  const uploadFilesHandler = (files) => {
-    files.forEach((file) => {
-      console.log(file);
-    });
+const FileUploader = () => {
+  const props = {
+    name: "files",
+    multiple: true,
   };
 
   return (
-    <FileUploadContainer>
-      <DragDropText>Drag and drop your files anywhere here or</DragDropText>
-      <UploadFileButton type="button" onClick={handleUploadBtnClick}>
-        <i className="fas fa-file-upload" />
-        <span>Upload files</span>
-      </UploadFileButton>
-      <UploadFormField
-        type="file"
-        ref={fileInputField}
-        onChange={formFieldOnChange}
-        title=""
-        value=""
-        multiple
-      />
-    </FileUploadContainer>
+    <Dragger {...props}>
+      <p className="ant-upload-drag-icon">
+        <InboxOutlined />
+      </p>
+      <p className="ant-upload-text">
+        Click or drag files to this area to upload
+      </p>
+      <p className="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit uploading company
+        data or other band files
+      </p>
+    </Dragger>
   );
 };
 
