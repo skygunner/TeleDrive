@@ -382,26 +382,27 @@ def upload(request: Request) -> Response:
     return api_success(FileSerializer(file).data)
 
 
-@api_view(["HEAD", "GET"])
+@api_view(["OPTIONS", "HEAD", "GET"])
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
     if file is None or file.binary_message is None:
         return api_error(_("file_id not found."), status.HTTP_404_NOT_FOUND)
 
-    etag = quote_etag("{}-{}".format(file.id, file.file_id))
+    etag = quote_etag(str(file.file_id))
 
     def add_headers(response, content_length, content_range=None):
         response["Accept-Ranges"] = "bytes"
         response["Cache-Control"] = "public, max-age=604800"
         response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
-        response["Content-Length"] = content_length
+        if request.method != "OPTIONS":
+            response["Content-Length"] = content_length
         if content_range is not None:
             response["Content-Range"] = content_range
         response["Content-Type"] = file.mime_type
         response["ETag"] = etag
 
-    if request.method == "HEAD":
+    if request.method != "GET":
         response = HttpResponse(status=status.HTTP_200_OK)
         add_headers(response=response, content_length=file.file_size)
         return response
@@ -424,6 +425,7 @@ def download(request: Request, file_id: int) -> Response:
             if start > end:
                 return api_error(_("Invalid Range header."), status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)
 
+            # Check compatibility
             if end - start + 1 > 1 * 1024 * 1024:  # 1MB
                 headers = {"Accept-Ranges": "bytes"}
                 return api_error(
@@ -434,6 +436,7 @@ def download(request: Request, file_id: int) -> Response:
 
             status_code = status.HTTP_206_PARTIAL_CONTENT
 
+    # Check compatibility
     if status_code == status.HTTP_200_OK and file.file_size > 1 * 1024 * 1024:  # 1MB
         headers = {"Accept-Ranges": "bytes"}
         return api_error(

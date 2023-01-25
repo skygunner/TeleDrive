@@ -160,8 +160,8 @@ class File(BaseModelMixin):
         self.file_name = file_name
         self.save()
 
-    def get_unique_name(self):
-        return str(self.id) + "-" + str(self.file_id) + os.path.splitext(self.file_name)[-1]
+    def get_telegram_name(self):
+        return str(self.file_id) + os.path.splitext(self.file_name)[-1]
 
     def upload_part(self, file_bytes: bytes, file_part: int):
         from tdlib.wrapper import TD_CLIENT
@@ -188,10 +188,13 @@ class File(BaseModelMixin):
 
         if self.last_uploaded_part == self.total_parts:
             if is_big:
-                input_file = types.InputFileBig(id=self.file_id, parts=self.total_parts, name=self.get_unique_name())
+                input_file = types.InputFileBig(id=self.file_id, parts=self.total_parts, name=self.get_telegram_name())
             else:
                 input_file = types.InputFile(
-                    id=self.file_id, parts=self.total_parts, name=self.get_unique_name(), md5_checksum=self.md5_checksum
+                    id=self.file_id,
+                    parts=self.total_parts,
+                    name=self.get_telegram_name(),
+                    md5_checksum=self.md5_checksum,
                 )
 
             message = TD_CLIENT.send_file(
