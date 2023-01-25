@@ -71,3 +71,11 @@ export const post = async (url, data, headers = {}) => {
     handleError(error);
   }
 };
+
+export const get = async (url, headers = {}) => {
+  try {
+    return responseData(await api.get(url, { headers: headers }));
+  } catch (error) {
+    handleError(error);
+  }
+};
