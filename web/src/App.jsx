@@ -11,6 +11,7 @@ const App = () => {
   const defaultTheme = {
     token: {
       colorPrimary: "#158bdc",
+      colorSplit: "#d9d9d9",
     },
   };
 

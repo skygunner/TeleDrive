@@ -3,13 +3,17 @@ import {
   HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
+  MoreOutlined,
 } from "@ant-design/icons";
 import { Col, Menu, Row } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { getAuthHeaders, isUserLoggedIn, post } from "../../api/utils";
-import { removeUserCredential } from "../../api/utils";
+import {
+  getAuthHeaders,
+  isUserLoggedIn,
+  post,
+  removeUserCredential,
+} from "../../api/utils";
 
 const NavigationMenu = () => {
   const location = useLocation();
@@ -72,15 +76,16 @@ const NavigationMenu = () => {
           <Menu
             style={{ ...styles, justifyContent: "left" }}
             mode="horizontal"
-            defaultSelectedKeys={[location.pathname]}
+            selectedKeys={[location.pathname]}
             items={mainMenuItems}
+            overflowedIndicator={<MoreOutlined />}
           />
         </Col>
         <Col span={12} align="right">
           <Menu
             style={{ ...styles, justifyContent: "right" }}
             mode="horizontal"
-            defaultSelectedKeys={[location.pathname]}
+            selectedKeys={[location.pathname]}
             items={userMenuItems}
           />
         </Col>
