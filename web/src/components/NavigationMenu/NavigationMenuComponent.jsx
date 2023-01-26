@@ -2,10 +2,13 @@ import {
   FileOutlined,
   HomeOutlined,
   LoginOutlined,
+  LogoutOutlined,
+  MenuOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Col, Menu, Row } from "antd";
+import { Avatar, Button, Col, Divider, Drawer, Menu, Row } from "antd";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import {
@@ -19,19 +22,35 @@ import {
 const NavigationMenu = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const isLoggedIn = isUserLoggedIn();
-  const [photoUrl, setPhotoUrl] = useState(null);
 
-  const syncPhotoUrl = async () => {
+  const isLoggedIn = isUserLoggedIn();
+
+  const [user, setUser] = useState({});
+  const syncUser = async () => {
     if (isLoggedIn) {
       const user = await get("/v1/user", getAuthHeaders());
-      if (user && user.photo_url) {
-        setPhotoUrl(user.photo_url);
+      if (user) {
+        setUser(user);
       }
     }
   };
+  useEffect(syncUser);
 
-  useEffect(syncPhotoUrl);
+  const mediaQueryMatch = useMediaQuery(
+    { query: "(min-width: 576px)" },
+    undefined,
+    (match) => {
+      setUseDrawer(!match);
+    }
+  );
+  const [useDrawer, setUseDrawer] = useState(!mediaQueryMatch);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
 
   let userMenuItems = [];
   let mainMenuItems = [
@@ -41,6 +60,7 @@ const NavigationMenu = () => {
       icon: <HomeOutlined />,
       onClick: () => {
         navigate("/");
+        closeDrawer();
       },
     },
   ];
@@ -52,18 +72,21 @@ const NavigationMenu = () => {
       icon: <FileOutlined />,
       onClick: () => {
         navigate("/files");
+        closeDrawer();
       },
     });
 
     userMenuItems.push({
       key: "/logout",
       label: "Logout",
-      icon: (
+      icon: useDrawer ? (
+        <LogoutOutlined />
+      ) : (
         <Avatar
           style={{ justifyContent: "center", verticalAlign: "middle" }}
           size="default"
           icon={<UserOutlined />}
-          src={photoUrl}
+          src={user.photo_url}
         />
       ),
       onClick: async () => {
@@ -92,24 +115,70 @@ const NavigationMenu = () => {
   return (
     <Row align="middle">
       <Col span={1}></Col>
-      <Col span={13}>
-        <Menu
-          style={{ ...styles, justifyContent: "left" }}
-          mode="horizontal"
-          selectedKeys={[location.pathname]}
-          items={mainMenuItems}
-          overflowedIndicator={false}
-        />
+      <Col span={useDrawer ? 22 : 11}>
+        {useDrawer ? (
+          <>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Button style={{ border: 0 }} onClick={openDrawer}>
+                <MenuOutlined />
+              </Button>
+              <Avatar src={process.env.PUBLIC_URL + "/logo192.png"} />
+              <p style={{ marginLeft: 5 }}>TeleDrive</p>
+            </div>
+            <Drawer
+              title={
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar src={process.env.PUBLIC_URL + "/logo192.png"} />
+                  <p style={{ marginLeft: 5 }}>TeleDrive</p>
+                </div>
+              }
+              placement="left"
+              onClose={closeDrawer}
+              open={isDrawerOpen}
+            >
+              <Menu
+                style={{ ...styles, justifyContent: "left" }}
+                mode="vertical"
+                selectedKeys={[location.pathname]}
+                items={mainMenuItems.concat(userMenuItems)}
+                overflowedIndicator={false}
+              />
+            </Drawer>
+            <Divider style={{ margin: 0 }} type="horizontal" />
+          </>
+        ) : (
+          <Menu
+            style={{ ...styles, justifyContent: "left" }}
+            mode="horizontal"
+            selectedKeys={[location.pathname]}
+            items={mainMenuItems}
+            overflowedIndicator={false}
+          />
+        )}
       </Col>
-      <Col span={9}>
-        <Menu
-          style={{ ...styles, justifyContent: "right" }}
-          mode="horizontal"
-          selectedKeys={[location.pathname]}
-          items={userMenuItems}
-          overflowedIndicator={false}
-        />
-      </Col>
+      {!useDrawer ? (
+        <Col span={11}>
+          <Menu
+            style={{ ...styles, justifyContent: "right" }}
+            mode="horizontal"
+            selectedKeys={[location.pathname]}
+            items={userMenuItems}
+            overflowedIndicator={false}
+          />
+        </Col>
+      ) : (
+        <></>
+      )}
       <Col span={1}></Col>
     </Row>
   );
