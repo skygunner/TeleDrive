@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Col, Divider, Drawer, Menu, Row } from "antd";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "react-responsive";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -20,7 +21,8 @@ import {
 } from "../../api/utils";
 
 const NavigationMenu = () => {
-  console.log("here");
+  const { t } = useTranslation();
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -57,7 +59,7 @@ const NavigationMenu = () => {
   let mainMenuItems = [
     {
       key: "/",
-      label: "Home",
+      label: t("Home"),
       icon: <HomeOutlined />,
       onClick: () => {
         navigate("/");
@@ -69,7 +71,7 @@ const NavigationMenu = () => {
   if (isLoggedIn) {
     mainMenuItems.push({
       key: "/files",
-      label: "Files",
+      label: t("Files"),
       icon: <FileOutlined />,
       onClick: () => {
         navigate("/files");
@@ -79,7 +81,7 @@ const NavigationMenu = () => {
 
     userMenuItems.push({
       key: "/logout",
-      label: "Logout",
+      label: t("Logout"),
       icon: useDrawer ? (
         <LogoutOutlined />
       ) : (
@@ -103,7 +105,7 @@ const NavigationMenu = () => {
   } else {
     userMenuItems.push({
       key: "/login",
-      label: "Login",
+      label: t("Login"),
       icon: <LoginOutlined />,
       onClick: () => {
         navigate("/login");
