@@ -23,7 +23,6 @@ const handleError = (error) => {
         console.error(error.response.data.details[i]);
       }
     } else {
-      console.log("Something went wrong!");
       console.error(error);
     }
   } else {

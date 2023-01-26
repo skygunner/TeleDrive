@@ -20,21 +20,22 @@ import {
 } from "../../api/utils";
 
 const NavigationMenu = () => {
+  console.log("here");
   const location = useLocation();
   const navigate = useNavigate();
 
   const isLoggedIn = isUserLoggedIn();
 
-  const [user, setUser] = useState({});
-  const syncUser = async () => {
-    if (isLoggedIn) {
-      const user = await get("/v1/user", getAuthHeaders());
-      if (user) {
-        setUser(user);
-      }
+  const [user, setUser] = useState();
+  useEffect(() => {
+    if (isLoggedIn && !user) {
+      get("/v1/user", getAuthHeaders()).then((user) => {
+        if (user) {
+          setUser(user);
+        }
+      });
     }
-  };
-  useEffect(syncUser);
+  });
 
   const mediaQueryMatch = useMediaQuery(
     { query: "(min-width: 576px)" },
@@ -86,14 +87,16 @@ const NavigationMenu = () => {
           style={{ justifyContent: "center", verticalAlign: "middle" }}
           size="default"
           icon={<UserOutlined />}
-          src={user.photo_url}
+          src={user ? user.photo_url : null}
         />
       ),
       onClick: async () => {
         const resp = await post("/v1/auth/signOut", {}, getAuthHeaders());
         if (resp) {
-          removeUserCredential();
           navigate("/");
+          setUser();
+          removeUserCredential();
+          closeDrawer();
         }
       },
     });
@@ -104,6 +107,7 @@ const NavigationMenu = () => {
       icon: <LoginOutlined />,
       onClick: () => {
         navigate("/login");
+        closeDrawer();
       },
     });
   }
@@ -128,7 +132,7 @@ const NavigationMenu = () => {
                 <MenuOutlined />
               </Button>
               <Avatar src={process.env.PUBLIC_URL + "/logo192.png"} />
-              <p style={{ marginLeft: 5 }}>TeleDrive</p>
+              <p style={{ marginLeft: 10 }}>TeleDrive</p>
             </div>
             <Drawer
               title={
@@ -136,10 +140,20 @@ const NavigationMenu = () => {
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    marginTop: -18,
+                    marginBottom: -17,
                   }}
                 >
-                  <Avatar src={process.env.PUBLIC_URL + "/logo192.png"} />
-                  <p style={{ marginLeft: 5 }}>TeleDrive</p>
+                  <Avatar
+                    size="default"
+                    icon={<UserOutlined />}
+                    src={user ? user.photo_url : null}
+                  />
+                  <p style={{ marginLeft: 10 }}>
+                    {user
+                      ? user.first_name + " " + user.last_name
+                      : "TeleDrive"}
+                  </p>
                 </div>
               }
               placement="left"
