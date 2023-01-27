@@ -18,7 +18,7 @@ import {
   isUserLoggedIn,
   post,
   removeUserCredential,
-} from "../../api/utils";
+} from "../api/utils";
 
 const NavigationMenu = () => {
   const { t } = useTranslation();
@@ -71,7 +71,7 @@ const NavigationMenu = () => {
   if (isLoggedIn) {
     mainMenuItems.push({
       key: "/files",
-      label: t("Files"),
+      label: t("My Files"),
       icon: <FileOutlined />,
       onClick: () => {
         navigate("/files");

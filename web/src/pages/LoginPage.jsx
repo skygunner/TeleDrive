@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
-import { isUserLoggedIn } from "../../api/utils";
-import LoginButton from "../../components/Telegram/LoginButtonComponent";
+import { isUserLoggedIn } from "../api/utils";
+import LoginButton from "../components/LoginButton";
 
 const LoginPage = () => {
   const isLoggedIn = isUserLoggedIn();

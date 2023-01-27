@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
-import { isUserLoggedIn } from "../../api/utils";
-import FileUploader from "../../components/FileUploader/FileUploaderComponent";
+import { isUserLoggedIn } from "../api/utils";
+import FileUploader from "../components/FileUploader";
 
 const FilesPage = () => {
   const isLoggedIn = isUserLoggedIn();
