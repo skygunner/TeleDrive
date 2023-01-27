@@ -143,13 +143,16 @@ const NavigationMenu = () => {
                     display: "flex",
                     alignItems: "center",
                     marginTop: -18,
-                    marginBottom: -17,
+                    marginBottom: -18,
                   }}
                 >
                   <Avatar
                     size="default"
-                    icon={<UserOutlined />}
-                    src={user ? user.photo_url : null}
+                    src={
+                      user
+                        ? user.photo_url
+                        : process.env.PUBLIC_URL + "/logo192.png"
+                    }
                   />
                   <p style={{ marginLeft: 10 }}>
                     {user
@@ -161,9 +164,11 @@ const NavigationMenu = () => {
               placement="left"
               onClose={closeDrawer}
               open={isDrawerOpen}
+              closable={false}
+              width={250}
             >
               <Menu
-                style={{ ...styles, justifyContent: "left" }}
+                style={{ ...styles, justifyContent: "left", border: 0 }}
                 mode="vertical"
                 selectedKeys={[location.pathname]}
                 items={mainMenuItems.concat(userMenuItems)}

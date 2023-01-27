@@ -13,7 +13,7 @@ const FileUploader = () => {
   };
 
   return (
-    <Dragger {...props}>
+    <Dragger style={{ padding: "0 5px" }} {...props}>
       <p className="ant-upload-drag-icon">
         <UploadOutlined />
       </p>

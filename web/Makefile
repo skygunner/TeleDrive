@@ -8,3 +8,6 @@ format:
 
 lint:
 	npx prettier --check .
+
+start:
+	sudo HOST=teledrive.local PORT=80 npm start
