@@ -13,7 +13,7 @@ const FileUploader = () => {
   const onStatusChange = (info) => {
     const { status } = info.file;
     if (status === "done") {
-      message.success(`${info.file.name} uploaded successfully.`);
+      message.success(t(`${info.file.name} uploaded successfully.`));
     }
   };
 
