@@ -3,6 +3,8 @@ from tdlib.models import File, Folder
 
 
 class FileSerializer(serializers.ModelSerializer):
+    file_id = serializers.CharField()  # JavaScript issue with BigInt
+
     class Meta:
         model = File
         fields = [

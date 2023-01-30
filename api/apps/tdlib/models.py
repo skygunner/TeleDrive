@@ -200,7 +200,10 @@ class File(BaseModelMixin):
             message = TD_CLIENT.send_file(
                 entity=self.user.id, file=input_file, force_document=True, file_size=self.file_size, silent=True
             )
-            binary_thumbnail = TD_CLIENT.download_media(message=message, file=bytes, thumb=0)  # Smallest thumbnail
+
+            binary_thumbnail = None
+            if message.media.document.thumbs is not None and len(message.media.document.thumbs) > 0:
+                binary_thumbnail = TD_CLIENT.download_media(message=message, file=bytes, thumb=0)  # Smallest thumbnail
 
             self.binary_message = bytes(message)
             self.binary_thumbnail = binary_thumbnail
