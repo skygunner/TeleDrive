@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 const api = axios.create({
@@ -21,12 +22,15 @@ const handleError = (error) => {
     if (error.response?.data?.details?.length > 0) {
       for (var i = 0; i < error.response.data.details.length; i++) {
         console.error(error.response.data.details[i]);
+        message.error(error.response.data.details[i]);
       }
     } else {
       console.error(error);
+      message.error(error.message);
     }
   } else {
     console.error(error);
+    message.error(error.message);
   }
 };
 
