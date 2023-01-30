@@ -120,8 +120,7 @@ const NavigationMenu = () => {
 
   return (
     <Row align="middle">
-      <Col span={1}></Col>
-      <Col span={useDrawer ? 22 : 11}>
+      <Col offset={1} span={useDrawer ? 22 : 11}>
         {useDrawer ? (
           <>
             <div
@@ -200,7 +199,6 @@ const NavigationMenu = () => {
       ) : (
         <></>
       )}
-      <Col span={1}></Col>
     </Row>
   );
 };
