@@ -28,16 +28,18 @@ const NavigationMenu = () => {
 
   const isLoggedIn = isUserLoggedIn();
 
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   useEffect(() => {
-    if (isLoggedIn && !user) {
-      get("/v1/user", getAuthHeaders()).then((user) => {
-        if (user) {
-          setUser(user);
-        }
-      });
+    if (!isLoggedIn) {
+      return;
     }
-  });
+
+    get("/v1/user", getAuthHeaders()).then((user) => {
+      if (user) {
+        setUser(user);
+      }
+    });
+  }, []);
 
   const mediaQueryMatch = useMediaQuery(
     { query: "(min-width: 576px)" },
@@ -114,7 +116,7 @@ const NavigationMenu = () => {
     });
   }
 
-  const styles = {
+  const menuStyles = {
     fontWeight: "bold",
   };
 
@@ -167,7 +169,7 @@ const NavigationMenu = () => {
               width={250}
             >
               <Menu
-                style={{ ...styles, justifyContent: "left", border: 0 }}
+                style={{ ...menuStyles, justifyContent: "left", border: 0 }}
                 mode="vertical"
                 selectedKeys={[location.pathname]}
                 items={mainMenuItems.concat(userMenuItems)}
@@ -178,7 +180,7 @@ const NavigationMenu = () => {
           </>
         ) : (
           <Menu
-            style={{ ...styles, justifyContent: "left" }}
+            style={{ ...menuStyles, justifyContent: "left" }}
             mode="horizontal"
             selectedKeys={[location.pathname]}
             items={mainMenuItems}
@@ -189,7 +191,7 @@ const NavigationMenu = () => {
       {!useDrawer ? (
         <Col span={11}>
           <Menu
-            style={{ ...styles, justifyContent: "right" }}
+            style={{ ...menuStyles, justifyContent: "right" }}
             mode="horizontal"
             selectedKeys={[location.pathname]}
             items={userMenuItems}

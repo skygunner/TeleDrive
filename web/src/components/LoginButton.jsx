@@ -7,19 +7,15 @@ const LoginButton = () => {
   const navigate = useNavigate();
 
   const onTelegramResponse = async (data) => {
-    const resp = await post("/v1/auth/signIn", data);
-    if (resp) {
-      storeUserCredential(resp);
+    const userCredential = await post("/v1/auth/signIn", data);
+    if (userCredential) {
+      storeUserCredential(userCredential);
       navigate("/files", { replace: true });
     }
   };
 
-  const styles = {
-    marginTop: 10,
-  };
-
   return (
-    <div style={styles}>
+    <div style={{ marginTop: 10 }}>
       <TelegramLoginButton
         botName={process.env.REACT_APP_TELEGRAM_BOT_NAME}
         dataOnauth={onTelegramResponse}

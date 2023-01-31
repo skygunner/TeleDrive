@@ -49,16 +49,18 @@ const FileUploader = () => {
       if (fileId) {
         url += `&file_id=${fileId}`;
       }
+
       const start = (filePart - 1) * partSize;
       const end = start + partSize;
       const data = file.slice(start, end);
-      const resp = await post(url, data, headers);
-      if (resp) {
+
+      const fileInfo = await post(url, data, headers);
+      if (fileInfo) {
         onProgress({ percent: Math.floor((filePart / totalParts) * 100) });
         if (filePart === totalParts) {
           onSuccess("OK");
         } else {
-          await uploadPart(filePart + 1, resp.file_id);
+          await uploadPart(filePart + 1, fileInfo.file_id);
         }
       } else {
         const err = new Error(`${fileName} upload failed.`);
