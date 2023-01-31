@@ -38,7 +38,7 @@ const FileUploader = () => {
     const headers = {
       ...getAuthHeaders(),
       "Content-Type": "application/octet-stream",
-      "Content-Disposition": `attachment; filename="2${fileName}"`,
+      "Content-Disposition": `attachment; filename="${fileName}"`,
     };
 
     const uploadPart = async (filePart, fileId) => {
