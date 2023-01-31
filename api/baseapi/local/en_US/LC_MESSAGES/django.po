@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-30 14:28+0000\n"
+"POT-Creation-Date: 2023-01-31 15:02+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,126 +23,114 @@ msgstr ""
 msgid "Invalid limit."
 msgstr ""
 
-#: apps/tdlib/views.py:36 apps/tdlib/views.py:98 apps/tdlib/views.py:146
-#: apps/tdlib/views.py:215
+#: apps/tdlib/views.py:36 apps/tdlib/views.py:98 apps/tdlib/views.py:143
+#: apps/tdlib/views.py:209
 msgid "Invalid parent_id."
 msgstr ""
 
 #: apps/tdlib/views.py:53 apps/tdlib/views.py:78 apps/tdlib/views.py:114
-#: apps/tdlib/views.py:165 apps/tdlib/views.py:234 apps/tdlib/views.py:323
+#: apps/tdlib/views.py:162 apps/tdlib/views.py:228 apps/tdlib/views.py:311
 msgid "Parent folder not found."
 msgstr ""
 
-#: apps/tdlib/views.py:95 apps/tdlib/views.py:143
+#: apps/tdlib/views.py:95 apps/tdlib/views.py:140
 msgid "Invalid folder_name."
 msgstr ""
 
-#: apps/tdlib/views.py:117 apps/tdlib/views.py:168
-msgid "A folder with this name already exists."
-msgstr ""
-
-#: apps/tdlib/views.py:140 apps/tdlib/views.py:177
+#: apps/tdlib/views.py:137 apps/tdlib/views.py:171
 msgid "Invalid folder_id."
 msgstr ""
 
-#: apps/tdlib/views.py:159 apps/tdlib/views.py:181
+#: apps/tdlib/views.py:156 apps/tdlib/views.py:175
 msgid "folder_id not found."
 msgstr ""
 
-#: apps/tdlib/views.py:204 apps/tdlib/views.py:249 apps/tdlib/views.py:349
+#: apps/tdlib/views.py:198 apps/tdlib/views.py:237 apps/tdlib/views.py:331
 msgid "Invalid file_id."
 msgstr ""
 
-#: apps/tdlib/views.py:212
+#: apps/tdlib/views.py:206
 msgid "Invalid file_name."
 msgstr ""
 
-#: apps/tdlib/views.py:228 apps/tdlib/views.py:253 apps/tdlib/views.py:354
-#: apps/tdlib/views.py:390
+#: apps/tdlib/views.py:222 apps/tdlib/views.py:241 apps/tdlib/views.py:336
+#: apps/tdlib/views.py:373
 msgid "file_id not found."
 msgstr ""
 
-#: apps/tdlib/views.py:237 apps/tdlib/views.py:329
-msgid "A file with this name already exists."
-msgstr ""
-
-#: apps/tdlib/views.py:240 apps/tdlib/views.py:332
-msgid "A file with this name temporarily reserved."
-msgstr ""
-
-#: apps/tdlib/views.py:269
+#: apps/tdlib/views.py:257
 msgid "Invalid file_part."
 msgstr ""
 
-#: apps/tdlib/views.py:274
+#: apps/tdlib/views.py:262
 msgid "Invalid file object."
 msgstr ""
 
-#: apps/tdlib/views.py:279
+#: apps/tdlib/views.py:267
 msgid "Invalid total_parts."
 msgstr ""
 
-#: apps/tdlib/views.py:284 apps/tdlib/views.py:298
+#: apps/tdlib/views.py:272 apps/tdlib/views.py:286
 msgid "Invalid file_size."
 msgstr ""
 
-#: apps/tdlib/views.py:287
+#: apps/tdlib/views.py:275
 msgid "The file size must be less or equal to 2 GB."
 msgstr ""
 
-#: apps/tdlib/views.py:291
+#: apps/tdlib/views.py:279
 msgid "The file part size must be less or equal to 512 KB."
 msgstr ""
 
-#: apps/tdlib/views.py:295
+#: apps/tdlib/views.py:283
 msgid "The file part size must be evenly divisible by 1024."
 msgstr ""
 
-#: apps/tdlib/views.py:303
+#: apps/tdlib/views.py:291
 msgid "total_parts must be {}."
 msgstr ""
 
-#: apps/tdlib/views.py:308
+#: apps/tdlib/views.py:296
 msgid "Provided file_size is not equal to the actual file size."
 msgstr ""
 
-#: apps/tdlib/views.py:313
+#: apps/tdlib/views.py:301
 msgid "Invalid md5_checksum."
 msgstr ""
 
-#: apps/tdlib/views.py:319
+#: apps/tdlib/views.py:307
 msgid "Invalid parent."
 msgstr ""
 
-#: apps/tdlib/views.py:326 apps/tdlib/views.py:362
+#: apps/tdlib/views.py:314 apps/tdlib/views.py:344
 msgid "Invalid file name."
 msgstr ""
 
-#: apps/tdlib/views.py:358
+#: apps/tdlib/views.py:340
 msgid "File with id {} successfully uploaded before."
 msgstr ""
 
-#: apps/tdlib/views.py:366
+#: apps/tdlib/views.py:348
 msgid "You must upload part {} now."
 msgstr ""
 
-#: apps/tdlib/views.py:371
+#: apps/tdlib/views.py:353
 msgid "The file part size must be equal to {} KB."
 msgstr ""
 
-#: apps/tdlib/views.py:376
+#: apps/tdlib/views.py:358
 msgid "The file part size must be less or equal to {} KB."
 msgstr ""
 
-#: apps/tdlib/views.py:426
+#: apps/tdlib/views.py:409
 msgid "Invalid Range header."
 msgstr ""
 
-#: apps/tdlib/views.py:432
+#: apps/tdlib/views.py:415
 msgid "Range length must be less or equal to 1 MB."
 msgstr ""
 
-#: apps/tdlib/views.py:443
+#: apps/tdlib/views.py:426
 msgid "The requested file is too big. Please use range request instead."
 msgstr ""
 

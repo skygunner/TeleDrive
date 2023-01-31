@@ -113,9 +113,6 @@ def create_folder(request: Request) -> Response:
         if parent is None:
             return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
 
-    if not Folder.is_unique_name(user=request.user, parent=parent, folder_name=folder_name):
-        return api_error(_("A folder with this name already exists."), status.HTTP_400_BAD_REQUEST)
-
     folder = Folder.create(user=request.user, parent=parent, folder_name=folder_name)
 
     return api_success(FolderSerializer(folder).data)
@@ -163,9 +160,6 @@ def update_folder(request: Request, folder_id: int) -> Response:
         parent = Folder.find_by_user_and_id(user=request.user, id=parent_id)
         if parent is None:
             return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
-
-    if not Folder.is_unique_name(user=request.user, parent=parent, folder_name=folder_name):
-        return api_error(_("A folder with this name already exists."), status.HTTP_400_BAD_REQUEST)
 
     folder.update(parent=parent, folder_name=folder_name)
 
@@ -232,12 +226,6 @@ def update_file(request: Request, file_id: int) -> Response:
         parent = Folder.find_by_user_and_id(user=request.user, id=parent_id)
         if parent is None:
             return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
-
-    if not File.is_unique_name(user=request.user, parent=parent, file_name=file_name):
-        return api_error(_("A file with this name already exists."), status.HTTP_400_BAD_REQUEST)
-
-    if File.is_temporarily_reserved_name(user=request.user, parent=parent, file_name=file_name):
-        return api_error(_("A file with this name temporarily reserved."), status.HTTP_409_CONFLICT)
 
     file.update(parent=parent, file_name=file_name)
 
@@ -325,12 +313,6 @@ def upload(request: Request) -> Response:
         if file_obj.name is None or not os.path.splitext(file_obj.name)[-1]:
             return api_error(_("Invalid file name."), status.HTTP_400_BAD_REQUEST)
 
-        if not File.is_unique_name(user=request.user, parent=parent, file_name=file_obj.name):
-            return api_error(_("A file with this name already exists."), status.HTTP_400_BAD_REQUEST)
-
-        if File.is_temporarily_reserved_name(user=request.user, parent=parent, file_name=file_obj.name):
-            return api_error(_("A file with this name temporarily reserved."), status.HTTP_409_CONFLICT)
-
         file_id = int.from_bytes(os.urandom(7), signed=False, byteorder="little")
 
         file = File.create(
@@ -382,7 +364,8 @@ def upload(request: Request) -> Response:
     return api_success(FileSerializer(file).data)
 
 
-@api_view(["OPTIONS", "HEAD", "GET"])
+@api_view(["GET"])
+# @api_view(["OPTIONS", "HEAD", "GET"])
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)

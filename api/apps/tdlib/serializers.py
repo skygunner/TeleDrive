@@ -19,6 +19,7 @@ class FileSerializer(serializers.ModelSerializer):
             "thumbnail",
             "created_at",
             "updated_at",
+            "uploaded_at",
         ]
 
 

@@ -1,7 +1,6 @@
 import base64
 import io
 import os
-from datetime import timedelta
 
 from django.db import models
 from django.utils import timezone
@@ -29,10 +28,6 @@ class Folder(BaseModelMixin):
     @classmethod
     def find_by_user_and_id(self, user: User, id: str):
         return self.objects.filter(user=user, id=id).first()
-
-    @classmethod
-    def is_unique_name(self, user: User, parent: "Folder", folder_name: str):
-        return self.objects.filter(user=user, parent=parent, folder_name=folder_name).first() is None
 
     @classmethod
     def create(self, user: User, parent: "Folder", folder_name: str):
@@ -66,7 +61,7 @@ class File(BaseModelMixin):
         to=Folder, to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     file_id = models.PositiveBigIntegerField()
-    file_name = models.CharField(max_length=255, db_index=True)
+    file_name = models.CharField(max_length=255)
     file_size = models.PositiveBigIntegerField()
     part_size = models.PositiveBigIntegerField()
     total_parts = models.PositiveIntegerField()
@@ -74,6 +69,7 @@ class File(BaseModelMixin):
     md5_checksum = models.CharField(max_length=255)
     binary_message = models.BinaryField(blank=True, null=True)
     binary_thumbnail = models.BinaryField(blank=True, null=True)
+    uploaded_at = models.DateTimeField(null=True, blank=True, db_index=True)
 
     class Meta:
         db_table = "files"
@@ -100,27 +96,6 @@ class File(BaseModelMixin):
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
         return File.objects.filter(user=user, file_id=file_id).first()
-
-    @classmethod
-    def is_unique_name(self, user: User, parent: Folder, file_name: str):
-        return (
-            self.objects.filter(user=user, parent=parent, file_name=file_name, binary_message__isnull=False).first()
-            is None
-        )
-
-    @classmethod
-    def is_temporarily_reserved_name(self, user: User, parent: Folder, file_name: str):
-        temp_file = self.objects.filter(
-            user=user, parent=parent, file_name=file_name, binary_message__isnull=True
-        ).first()
-        if temp_file is None:
-            return False
-
-        if temp_file.updated_at + timedelta(minutes=15) < timezone.now():
-            temp_file.delete()
-            return False
-
-        return True
 
     @classmethod
     def create(
@@ -207,6 +182,7 @@ class File(BaseModelMixin):
 
             self.binary_message = bytes(message)
             self.binary_thumbnail = binary_thumbnail
+            self.uploaded_at = timezone.now()
 
             self.save()
 

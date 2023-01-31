@@ -25,7 +25,7 @@ class BaseModelMixin(models.Model):
 
     created_at = models.DateTimeField(null=False, blank=False, auto_now_add=True)
     updated_at = models.DateTimeField(null=False, blank=False, auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True, default=None, db_index=True)
+    deleted_at = models.DateTimeField(null=True, blank=True, db_index=True)
 
     class Meta:
         abstract = True
@@ -33,3 +33,7 @@ class BaseModelMixin(models.Model):
     def delete(self, *args, **kwargs):
         self.deleted_at = timezone.now()
         self.save()
+
+    def save(self, *args, **kwargs):
+        self.updated_at = timezone.now()
+        return super().save(*args, **kwargs)
