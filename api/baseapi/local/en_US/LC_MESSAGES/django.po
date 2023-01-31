@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-31 15:02+0000\n"
+"POT-Creation-Date: 2023-01-31 16:50+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,8 +24,8 @@ msgid "Invalid limit."
 msgstr ""
 
 #: apps/tdlib/views.py:36 apps/tdlib/views.py:98 apps/tdlib/views.py:143
-#: apps/tdlib/views.py:209
-msgid "Invalid parent_id."
+#: apps/tdlib/views.py:209 apps/tdlib/views.py:307
+msgid "Invalid parent id."
 msgstr ""
 
 #: apps/tdlib/views.py:53 apps/tdlib/views.py:78 apps/tdlib/views.py:114
@@ -34,32 +34,36 @@ msgid "Parent folder not found."
 msgstr ""
 
 #: apps/tdlib/views.py:95 apps/tdlib/views.py:140
-msgid "Invalid folder_name."
+msgid "Invalid folder name."
 msgstr ""
 
-#: apps/tdlib/views.py:137 apps/tdlib/views.py:171
-msgid "Invalid folder_id."
+#: apps/tdlib/views.py:137
+msgid "Invalid folder id."
 msgstr ""
 
 #: apps/tdlib/views.py:156 apps/tdlib/views.py:175
-msgid "folder_id not found."
+msgid "Folder not found."
+msgstr ""
+
+#: apps/tdlib/views.py:171
+msgid "Invalid folder_id."
 msgstr ""
 
 #: apps/tdlib/views.py:198 apps/tdlib/views.py:237 apps/tdlib/views.py:331
-msgid "Invalid file_id."
+msgid "Invalid file id."
 msgstr ""
 
-#: apps/tdlib/views.py:206
-msgid "Invalid file_name."
+#: apps/tdlib/views.py:206 apps/tdlib/views.py:314 apps/tdlib/views.py:344
+msgid "Invalid file name."
 msgstr ""
 
 #: apps/tdlib/views.py:222 apps/tdlib/views.py:241 apps/tdlib/views.py:336
 #: apps/tdlib/views.py:373
-msgid "file_id not found."
+msgid "File not found."
 msgstr ""
 
 #: apps/tdlib/views.py:257
-msgid "Invalid file_part."
+msgid "Invalid file part."
 msgstr ""
 
 #: apps/tdlib/views.py:262
@@ -67,11 +71,11 @@ msgid "Invalid file object."
 msgstr ""
 
 #: apps/tdlib/views.py:267
-msgid "Invalid total_parts."
+msgid "Invalid total parts."
 msgstr ""
 
 #: apps/tdlib/views.py:272 apps/tdlib/views.py:286
-msgid "Invalid file_size."
+msgid "Invalid file size."
 msgstr ""
 
 #: apps/tdlib/views.py:275
@@ -95,15 +99,7 @@ msgid "Provided file_size is not equal to the actual file size."
 msgstr ""
 
 #: apps/tdlib/views.py:301
-msgid "Invalid md5_checksum."
-msgstr ""
-
-#: apps/tdlib/views.py:307
-msgid "Invalid parent."
-msgstr ""
-
-#: apps/tdlib/views.py:314 apps/tdlib/views.py:344
-msgid "Invalid file name."
+msgid "Invalid md5 checksum."
 msgstr ""
 
 #: apps/tdlib/views.py:340

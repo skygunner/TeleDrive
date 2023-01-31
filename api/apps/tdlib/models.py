@@ -37,7 +37,7 @@ class Folder(BaseModelMixin):
 
     @classmethod
     def list(self, user: User, parent: "Folder", offset: int, limit: int):
-        where = "WHERE user_id = {} AND parent_id is NULL".format(user.id)
+        where = "WHERE user_id = {} AND parent_id IS NULL".format(user.id)
         if parent is not None:
             where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
 
@@ -93,6 +93,10 @@ class File(BaseModelMixin):
             return "data:image/jpg;base64,{}".format(base64.b64encode(self.binary_thumbnail).decode("UTF-8"))
         return None
 
+    @property
+    def is_upload_completed(self):
+        return self.uploaded_at is not None
+
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
         return File.objects.filter(user=user, file_id=file_id).first()
@@ -124,11 +128,11 @@ class File(BaseModelMixin):
 
     @classmethod
     def list(self, user: User, parent: Folder, offset: int, limit: int):
-        where = "WHERE user_id = {} AND parent_id is NULL".format(user.id)
+        where = "WHERE user_id = {} AND parent_id IS NULL AND uploaded_at IS NOT NULL".format(user.id)
         if parent is not None:
-            where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
+            where = "WHERE user_id = {} AND parent_id = {} AND uploaded_at IS NOT NULL".format(user.id, parent.id)
 
-        return self.objects.raw("SELECT * FROM folders {} LIMIT {} OFFSET {}".format(where, limit, offset))
+        return self.objects.raw("SELECT * FROM files {} LIMIT {} OFFSET {}".format(where, limit, offset))
 
     def update(self, parent: Folder, file_name: str):
         self.parent = parent
