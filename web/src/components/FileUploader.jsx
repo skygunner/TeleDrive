@@ -1,6 +1,7 @@
 import { UploadOutlined } from "@ant-design/icons";
 import { Col, Row, Upload, message } from "antd";
 import md5 from "md5";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getAuthHeaders, post } from "../api/utils";
@@ -8,12 +9,17 @@ import { getAuthHeaders, post } from "../api/utils";
 const FileUploader = () => {
   const { t } = useTranslation();
 
+  const [fileList, setFileList] = useState([]);
+
   const parentId = null; // Query string
 
   const onStatusChange = (info) => {
     const { status } = info.file;
-    if (status === "done") {
+    if (status === "uploading" || status === "error") {
+      setFileList(info.fileList.filter((file) => file.status === "uploading"));
+    } else if (status === "done" || status === "success") {
       message.success(t(`${info.file.name} uploaded successfully.`));
+      setFileList(info.fileList.filter((file) => file.status === "uploading"));
     }
   };
 
@@ -67,10 +73,16 @@ const FileUploader = () => {
     <Row align="middle">
       <Col offset={1} span={22}>
         <Upload.Dragger
-          style={{ margin: "10px 0", padding: "0 5px" }}
+          style={{ margin: "10px 0" }}
           multiple={true}
+          fileList={fileList}
           onChange={onStatusChange}
           customRequest={uploadFile}
+          showUploadList={{
+            showRemoveIcon: false,
+            showPreviewIcon: false,
+            showDownloadIcon: false,
+          }}
         >
           <p className="ant-upload-drag-icon">
             <UploadOutlined />
