@@ -41,7 +41,9 @@ class Folder(BaseModelMixin):
         if parent is not None:
             where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
 
-        return self.objects.raw("SELECT * FROM folders {} LIMIT {} OFFSET {}".format(where, limit, offset))
+        return self.objects.raw(
+            "SELECT * FROM folders {} ORDER BY created_at LIMIT {} OFFSET {}".format(where, limit, offset)
+        )
 
     def update(self, parent: "Folder", folder_name: str):
         self.parent = parent
@@ -132,7 +134,9 @@ class File(BaseModelMixin):
         if parent is not None:
             where = "WHERE user_id = {} AND parent_id = {} AND uploaded_at IS NOT NULL".format(user.id, parent.id)
 
-        return self.objects.raw("SELECT * FROM files {} LIMIT {} OFFSET {}".format(where, limit, offset))
+        return self.objects.raw(
+            "SELECT * FROM files {} ORDER BY uploaded_at LIMIT {} OFFSET {}".format(where, limit, offset)
+        )
 
     def update(self, parent: Folder, file_name: str):
         self.parent = parent
@@ -140,7 +144,10 @@ class File(BaseModelMixin):
         self.save()
 
     def get_telegram_name(self):
-        return str(self.file_id) + os.path.splitext(self.file_name)[-1]
+        extension = os.path.splitext(self.file_name)[-1]
+        if extension:
+            return str(self.file_id) + extension
+        return str(self.file_id)
 
     def upload_part(self, file_bytes: bytes, file_part: int):
         from tdlib.wrapper import TD_CLIENT

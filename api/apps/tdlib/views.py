@@ -91,7 +91,7 @@ def validate_create_folder_request(errors, request_data):
     folder_name = request_data.get("folder_name", None)
     parent_id = request_data.get("parent_id", None)
 
-    if not isinstance(folder_name, str) or len(folder_name) < 3 or len(folder_name) > 255:
+    if not isinstance(folder_name, str) or len(folder_name) < 1 or len(folder_name) > 255:
         errors.append(_("Invalid folder name."))
 
     if parent_id is not None and (not isinstance(parent_id, int) or parent_id < 1):
@@ -136,7 +136,7 @@ def validate_update_folder_request(errors, request_data):
     if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
         errors.append(_("Invalid folder id."))
 
-    if not isinstance(folder_name, str) or len(folder_name) < 3 or len(folder_name) > 255:
+    if not isinstance(folder_name, str) or len(folder_name) < 1 or len(folder_name) > 255:
         errors.append(_("Invalid folder name."))
 
     if parent_id is not None and (not isinstance(parent_id, int) or parent_id < 1):
@@ -197,12 +197,7 @@ def validate_update_file_request(errors, request_data):
     if file_id is None or not isinstance(file_id, int) or file_id < 1:
         errors.append(_("Invalid file id."))
 
-    if (
-        not isinstance(file_name, str)
-        or len(file_name) < 3
-        or len(file_name) > 255
-        or not os.path.splitext(file_name)[-1]
-    ):
+    if not isinstance(file_name, str) or len(file_name) < 1 or len(file_name) > 255:
         errors.append(_("Invalid file name."))
 
     if parent_id is not None and (not isinstance(parent_id, int) or parent_id < 1):
@@ -310,7 +305,7 @@ def upload(request: Request) -> Response:
             if parent is None:
                 return api_error(_("Parent folder not found."), status.HTTP_404_NOT_FOUND)
 
-        if file_obj.name is None or not os.path.splitext(file_obj.name)[-1]:
+        if file_obj.name is None or len(file_obj.name) < 1 or len(file_obj.name) > 255:
             return api_error(_("Invalid file name."), status.HTTP_400_BAD_REQUEST)
 
         file_id = int.from_bytes(os.urandom(7), signed=False, byteorder="little")
