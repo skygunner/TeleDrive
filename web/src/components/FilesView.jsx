@@ -1,9 +1,14 @@
-import { FileOutlined, FolderOutlined } from "@ant-design/icons";
-import { Col, Image, Row, Table } from "antd";
+import { FolderOutlined } from "@ant-design/icons";
+import { Col, Row, Table } from "antd";
 import React, { useEffect, useState } from "react";
+import { FileIcon, defaultStyles } from "react-file-icon";
 
 import { get, getAuthHeaders } from "../api/utils";
-import { humanReadableDate, humanReadableSize } from "../utils/utils";
+import {
+  fileExtension,
+  humanReadableDate,
+  humanReadableSize,
+} from "../utils/utils";
 
 const FilesView = () => {
   const [loading, setLoading] = useState(true);
@@ -35,8 +40,10 @@ const FilesView = () => {
             data: folder,
             type: "folder",
             name: (
-              <div>
-                <FolderOutlined style={{ marginRight: 10 }} />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ maxWidth: 36, marginRight: 10 }}>
+                  <FolderOutlined style={{ fontSize: 38, padding: "6px 0" }} />
+                </div>
                 <a href="https://google.com">{folder.folder_name}</a>
               </div>
             ),
@@ -58,21 +65,21 @@ const FilesView = () => {
       files = await get(url, authHeaders);
       if (files) {
         files = files.map((file) => {
+          const extension = fileExtension(file.file_name);
+
           return {
             data: file,
             type: "file",
             name: (
-              <div>
-                {file.thumbnail ? (
-                  <Image
-                    style={{ maxHeight: 20, maxWidth: 30 }}
-                    preview={false}
-                    src={file.thumbnail}
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ maxWidth: 36, marginRight: 10 }}>
+                  <FileIcon
+                    labelUppercase={true}
+                    extension={extension}
+                    {...defaultStyles[extension]}
                   />
-                ) : (
-                  <FileOutlined />
-                )}
-                <span style={{ marginLeft: 10 }}>{file.file_name}</span>
+                </div>
+                <span>{file.file_name}</span>
               </div>
             ),
             size: humanReadableSize(file.file_size, true),
@@ -106,11 +113,13 @@ const FilesView = () => {
     {
       title: "Size",
       dataIndex: "size",
+      responsive: ["md"],
       width: "30%",
     },
     {
       title: "Modified",
       dataIndex: "modified",
+      responsive: ["sm"],
       width: "30%",
     },
   ];

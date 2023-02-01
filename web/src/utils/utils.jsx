@@ -23,6 +23,21 @@ export const humanReadableSize = (size, si = false, dp = 1) => {
 };
 
 export const humanReadableDate = (dateString) => {
-  const options = { year: "numeric", month: "long", day: "numeric" };
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
   return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+export const fileExtension = (fileName) => {
+  const split = fileName.split(".");
+  if (split.length > 1) {
+    return split.pop();
+  }
+
+  return "";
 };

@@ -72,7 +72,7 @@ const FileUploader = () => {
   };
 
   return (
-    <Row align="middle">
+    <Row style={{ marginBottom: 10 }} align="middle">
       <Col offset={1} span={22}>
         <Upload.Dragger
           style={{ margin: "10px 0" }}
