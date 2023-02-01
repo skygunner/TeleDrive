@@ -1,6 +1,6 @@
 import { FolderOutlined } from "@ant-design/icons";
 import { Col, Row, Table } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 
 import { get, getAuthHeaders } from "../api/utils";
@@ -9,13 +9,15 @@ import {
   humanReadableDate,
   humanReadableSize,
 } from "../utils/utils";
+import RefWrap from "./RefWrap";
 
 const FilesView = () => {
+  const foldersOffset = useRef(0);
+  const folderListEnd = useRef(false);
+  const filesOffset = useRef(0);
+  const dataSource = useRef([]);
+
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([]);
-  const [filesOffset, setFilesOffset] = useState(0);
-  const [foldersOffset, setFoldersOffset] = useState(0);
-  const [folderListEnd, setFolderListEnd] = useState(false);
 
   const limit = 20;
   const parentId = null; // Query string
@@ -27,8 +29,8 @@ const FilesView = () => {
     let folders = [];
     let files = [];
 
-    if (!folderListEnd) {
-      let url = `/v1/tdlib/folders?offset=${foldersOffset}&limit=${limit}`;
+    if (!folderListEnd.current) {
+      let url = `/v1/tdlib/folders?offset=${foldersOffset.current}&limit=${limit}`;
       if (parentId) {
         url += `&parent_id=${parentId}`;
       }
@@ -57,7 +59,7 @@ const FilesView = () => {
     if (folders.length < limit) {
       const filesLimit = limit - folders.length;
 
-      let url = `/v1/tdlib/files?offset=${filesOffset}&limit=${filesLimit}`;
+      let url = `/v1/tdlib/files?offset=${filesOffset.current}&limit=${filesLimit}`;
       if (parentId) {
         url += `&parent_id=${parentId}`;
       }
@@ -88,13 +90,13 @@ const FilesView = () => {
         });
       }
 
-      setFolderListEnd(true);
-      setFoldersOffset(foldersOffset + folders.length);
-      setFilesOffset(filesOffset + files.length);
-      setDataSource(dataSource.concat(folders).concat(files));
+      folderListEnd.current = true;
+      foldersOffset.current += folders.length;
+      filesOffset.current += files.length;
+      dataSource.current = dataSource.current.concat(folders).concat(files);
     } else {
-      setFoldersOffset(foldersOffset + limit);
-      setDataSource(dataSource.concat(folders));
+      foldersOffset.current += limit;
+      dataSource.current = dataSource.current.concat(folders);
     }
 
     setLoading(false);
@@ -132,16 +134,36 @@ const FilesView = () => {
     }
   };
 
+  const setRef = (ref) => {
+    if (ref) {
+      const tbody = ref.querySelector(".ant-table-body");
+      if (tbody)
+        tbody.addEventListener("scroll", async (event) => {
+          let maxScroll = event.target.scrollHeight - event.target.clientHeight;
+          let currentScroll = event.target.scrollTop;
+          if (currentScroll === maxScroll) {
+            await fetchData();
+          }
+        });
+    }
+  };
+
   return (
     <Row align="middle">
       <Col offset={1} span={22}>
-        <Table
-          columns={columns}
-          rowKey={rowKey}
-          loading={loading}
-          dataSource={dataSource}
-          pagination={false}
-        />
+        <RefWrap setRef={setRef}>
+          <Table
+            columns={columns}
+            rowKey={rowKey}
+            loading={loading}
+            dataSource={dataSource.current}
+            pagination={false}
+            scroll={{
+              scrollToFirstRowOnChange: false,
+              y: 240,
+            }}
+          />
+        </RefWrap>
       </Col>
     </Row>
   );
