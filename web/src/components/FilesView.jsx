@@ -9,7 +9,6 @@ import {
   humanReadableDate,
   humanReadableSize,
 } from "../utils/utils";
-import RefWrap from "./RefWrap";
 
 const FilesView = () => {
   const foldersOffset = useRef(0);
@@ -17,7 +16,11 @@ const FilesView = () => {
   const filesOffset = useRef(0);
   const dataSource = useRef([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [windowSize, setWindowSize] = useState([
+    window.innerWidth,
+    window.innerHeight,
+  ]);
 
   const limit = 20;
   const parentId = null; // Query string
@@ -54,6 +57,9 @@ const FilesView = () => {
           };
         });
       }
+
+      foldersOffset.current += folders.length;
+      dataSource.current = dataSource.current.concat(folders);
     }
 
     if (folders.length < limit) {
@@ -91,18 +97,30 @@ const FilesView = () => {
       }
 
       folderListEnd.current = true;
-      foldersOffset.current += folders.length;
       filesOffset.current += files.length;
-      dataSource.current = dataSource.current.concat(folders).concat(files);
-    } else {
-      foldersOffset.current += limit;
-      dataSource.current = dataSource.current.concat(folders);
+      dataSource.current = dataSource.current.concat(files);
     }
 
     setLoading(false);
   };
 
   useEffect(() => {
+    // https://github.com/ant-design/ant-design/issues/5904#issuecomment-660817725
+    const table = document.querySelector(".files-view-table .ant-table-body");
+    if (table) {
+      table.addEventListener("scroll", async () => {
+        const percent =
+          (table.scrollTop / (table.scrollHeight - table.clientHeight)) * 100;
+        if (percent >= 100) {
+          await fetchData();
+        }
+      });
+    }
+
+    window.addEventListener("resize", () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+    });
+
     fetchData();
   }, []);
 
@@ -134,36 +152,21 @@ const FilesView = () => {
     }
   };
 
-  const setRef = (ref) => {
-    if (ref) {
-      const tbody = ref.querySelector(".ant-table-body");
-      if (tbody)
-        tbody.addEventListener("scroll", async (event) => {
-          let maxScroll = event.target.scrollHeight - event.target.clientHeight;
-          let currentScroll = event.target.scrollTop;
-          if (currentScroll === maxScroll) {
-            await fetchData();
-          }
-        });
-    }
-  };
-
   return (
     <Row align="middle">
       <Col offset={1} span={22}>
-        <RefWrap setRef={setRef}>
-          <Table
-            columns={columns}
-            rowKey={rowKey}
-            loading={loading}
-            dataSource={dataSource.current}
-            pagination={false}
-            scroll={{
-              scrollToFirstRowOnChange: false,
-              y: 240,
-            }}
-          />
-        </RefWrap>
+        <Table
+          className="files-view-table"
+          columns={columns}
+          rowKey={rowKey}
+          loading={loading}
+          dataSource={dataSource.current}
+          pagination={false}
+          scroll={{
+            scrollToFirstRowOnChange: false,
+            y: windowSize[1],
+          }}
+        />
       </Col>
     </Row>
   );
