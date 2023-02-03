@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-01 14:35+0000\n"
+"POT-Creation-Date: 2023-02-03 17:03+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -122,11 +122,11 @@ msgstr ""
 msgid "Invalid Range header."
 msgstr ""
 
-#: apps/tdlib/views.py:410
+#: apps/tdlib/views.py:412
 msgid "Range length must be less or equal to 1 MB."
 msgstr ""
 
-#: apps/tdlib/views.py:421
+#: apps/tdlib/views.py:423
 msgid "The requested file is too big. Please use range request instead."
 msgstr ""
 

@@ -1,7 +1,9 @@
 import { FolderOutlined } from "@ant-design/icons";
-import { Col, Row, Table } from "antd";
+import { Button, Col, Row, Table } from "antd";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
+import { useTranslation } from "react-i18next";
 
 import { get, getAuthHeaders } from "../api/utils";
 import {
@@ -11,6 +13,8 @@ import {
 } from "../utils/utils";
 
 const FilesView = () => {
+  const { t } = useTranslation();
+
   const foldersOffset = useRef(0);
   const folderListEnd = useRef(false);
   const filesOffset = useRef(0);
@@ -25,6 +29,45 @@ const FilesView = () => {
   const limit = 20;
   const parentId = null; // Query string
   const authHeaders = getAuthHeaders();
+
+  const downloadFile = async (url, fileName, fileSize, chunkSize = 1048576) => {
+    let start = 0;
+    let end = chunkSize - 1;
+    let chunks = [];
+
+    while (true) {
+      const response = await axios.get(
+        process.env.REACT_APP_API_BASE_URL + url,
+        {
+          responseType: "arraybuffer",
+          headers: {
+            ...authHeaders,
+            Range: `bytes=${start}-${end}`,
+          },
+        }
+      );
+
+      if (response.status === 206) {
+        const chunk = new Uint8Array(response.data);
+        chunks.push(chunk);
+
+        if (end >= fileSize) {
+          const blob = new Blob(chunks);
+          const a = document.createElement("a");
+          a.style.display = "none";
+          a.href = URL.createObjectURL(blob);
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          break;
+        }
+
+        start = end + 1;
+        end = start + chunkSize - 1;
+      }
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -91,7 +134,20 @@ const FilesView = () => {
               </div>
             ),
             size: humanReadableSize(file.file_size, true),
-            modified: humanReadableDate(file.updated_at),
+            last_modified: humanReadableDate(file.updated_at),
+            actions: (
+              <Button
+                onClick={async () => {
+                  await downloadFile(
+                    `/v1/tdlib/download/${file.file_id}`,
+                    file.file_name,
+                    file.file_size
+                  );
+                }}
+              >
+                {t("Download")}
+              </Button>
+            ),
           };
         });
       }
@@ -126,21 +182,27 @@ const FilesView = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: t("Name"),
       dataIndex: "name",
       width: "40%",
     },
     {
-      title: "Size",
+      title: t("Size"),
       dataIndex: "size",
       responsive: ["md"],
-      width: "30%",
+      width: "20%",
     },
     {
-      title: "Modified",
-      dataIndex: "modified",
-      responsive: ["sm"],
-      width: "30%",
+      title: t("Last Modified"),
+      dataIndex: "last_modified",
+      responsive: ["md"],
+      width: "20%",
+    },
+    {
+      title: t("Actions"),
+      dataIndex: "actions",
+      // responsive: ["sm"],
+      width: "20%",
     },
   ];
 

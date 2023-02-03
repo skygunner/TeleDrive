@@ -404,6 +404,8 @@ def download(request: Request, file_id: int) -> Response:
                 return api_error(_("Invalid Range header."), status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)
 
             # Check compatibility
+            print(end)
+            print(start)
             if end - start + 1 > 1 * 1024 * 1024:  # 1MB
                 headers = {"Accept-Ranges": "bytes"}
                 return api_error(
