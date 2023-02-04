@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-import { isUserLoggedIn } from "../api/utils";
+import { isUserLoggedIn } from "../api";
 import LoginButton from "../components/LoginButton";
 
 const LoginPage = () => {

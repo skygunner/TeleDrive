@@ -4,12 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { useTranslation } from "react-i18next";
 
-import { get, getAuthHeaders } from "../api/utils";
-import {
-  fileExtension,
-  humanReadableDate,
-  humanReadableSize,
-} from "../utils/utils";
+import { get, getAuthHeaders } from "../api";
+import { fileExtension, humanReadableDate, humanReadableSize } from "../utils";
 
 const FilesView = () => {
   const { t } = useTranslation();
@@ -60,6 +56,9 @@ const FilesView = () => {
             actions: "-",
           };
         });
+      } else {
+        setLoading(false);
+        return;
       }
 
       foldersOffset.current += folders.length;
@@ -67,6 +66,7 @@ const FilesView = () => {
     }
 
     if (folders.length < limit) {
+      folderListEnd.current = true;
       const filesLimit = limit - folders.length;
 
       let url = `/v1/tdlib/files?offset=${filesOffset.current}&limit=${filesLimit}`;
@@ -101,14 +101,16 @@ const FilesView = () => {
                 href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
                 download={file.file_name}
               >
-                Download
+                {t("Download")}
               </a>
             ),
           };
         });
+      } else {
+        setLoading(false);
+        return;
       }
 
-      folderListEnd.current = true;
       filesOffset.current += files.length;
       dataSource.current = dataSource.current.concat(files);
     }

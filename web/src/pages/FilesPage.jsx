@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-import { isUserLoggedIn } from "../api/utils";
+import { isUserLoggedIn } from "../api";
 import FileUploader from "../components/FileUploader";
 import FilesView from "../components/FilesView";
 

@@ -4,7 +4,7 @@ import md5 from "md5";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getAuthHeaders, post } from "../api/utils";
+import { getAuthHeaders, post } from "../api";
 
 const FileUploader = () => {
   const { t } = useTranslation();

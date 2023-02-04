@@ -18,7 +18,7 @@ import {
   isUserLoggedIn,
   post,
   removeUserCredential,
-} from "../api/utils";
+} from "../api";
 
 const NavigationMenu = () => {
   const { t } = useTranslation();

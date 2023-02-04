@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import TelegramLoginButton from "react-telegram-login";
 
-import { post, storeUserCredential } from "../api/utils";
+import { post, storeUserCredential } from "../api";
 
 const LoginButton = () => {
   const navigate = useNavigate();

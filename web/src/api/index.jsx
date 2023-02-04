@@ -1,7 +1,9 @@
 import { message } from "antd";
 import axios from "axios";
 
-const api = axios.create({
+const unknownError = new Error("Something went wrong! Please try again later.");
+
+const baseAPI = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
 });
 
@@ -14,23 +16,23 @@ const responseData = (resp) => {
     throw new Error(resp.data.details[0]);
   }
 
-  throw new Error("Something went wrong!");
+  throw unknownError;
 };
 
 const handleError = (error) => {
   if (axios.isAxiosError(error)) {
-    if (error.response?.data?.details?.length > 0) {
-      for (var i = 0; i < error.response.data.details.length; i++) {
-        console.error(error.response.data.details[i]);
+    const detailsLength = error.response?.data?.details?.length;
+    if (detailsLength > 0) {
+      for (var i = 0; i < detailsLength; i++) {
         message.error(error.response.data.details[i]);
       }
     } else {
       console.error(error);
-      message.error(error.message);
+      message.error(unknownError.message);
     }
   } else {
     console.error(error);
-    message.error(error.message);
+    message.error(unknownError.message);
   }
 };
 
@@ -69,7 +71,7 @@ export const getAuthHeaders = () => {
 
 export const post = async (url, data, headers = {}) => {
   try {
-    return responseData(await api.post(url, data, { headers: headers }));
+    return responseData(await baseAPI.post(url, data, { headers: headers }));
   } catch (error) {
     handleError(error);
   }
@@ -77,7 +79,7 @@ export const post = async (url, data, headers = {}) => {
 
 export const get = async (url, headers = {}) => {
   try {
-    return responseData(await api.get(url, { headers: headers }));
+    return responseData(await baseAPI.get(url, { headers: headers }));
   } catch (error) {
     handleError(error);
   }
