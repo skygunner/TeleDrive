@@ -61,7 +61,7 @@ class File(BaseModelMixin):
         to=Folder, to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     file_id = models.PositiveBigIntegerField()
-    file_uuid = models.CharField(max_length=255, unique=True, db_index=True, default=make_uuid)
+    file_uuid = models.CharField(max_length=255, unique=True, default=make_uuid)
     file_name = models.CharField(max_length=255)
     file_size = models.PositiveBigIntegerField()
     part_size = models.PositiveBigIntegerField()
@@ -75,7 +75,10 @@ class File(BaseModelMixin):
     class Meta:
         db_table = "files"
         unique_together = (("user", "file_id"),)
-        index_together = (("user", "file_id"),)
+        index_together = (
+            ("user", "file_id"),
+            ("file_id", "file_uuid"),
+        )
 
     @property
     def message(self):
