@@ -7,7 +7,9 @@ class FileSerializer(serializers.ModelSerializer):
     file_token = serializers.SerializerMethodField()
 
     def get_file_token(self, obj):
-        return obj.file_uuid
+        if obj.is_uploaded:
+            return obj.file_uuid
+        return None
 
     class Meta:
         model = File
@@ -17,9 +19,6 @@ class FileSerializer(serializers.ModelSerializer):
             "parent_id",
             "file_name",
             "file_size",
-            # "part_size",
-            # "total_parts",
-            # "last_uploaded_part",
             "md5_checksum",
             "thumbnail",
             "created_at",
@@ -29,10 +28,15 @@ class FileSerializer(serializers.ModelSerializer):
 
 
 class FolderSerializer(serializers.ModelSerializer):
+    folder_id = serializers.SerializerMethodField()
+
+    def get_folder_id(self, obj):
+        return str(obj.id)  # JavaScript issue with BigInt
+
     class Meta:
         model = Folder
         fields = [
-            "id",
+            "folder_id",
             "parent_id",
             "folder_name",
             "created_at",

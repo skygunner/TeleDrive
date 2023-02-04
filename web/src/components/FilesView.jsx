@@ -56,7 +56,8 @@ const FilesView = () => {
               </div>
             ),
             size: "-",
-            modified: humanReadableDate(folder.updated_at),
+            last_modified: humanReadableDate(folder.updated_at),
+            actions: "-",
           };
         });
       }
@@ -165,7 +166,7 @@ const FilesView = () => {
     if (row.type === "file") {
       return row.data.file_id;
     } else if (row.type === "folder") {
-      return row.data.id;
+      return row.data.folder_id;
     }
   };
 

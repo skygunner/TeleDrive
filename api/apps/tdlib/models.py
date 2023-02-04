@@ -204,6 +204,14 @@ class File(BaseModelMixin):
         from tdlib.wrapper import TD_CLIENT
 
         request_size = end - start + 1
+        yielded_size = 0
 
-        for chunk in TD_CLIENT.iter_download(file=self.message, offset=start, request_size=request_size):
+        for chunk in TD_CLIENT.iter_download(file=self.message, offset=start):
+            chunk_len = len(chunk)
+            if chunk_len + yielded_size > request_size:
+                chunk = chunk[: request_size - yielded_size]
+                yield chunk
+                break
+
+            yielded_size += chunk_len
             yield chunk

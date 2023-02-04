@@ -103,8 +103,8 @@ JWT_TOKEN_KEY_ID = "1"
 JWT_TOKEN_EXP_HOURS = 5 * 365 * 24  # 5 years
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_METHODS = list(default_methods) + ["HEAD"]
-CORS_ALLOW_HEADERS = list(default_headers) + ["Range", "Content-Disposition"]
+CORS_ALLOW_METHODS = list(default_methods)
+CORS_ALLOW_HEADERS = list(default_headers) + ["Range"]
 CORS_PREFLIGHT_MAX_AGE = 86400
 CORS_ALLOW_CREDENTIALS = False
 CORS_URLS_REGEX = r"^/v1/.*$"
