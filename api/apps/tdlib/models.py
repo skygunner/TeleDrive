@@ -1,5 +1,4 @@
 import base64
-import io
 import os
 
 from django.db import models
@@ -7,7 +6,6 @@ from django.utils import timezone
 
 from auth.models import User
 from simple_history.models import HistoricalRecords
-from telethon.client.downloads import MIN_CHUNK_SIZE
 from telethon.extensions import BinaryReader
 from telethon.tl import functions, types
 from utils.models import BaseModelMixin, make_uuid
@@ -205,27 +203,7 @@ class File(BaseModelMixin):
     def download_iter(self, start: int, end: int):
         from tdlib.wrapper import TD_CLIENT
 
-        range_length = end - start + 1
+        request_size = end - start + 1
 
-        request_size = range_length
-        if request_size % MIN_CHUNK_SIZE != 0:
-            request_size += MIN_CHUNK_SIZE - (request_size % MIN_CHUNK_SIZE)
-
-        bytes_io = io.BytesIO()
-
-        for chunk in TD_CLIENT.iter_download(
-            file=self.message,
-            offset=start,
-            limit=1,
-            request_size=request_size,
-            file_size=self.file_size,
-        ):
-
-            bytes_io.write(chunk)
-
-        bytes_io.flush()
-        bytes_io.truncate(range_length)
-        byte_ranges = bytes_io.getvalue()
-        bytes_io.close()
-
-        return byte_ranges
+        for chunk in TD_CLIENT.iter_download(file=self.message, offset=start, request_size=request_size):
+            yield chunk

@@ -1,6 +1,5 @@
 import { FolderOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Table } from "antd";
-import axios from "axios";
+import { Col, Row, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { useTranslation } from "react-i18next";
@@ -29,45 +28,6 @@ const FilesView = () => {
   const limit = 20;
   const parentId = null; // Query string
   const authHeaders = getAuthHeaders();
-
-  const downloadFile = async (url, fileName, fileSize, chunkSize = 1048576) => {
-    let start = 0;
-    let end = chunkSize - 1;
-    let chunks = [];
-
-    while (true) {
-      const response = await axios.get(
-        process.env.REACT_APP_API_BASE_URL + url,
-        {
-          responseType: "arraybuffer",
-          headers: {
-            ...authHeaders,
-            Range: `bytes=${start}-${end}`,
-          },
-        }
-      );
-
-      if (response.status === 206) {
-        const chunk = new Uint8Array(response.data);
-        chunks.push(chunk);
-
-        if (end >= fileSize) {
-          const blob = new Blob(chunks);
-          const a = document.createElement("a");
-          a.style.display = "none";
-          a.href = URL.createObjectURL(blob);
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          break;
-        }
-
-        start = end + 1;
-        end = start + chunkSize - 1;
-      }
-    }
-  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -136,17 +96,12 @@ const FilesView = () => {
             size: humanReadableSize(file.file_size, true),
             last_modified: humanReadableDate(file.updated_at),
             actions: (
-              <Button
-                onClick={async () => {
-                  await downloadFile(
-                    `/v1/tdlib/download/${file.file_id}`,
-                    file.file_name,
-                    file.file_size
-                  );
-                }}
+              <a
+                href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
+                download={file.file_name}
               >
-                {t("Download")}
-              </Button>
+                Download
+              </a>
             ),
           };
         });
