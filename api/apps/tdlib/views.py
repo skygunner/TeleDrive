@@ -3,12 +3,12 @@ import re
 
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import StreamingHttpResponse
 from django.utils.http import quote_etag
 from django.utils.translation import gettext as _
 
 from rest_framework import status
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework.decorators import api_view, authentication_classes, parser_classes
 from rest_framework.parsers import FileUploadParser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -213,7 +213,7 @@ def update_file(request: Request, file_id: int) -> Response:
     parent_id = request_data.get("parent_id", None)
 
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
-    if file is None or not file.is_upload_completed:
+    if file is None or not file.is_uploaded:
         return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
 
     parent = None
@@ -232,7 +232,7 @@ def delete_file(request: Request, file_id: int) -> Response:
         return api_error(_("Invalid file id."), status.HTTP_400_BAD_REQUEST)
 
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
-    if file is None or not file.is_upload_completed:
+    if file is None or not file.is_uploaded:
         return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
 
     file.delete()
@@ -360,34 +360,21 @@ def upload(request: Request) -> Response:
 
 
 @api_view(["GET"])
-# @api_view(["OPTIONS", "HEAD", "GET"])
+@authentication_classes([])
 @transaction.atomic
 def download(request: Request, file_id: int) -> Response:
-    file = File.find_by_user_and_id(user=request.user, file_id=file_id)
-    if file is None or not file.is_upload_completed:
+    request_data = request.query_params
+
+    file_token = request_data.get("secret", None)
+
+    file = File.find_by_id_and_token(file_id=file_id, file_token=file_token)
+    if file is None or not file.is_uploaded:
         return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
-
-    etag = quote_etag(str(file.file_id))
-
-    def add_headers(response, content_length, content_range=None):
-        response["Accept-Ranges"] = "bytes"
-        response["Cache-Control"] = "public, max-age=604800"
-        response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
-        if request.method != "OPTIONS":
-            response["Content-Length"] = content_length
-        if content_range is not None:
-            response["Content-Range"] = content_range
-        response["Content-Type"] = file.mime_type
-        response["ETag"] = etag
-
-    if request.method != "GET":
-        response = HttpResponse(status=status.HTTP_200_OK)
-        add_headers(response=response, content_length=file.file_size)
-        return response
 
     start = 0
     end = file.file_size - 1
     status_code = status.HTTP_200_OK
+    etag = quote_etag(str(file.file_id))
 
     if_range = request.META.get("HTTP_IF_RANGE", "").strip()
     if not if_range or if_range == etag:
@@ -403,34 +390,18 @@ def download(request: Request, file_id: int) -> Response:
             if start > end:
                 return api_error(_("Invalid Range header."), status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE)
 
-            # Check compatibility
-            print(end)
-            print(start)
-            if end - start + 1 > 1 * 1024 * 1024:  # 1MB
-                headers = {"Accept-Ranges": "bytes"}
-                return api_error(
-                    _("Range length must be less or equal to 1 MB."),
-                    status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                    headers,
-                )
-
             status_code = status.HTTP_206_PARTIAL_CONTENT
 
-    # Check compatibility
-    if status_code == status.HTTP_200_OK and file.file_size > 1 * 1024 * 1024:  # 1MB
-        headers = {"Accept-Ranges": "bytes"}
-        return api_error(
-            _("The requested file is too big. Please use range request instead."),
-            status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            headers,
-        )
+    download_iter = file.download_iter(start=start, end=end)
 
-    byte_ranges = file.download_range(start=start, end=end)
+    response = StreamingHttpResponse(streaming_content=download_iter, status=status_code)
+    response["Accept-Ranges"] = "bytes"
+    response["Cache-Control"] = "public, max-age=604800"
+    response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
+    response["Content-Length"] = end - start + 1
+    if status_code == status.HTTP_206_PARTIAL_CONTENT:
+        response["Content-Range"] = "bytes {}-{}/{}".format(start, end, file.file_size)
+    response["Content-Type"] = file.mime_type
+    response["ETag"] = etag
 
-    response = HttpResponse(content=byte_ranges, status=status_code)
-    add_headers(
-        response=response,
-        content_length=len(byte_ranges),
-        content_range="bytes {}-{}/{}".format(start, end, file.file_size),
-    )
     return response

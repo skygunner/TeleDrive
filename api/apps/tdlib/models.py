@@ -10,7 +10,7 @@ from simple_history.models import HistoricalRecords
 from telethon.client.downloads import MIN_CHUNK_SIZE
 from telethon.extensions import BinaryReader
 from telethon.tl import functions, types
-from utils.models import BaseModelMixin
+from utils.models import BaseModelMixin, make_uuid
 
 
 class Folder(BaseModelMixin):
@@ -63,6 +63,7 @@ class File(BaseModelMixin):
         to=Folder, to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     file_id = models.PositiveBigIntegerField()
+    file_uuid = models.CharField(max_length=255, unique=True, db_index=True, default=make_uuid)
     file_name = models.CharField(max_length=255)
     file_size = models.PositiveBigIntegerField()
     part_size = models.PositiveBigIntegerField()
@@ -96,12 +97,16 @@ class File(BaseModelMixin):
         return None
 
     @property
-    def is_upload_completed(self):
+    def is_uploaded(self):
         return self.uploaded_at is not None
 
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
-        return File.objects.filter(user=user, file_id=file_id).first()
+        return self.objects.filter(user=user, file_id=file_id).first()
+
+    @classmethod
+    def find_by_id_and_token(self, file_id: str, file_token: str):
+        return self.objects.filter(file_id=file_id, file_uuid=file_token).first()
 
     @classmethod
     def create(
@@ -197,7 +202,7 @@ class File(BaseModelMixin):
 
             self.save()
 
-    def download_range(self, start: int, end: int):
+    def download_iter(self, start: int, end: int):
         from tdlib.wrapper import TD_CLIENT
 
         range_length = end - start + 1
@@ -215,6 +220,7 @@ class File(BaseModelMixin):
             request_size=request_size,
             file_size=self.file_size,
         ):
+
             bytes_io.write(chunk)
 
         bytes_io.flush()

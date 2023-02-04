@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-03 17:03+0000\n"
+"POT-Creation-Date: 2023-02-04 00:21+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,7 +58,7 @@ msgid "Invalid file name."
 msgstr ""
 
 #: apps/tdlib/views.py:217 apps/tdlib/views.py:236 apps/tdlib/views.py:331
-#: apps/tdlib/views.py:368
+#: apps/tdlib/views.py:372
 msgid "File not found."
 msgstr ""
 
@@ -118,16 +118,8 @@ msgstr ""
 msgid "The file part size must be less or equal to {} KB."
 msgstr ""
 
-#: apps/tdlib/views.py:404
+#: apps/tdlib/views.py:391
 msgid "Invalid Range header."
-msgstr ""
-
-#: apps/tdlib/views.py:412
-msgid "Range length must be less or equal to 1 MB."
-msgstr ""
-
-#: apps/tdlib/views.py:423
-msgid "The requested file is too big. Please use range request instead."
 msgstr ""
 
 #: baseapi/settings.py:21

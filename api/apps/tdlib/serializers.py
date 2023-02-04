@@ -4,11 +4,16 @@ from tdlib.models import File, Folder
 
 class FileSerializer(serializers.ModelSerializer):
     file_id = serializers.CharField()  # JavaScript issue with BigInt
+    file_token = serializers.SerializerMethodField()
+
+    def get_file_token(self, obj):
+        return obj.file_uuid
 
     class Meta:
         model = File
         fields = [
             "file_id",
+            "file_token",
             "parent_id",
             "file_name",
             "file_size",
