@@ -35,9 +35,9 @@ class Folder(BaseModelMixin):
 
     @classmethod
     def list(self, user: User, parent: "Folder", offset: int, limit: int):
-        where = "WHERE user_id = {} AND parent_id IS NULL".format(user.id)
+        where = "WHERE user_id = {} AND parent_id IS NULL AND deleted_at IS NULL".format(user.id)
         if parent is not None:
-            where = "WHERE user_id = {} AND parent_id = {}".format(user.id, parent.id)
+            where = "WHERE user_id = {} AND parent_id = {} AND deleted_at IS NULL".format(user.id, parent.id)
 
         return self.objects.raw(
             "SELECT * FROM folders {} ORDER BY created_at LIMIT {} OFFSET {}".format(where, limit, offset)
@@ -136,9 +136,13 @@ class File(BaseModelMixin):
 
     @classmethod
     def list(self, user: User, parent: Folder, offset: int, limit: int):
-        where = "WHERE user_id = {} AND parent_id IS NULL AND uploaded_at IS NOT NULL".format(user.id)
+        where = "WHERE user_id = {} AND parent_id IS NULL AND uploaded_at IS NOT NULL AND deleted_at IS NULL".format(
+            user.id
+        )
         if parent is not None:
-            where = "WHERE user_id = {} AND parent_id = {} AND uploaded_at IS NOT NULL".format(user.id, parent.id)
+            where = "WHERE user_id = {} AND parent_id = {} AND uploaded_at IS NOT NULL AND deleted_at IS NULL".format(
+                user.id, parent.id
+            )
 
         return self.objects.raw(
             "SELECT * FROM files {} ORDER BY uploaded_at LIMIT {} OFFSET {}".format(where, limit, offset)

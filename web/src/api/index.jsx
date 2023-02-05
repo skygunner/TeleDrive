@@ -84,3 +84,11 @@ export const get = async (url, headers = {}) => {
     handleError(error);
   }
 };
+
+export const del = async (url, headers = {}) => {
+  try {
+    return responseData(await baseAPI.delete(url, { headers: headers }));
+  } catch (error) {
+    handleError(error);
+  }
+};

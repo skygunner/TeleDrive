@@ -1,10 +1,16 @@
-import { FolderOutlined } from "@ant-design/icons";
-import { Col, Row, Table } from "antd";
+import {
+  DeleteOutlined,
+  DownOutlined,
+  DownloadOutlined,
+  EditOutlined,
+  FolderOutlined,
+} from "@ant-design/icons";
+import { Col, Dropdown, Modal, Row, Space, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { useTranslation } from "react-i18next";
 
-import { get, getAuthHeaders } from "../api";
+import { del, get, getAuthHeaders } from "../api";
 import { fileExtension, humanReadableDate, humanReadableSize } from "../utils";
 
 const FilesView = () => {
@@ -21,9 +27,118 @@ const FilesView = () => {
     window.innerHeight,
   ]);
 
+  const defaultModalConfig = {
+    title: "",
+    description: "",
+    open: false,
+    onOk: () => {},
+    confirmLoading: false,
+    onCancel: () => {},
+  };
+  const [modalConfig, setModalConfig] = useState(defaultModalConfig);
+
   const limit = 20;
   const parentId = null; // Query string
   const authHeaders = getAuthHeaders();
+
+  const getFolderActionItems = (folder) => {
+    return [
+      {
+        key: "q",
+        label: <a>{t("Rename")}</a>,
+        icon: <EditOutlined />,
+      },
+      {
+        type: "divider",
+      },
+      {
+        key: "2",
+        danger: true,
+        label: (
+          <a
+            onClick={() => {
+              setModalConfig({
+                title: t(`Delete ${folder.folder_name}`),
+                description: t(
+                  `Are you sure you want to delete ${folder.folder_name}?`
+                ),
+                open: true,
+                onOk: async () => {
+                  setModalConfig({ ...modalConfig, confirmLoading: true });
+                  await del(
+                    `/v1/tdlib/folder/${folder.folder_id}`,
+                    authHeaders
+                  );
+                  setModalConfig(defaultModalConfig);
+                },
+                confirmLoading: false,
+                onCancel: () => {
+                  setModalConfig(defaultModalConfig);
+                },
+              });
+            }}
+          >
+            {t("Delete")}
+          </a>
+        ),
+        icon: <DeleteOutlined />,
+      },
+    ];
+  };
+
+  const getFileActionItems = (file) => {
+    return [
+      {
+        key: "1",
+        label: (
+          <a
+            href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
+            download={file.file_name}
+          >
+            {t("Download")}
+          </a>
+        ),
+        icon: <DownloadOutlined />,
+      },
+      {
+        key: "2",
+        label: <a>{t("Rename")}</a>,
+        icon: <EditOutlined />,
+      },
+      {
+        type: "divider",
+      },
+      {
+        key: "3",
+        danger: true,
+        label: (
+          <a
+            onClick={() => {
+              setModalConfig({
+                title: t(`Delete ${file.file_name}`),
+                description: t(
+                  `Are you sure you want to delete ${file.file_name}?`
+                ),
+                open: true,
+                onOk: async () => {
+                  setModalConfig({ ...modalConfig, confirmLoading: true });
+                  await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
+                  setModalConfig(defaultModalConfig);
+                },
+                confirmLoading: false,
+                onCancel: () => {
+                  setModalConfig(defaultModalConfig);
+                },
+              });
+            }}
+          >
+            {t("Delete")}
+          </a>
+        ),
+        icon: <DeleteOutlined />,
+      },
+    ];
+  };
 
   const fetchData = async () => {
     setLoading(true);
@@ -48,12 +163,21 @@ const FilesView = () => {
                 <div style={{ maxWidth: 36, marginRight: 10 }}>
                   <FolderOutlined style={{ fontSize: 38, padding: "6px 0" }} />
                 </div>
-                <a href="https://google.com">{folder.folder_name}</a>
+                <a>{folder.folder_name}</a>
               </div>
             ),
             size: "-",
             last_modified: humanReadableDate(folder.updated_at),
-            actions: "-",
+            actions: (
+              <Dropdown menu={{ items: getFolderActionItems(folder) }}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    {t("Actions")}
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
+            ),
           };
         });
       } else {
@@ -97,12 +221,14 @@ const FilesView = () => {
             size: humanReadableSize(file.file_size, true),
             last_modified: humanReadableDate(file.updated_at),
             actions: (
-              <a
-                href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
-                download={file.file_name}
-              >
-                {t("Download")}
-              </a>
+              <Dropdown menu={{ items: getFileActionItems(file) }}>
+                <a onClick={(e) => e.preventDefault()}>
+                  <Space>
+                    {t("Actions")}
+                    <DownOutlined />
+                  </Space>
+                </a>
+              </Dropdown>
             ),
           };
         });
@@ -159,7 +285,6 @@ const FilesView = () => {
     {
       title: t("Actions"),
       dataIndex: "actions",
-      // responsive: ["sm"],
       width: "20%",
     },
   ];
@@ -187,6 +312,17 @@ const FilesView = () => {
             y: windowSize[1],
           }}
         />
+        <Modal
+          title={modalConfig.title}
+          open={modalConfig.open}
+          onOk={modalConfig.onOk}
+          confirmLoading={modalConfig.confirmLoading}
+          onCancel={modalConfig.onCancel}
+          okButtonProps={{ danger: true }}
+          okText={t("Yes")}
+        >
+          <p>{modalConfig.description}</p>
+        </Modal>
       </Col>
     </Row>
   );
