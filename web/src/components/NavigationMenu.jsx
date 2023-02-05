@@ -27,14 +27,16 @@ const NavigationMenu = () => {
   const navigate = useNavigate();
 
   const isLoggedIn = isUserLoggedIn();
+  const authHeaders = getAuthHeaders();
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState();
+
   useEffect(() => {
     if (!isLoggedIn) {
       return;
     }
 
-    get("/v1/user", getAuthHeaders()).then((user) => {
+    get("/v1/user", authHeaders).then((user) => {
       if (user) {
         setUser(user);
       }
@@ -95,11 +97,11 @@ const NavigationMenu = () => {
         />
       ),
       onClick: async () => {
-        const resp = await post("/v1/auth/signOut", {}, getAuthHeaders());
+        const resp = await post("/v1/auth/signOut", {}, authHeaders);
         if (resp) {
-          navigate("/");
           setUser();
           removeUserCredential();
+          navigate("/", { replace: true });
           closeDrawer();
         }
       },

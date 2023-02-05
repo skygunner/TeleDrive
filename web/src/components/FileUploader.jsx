@@ -12,6 +12,7 @@ const FileUploader = () => {
   const [fileList, setFileList] = useState([]);
 
   const parentId = null; // Query string
+  const authHeaders = getAuthHeaders();
 
   const onStatusChange = (info) => {
     const { status } = info.file;
@@ -36,7 +37,7 @@ const FileUploader = () => {
     const md5Checksum = md5(binaryArray);
 
     const headers = {
-      ...getAuthHeaders(),
+      ...authHeaders,
       "Content-Type": "application/octet-stream",
       "Content-Disposition": `attachment; filename="${fileName}"`,
     };

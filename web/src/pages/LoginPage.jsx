@@ -1,3 +1,4 @@
+import { Row } from "antd";
 import { Navigate } from "react-router-dom";
 
 import { isUserLoggedIn } from "../api";
@@ -9,7 +10,11 @@ const LoginPage = () => {
     return <Navigate to="/files" replace={true} />;
   }
 
-  return <LoginButton />;
+  return (
+    <Row align="middle" style={{ justifyContent: "center", marginTop: 50 }}>
+      <LoginButton />
+    </Row>
+  );
 };
 
 export default LoginPage;
