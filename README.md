@@ -11,7 +11,7 @@ Use Telegram for unlimited cloud storage.
 * You also need to create a Telegram application [here](https://my.telegram.org/) and get Telegram api_id and api_hash.
 * Use the `api/generate_telegram_bot_session.py` script for generating a Telegram bot session.
 
-## References
+# References
 
 * https://github.com/tdlib/td
 * https://github.com/tdlib/telegram-bot-api
@@ -19,3 +19,4 @@ Use Telegram for unlimited cloud storage.
 * https://github.com/LonamiWebs/Telethon/wiki/MTProto-vs-HTTP-Bot-API
 * https://docs.telethon.dev/en/stable/concepts/botapi-vs-mtproto.html#botapi
 * https://telegram-bot-sdk.readme.io/reference
+* https://medium.com/@sanketmeghani/docker-transferring-docker-images-without-registry-2ed50726495f
