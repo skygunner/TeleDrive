@@ -1,13 +1,7 @@
 {
-  "search.exclude": {
-    "**/node_modules": true,
-    ".cache": true,
-    "dist": true,
-    "lib": true,
-    "coverage": true,
-    "temp": true
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "eslint.validate": ["javascript"],
   "cSpell.words": ["Tele"]
 }

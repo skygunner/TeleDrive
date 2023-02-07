@@ -1,14 +1,14 @@
-import { message } from "antd";
-import axios from "axios";
+import { message } from 'antd';
+import axios from 'axios';
 
-const unknownError = new Error("Something went wrong! Please try again later.");
+const unknownError = new Error('Something went wrong! Please try again later.');
 
 const baseAPI = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
 });
 
 const responseData = (resp) => {
-  if (resp.data?.status === "SUCCESS") {
+  if (resp.data?.status === 'SUCCESS') {
     return resp.data.data;
   }
 
@@ -23,9 +23,9 @@ const handleError = (error) => {
   if (axios.isAxiosError(error)) {
     const detailsLength = error.response?.data?.details?.length;
     if (detailsLength > 0) {
-      for (var i = 0; i < detailsLength; i++) {
-        message.error(error.response.data.details[i]);
-      }
+      error.response.data.details.forEach((detail) => {
+        message.error(detail);
+      });
     } else {
       console.error(error);
       message.error(unknownError.message);
@@ -42,15 +42,15 @@ export const storeUserCredential = (jwtObject) => {
     expire_at: jwtObject.expire_at,
   });
 
-  localStorage.setItem("jwt_object", jwtObjectStr);
+  localStorage.setItem('jwt_object', jwtObjectStr);
 };
 
 export const removeUserCredential = () => {
-  localStorage.removeItem("jwt_object");
+  localStorage.removeItem('jwt_object');
 };
 
 export const isUserLoggedIn = () => {
-  const jwtObjectStr = localStorage.getItem("jwt_object");
+  const jwtObjectStr = localStorage.getItem('jwt_object');
   if (jwtObjectStr) {
     const jwtObject = JSON.parse(jwtObjectStr);
     if (jwtObject.expire_at > Math.floor(Date.now() / 1000)) {
@@ -62,33 +62,36 @@ export const isUserLoggedIn = () => {
 
 export const getAuthHeaders = () => {
   if (isUserLoggedIn()) {
-    const jwtObjectStr = localStorage.getItem("jwt_object");
+    const jwtObjectStr = localStorage.getItem('jwt_object');
     const jwtObject = JSON.parse(jwtObjectStr);
-    return { Authorization: "Bearer " + jwtObject.jwt_token };
+    return { Authorization: `Bearer ${jwtObject.jwt_token}` };
   }
   return {};
 };
 
 export const post = async (url, data, headers = {}) => {
   try {
-    return responseData(await baseAPI.post(url, data, { headers: headers }));
+    return responseData(await baseAPI.post(url, data, { headers }));
   } catch (error) {
     handleError(error);
+    return undefined;
   }
 };
 
 export const get = async (url, headers = {}) => {
   try {
-    return responseData(await baseAPI.get(url, { headers: headers }));
+    return responseData(await baseAPI.get(url, { headers }));
   } catch (error) {
     handleError(error);
+    return undefined;
   }
 };
 
 export const del = async (url, headers = {}) => {
   try {
-    return responseData(await baseAPI.delete(url, { headers: headers }));
+    return responseData(await baseAPI.delete(url, { headers }));
   } catch (error) {
     handleError(error);
+    return undefined;
   }
 };

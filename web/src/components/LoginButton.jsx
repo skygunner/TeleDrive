@@ -1,16 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import TelegramLoginButton from "react-telegram-login";
+import { useNavigate } from 'react-router-dom';
+import TelegramLoginButton from 'react-telegram-login';
 
-import { post, storeUserCredential } from "../api";
+import React from 'react';
+import { post, storeUserCredential } from '../api';
 
-const LoginButton = () => {
+function LoginButton() {
   const navigate = useNavigate();
 
   const onTelegramResponse = async (data) => {
-    const userCredential = await post("/v1/auth/signIn", data);
+    const userCredential = await post('/v1/auth/signIn', data);
     if (userCredential) {
       storeUserCredential(userCredential);
-      navigate("/files", { replace: true });
+      navigate('/files', { replace: true });
       window.location.reload(true); // NavigationMenu issue
     }
   };
@@ -27,6 +28,6 @@ const LoginButton = () => {
       />
     </div>
   );
-};
+}
 
 export default LoginButton;

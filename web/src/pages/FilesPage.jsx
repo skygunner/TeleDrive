@@ -1,13 +1,14 @@
-import { Navigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
-import { isUserLoggedIn } from "../api";
-import FileUploader from "../components/FileUploader";
-import FilesView from "../components/FilesView";
+import React from 'react';
+import { isUserLoggedIn } from '../api';
+import FileUploader from '../components/FileUploader';
+import FilesView from '../components/FilesView';
 
-const FilesPage = () => {
+function FilesPage() {
   const isLoggedIn = isUserLoggedIn();
   if (!isLoggedIn) {
-    return <Navigate to="/login" replace={true} />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -16,6 +17,6 @@ const FilesPage = () => {
       <FilesView />
     </>
   );
-};
+}
 
 export default FilesPage;

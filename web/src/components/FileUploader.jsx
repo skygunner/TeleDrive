@@ -1,12 +1,14 @@
-import { UploadOutlined } from "@ant-design/icons";
-import { Col, Row, Upload, message } from "antd";
-import md5 from "md5";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { UploadOutlined } from '@ant-design/icons';
+import {
+  Col, Row, Upload, message,
+} from 'antd';
+import md5 from 'md5';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { getAuthHeaders, post } from "../api";
+import { getAuthHeaders, post } from '../api';
 
-const FileUploader = () => {
+function FileUploader() {
   const { t } = useTranslation();
 
   const [fileList, setFileList] = useState([]);
@@ -16,16 +18,18 @@ const FileUploader = () => {
 
   const onStatusChange = (info) => {
     const { status } = info.file;
-    if (status === "uploading" || status === "error") {
-      setFileList(info.fileList.filter((file) => file.status === "uploading"));
-    } else if (status === "done" || status === "success") {
+    if (status === 'uploading' || status === 'error') {
+      setFileList(info.fileList.filter((file) => file.status === 'uploading'));
+    } else if (status === 'done' || status === 'success') {
       message.success(t(`${info.file.name} uploaded successfully.`));
-      setFileList(info.fileList.filter((file) => file.status === "uploading"));
+      setFileList(info.fileList.filter((file) => file.status === 'uploading'));
     }
   };
 
   const uploadFile = async (options) => {
-    const { onSuccess, onError, onProgress, file } = options;
+    const {
+      onSuccess, onError, onProgress, file,
+    } = options;
 
     const buffer = await file.arrayBuffer();
     const binaryArray = new Uint8Array(buffer);
@@ -38,8 +42,8 @@ const FileUploader = () => {
 
     const headers = {
       ...authHeaders,
-      "Content-Type": "application/octet-stream",
-      "Content-Disposition": `attachment; filename="${fileName}"`,
+      'Content-Type': 'application/octet-stream',
+      'Content-Disposition': `attachment; filename="${fileName}"`,
     };
 
     const uploadPart = async (filePart, fileId) => {
@@ -59,7 +63,7 @@ const FileUploader = () => {
       if (fileInfo) {
         onProgress({ percent: Math.floor((filePart / totalParts) * 100) });
         if (filePart === totalParts) {
-          onSuccess("OK");
+          onSuccess('OK');
         } else {
           await uploadPart(filePart + 1, fileInfo.file_id);
         }
@@ -76,8 +80,8 @@ const FileUploader = () => {
     <Row style={{ marginBottom: 10 }} align="middle">
       <Col offset={1} span={22}>
         <Upload.Dragger
-          style={{ margin: "10px 0" }}
-          multiple={true}
+          style={{ margin: '10px 0' }}
+          multiple
           fileList={fileList}
           onChange={onStatusChange}
           customRequest={uploadFile}
@@ -91,17 +95,17 @@ const FileUploader = () => {
             <UploadOutlined />
           </p>
           <p className="ant-upload-text">
-            {t("Click or drag files to this area to upload")}
+            {t('Click or drag files to this area to upload')}
           </p>
           <p className="ant-upload-hint">
             {t(
-              "Support for a single or bulk upload. Strictly prohibit uploading company data or other band files"
+              'Support for a single or bulk upload. Strictly prohibit uploading company data or other band files',
             )}
           </p>
         </Upload.Dragger>
       </Col>
     </Row>
   );
-};
+}
 
 export default FileUploader;

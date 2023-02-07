@@ -4,16 +4,18 @@ import {
   DownloadOutlined,
   EditOutlined,
   FolderOutlined,
-} from "@ant-design/icons";
-import { Col, Dropdown, Modal, Row, Space, Table } from "antd";
-import React, { useEffect, useRef, useState } from "react";
-import { FileIcon, defaultStyles } from "react-file-icon";
-import { useTranslation } from "react-i18next";
+} from '@ant-design/icons';
+import {
+  Col, Dropdown, Modal, Row, Space, Table,
+} from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { FileIcon, defaultStyles } from 'react-file-icon';
+import { useTranslation } from 'react-i18next';
 
-import { del, get, getAuthHeaders } from "../api";
-import { fileExtension, humanReadableDate, humanReadableSize } from "../utils";
+import { del, get, getAuthHeaders } from '../api';
+import { fileExtension, humanReadableDate, humanReadableSize } from '../utils';
 
-const FilesView = () => {
+function FilesView() {
   const { t } = useTranslation();
 
   const foldersOffset = useRef(0);
@@ -28,8 +30,8 @@ const FilesView = () => {
   ]);
 
   const defaultModalConfig = {
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     open: false,
     onOk: () => {},
     confirmLoading: false,
@@ -42,43 +44,40 @@ const FilesView = () => {
   const authHeaders = getAuthHeaders();
 
   const getFolderActionItems = (folder) => {
+    const handleDeleteFolder = () => {
+      setModalConfig({
+        title: t(`Delete ${folder.folder_name}`),
+        description: t(
+          `Are you sure you want to delete ${folder.folder_name}?`,
+        ),
+        open: true,
+        onOk: async () => {
+          setModalConfig({ ...modalConfig, confirmLoading: true });
+          await del(`/v1/tdlib/folder/${folder.folder_id}`, authHeaders);
+          setModalConfig(defaultModalConfig);
+        },
+        confirmLoading: false,
+        onCancel: () => {
+          setModalConfig(defaultModalConfig);
+        },
+      });
+    };
+
     return [
       {
-        key: "q",
-        label: <a>{t("Rename")}</a>,
+        key: 'q',
+        label: <a>{t('Rename')}</a>,
         icon: <EditOutlined />,
       },
       {
-        type: "divider",
+        type: 'divider',
       },
       {
-        key: "2",
+        key: '2',
         danger: true,
         label: (
-          <a
-            onClick={() => {
-              setModalConfig({
-                title: t(`Delete ${folder.folder_name}`),
-                description: t(
-                  `Are you sure you want to delete ${folder.folder_name}?`
-                ),
-                open: true,
-                onOk: async () => {
-                  setModalConfig({ ...modalConfig, confirmLoading: true });
-                  await del(
-                    `/v1/tdlib/folder/${folder.folder_id}`,
-                    authHeaders
-                  );
-                  setModalConfig(defaultModalConfig);
-                },
-                confirmLoading: false,
-                onCancel: () => {
-                  setModalConfig(defaultModalConfig);
-                },
-              });
-            }}
-          >
-            {t("Delete")}
+          <a onClick={handleDeleteFolder} onKeyDown={handleDeleteFolder}>
+            {t('Delete')}
           </a>
         ),
         icon: <DeleteOutlined />,
@@ -87,52 +86,50 @@ const FilesView = () => {
   };
 
   const getFileActionItems = (file) => {
+    const handleDeleteFile = () => {
+      setModalConfig({
+        title: t(`Delete ${file.file_name}`),
+        description: t(`Are you sure you want to delete ${file.file_name}?`),
+        open: true,
+        onOk: async () => {
+          setModalConfig({ ...modalConfig, confirmLoading: true });
+          await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
+          setModalConfig(defaultModalConfig);
+        },
+        confirmLoading: false,
+        onCancel: () => {
+          setModalConfig(defaultModalConfig);
+        },
+      });
+    };
+
     return [
       {
-        key: "1",
+        key: '1',
         label: (
           <a
             href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
             download={file.file_name}
           >
-            {t("Download")}
+            {t('Download')}
           </a>
         ),
         icon: <DownloadOutlined />,
       },
       {
-        key: "2",
-        label: <a>{t("Rename")}</a>,
+        key: '2',
+        label: <a>{t('Rename')}</a>,
         icon: <EditOutlined />,
       },
       {
-        type: "divider",
+        type: 'divider',
       },
       {
-        key: "3",
+        key: '3',
         danger: true,
         label: (
-          <a
-            onClick={() => {
-              setModalConfig({
-                title: t(`Delete ${file.file_name}`),
-                description: t(
-                  `Are you sure you want to delete ${file.file_name}?`
-                ),
-                open: true,
-                onOk: async () => {
-                  setModalConfig({ ...modalConfig, confirmLoading: true });
-                  await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
-                  setModalConfig(defaultModalConfig);
-                },
-                confirmLoading: false,
-                onCancel: () => {
-                  setModalConfig(defaultModalConfig);
-                },
-              });
-            }}
-          >
-            {t("Delete")}
+          <a onClick={handleDeleteFile} onKeyDown={handleDeleteFile}>
+            {t('Delete')}
           </a>
         ),
         icon: <DeleteOutlined />,
@@ -154,32 +151,33 @@ const FilesView = () => {
 
       folders = await get(url, authHeaders);
       if (folders) {
-        folders = folders.map((folder) => {
-          return {
-            data: folder,
-            type: "folder",
-            name: (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ maxWidth: 36, marginRight: 10 }}>
-                  <FolderOutlined style={{ fontSize: 38, padding: "6px 0" }} />
-                </div>
-                <a>{folder.folder_name}</a>
+        folders = folders.map((folder) => ({
+          data: folder,
+          type: 'folder',
+          name: (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ maxWidth: 36, marginRight: 10 }}>
+                <FolderOutlined style={{ fontSize: 38, padding: '6px 0' }} />
               </div>
-            ),
-            size: "-",
-            last_modified: humanReadableDate(folder.updated_at),
-            actions: (
-              <Dropdown menu={{ items: getFolderActionItems(folder) }}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    {t("Actions")}
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            ),
-          };
-        });
+              <a>{folder.folder_name}</a>
+            </div>
+          ),
+          size: '-',
+          last_modified: humanReadableDate(folder.updated_at),
+          actions: (
+            <Dropdown menu={{ items: getFolderActionItems(folder) }}>
+              <a
+                onClick={(e) => e.preventDefault()}
+                onKeyDown={(e) => e.preventDefault()}
+              >
+                <Space>
+                  {t('Actions')}
+                  <DownOutlined />
+                </Space>
+              </a>
+            </Dropdown>
+          ),
+        }));
       } else {
         setLoading(false);
         return;
@@ -205,12 +203,12 @@ const FilesView = () => {
 
           return {
             data: file,
-            type: "file",
+            type: 'file',
             name: (
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ maxWidth: 36, marginRight: 10 }}>
                   <FileIcon
-                    labelUppercase={true}
+                    labelUppercase
                     extension={extension}
                     {...defaultStyles[extension]}
                   />
@@ -222,9 +220,12 @@ const FilesView = () => {
             last_modified: humanReadableDate(file.updated_at),
             actions: (
               <Dropdown menu={{ items: getFileActionItems(file) }}>
-                <a onClick={(e) => e.preventDefault()}>
+                <a
+                  onClick={(e) => e.preventDefault()}
+                  onKeyDown={(e) => e.preventDefault()}
+                >
                   <Space>
-                    {t("Actions")}
+                    {t('Actions')}
                     <DownOutlined />
                   </Space>
                 </a>
@@ -246,18 +247,17 @@ const FilesView = () => {
 
   useEffect(() => {
     // https://github.com/ant-design/ant-design/issues/5904#issuecomment-660817725
-    const table = document.querySelector(".files-view-table .ant-table-body");
+    const table = document.querySelector('.files-view-table .ant-table-body');
     if (table) {
-      table.addEventListener("scroll", async () => {
-        const percent =
-          (table.scrollTop / (table.scrollHeight - table.clientHeight)) * 100;
+      table.addEventListener('scroll', async () => {
+        const percent = (table.scrollTop / (table.scrollHeight - table.clientHeight)) * 100;
         if (percent >= 100) {
           await fetchData();
         }
       });
     }
 
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       setWindowSize([window.innerWidth, window.innerHeight]);
     });
 
@@ -266,35 +266,37 @@ const FilesView = () => {
 
   const columns = [
     {
-      title: t("Name"),
-      dataIndex: "name",
-      width: "40%",
+      title: t('Name'),
+      dataIndex: 'name',
+      width: '40%',
     },
     {
-      title: t("Size"),
-      dataIndex: "size",
-      responsive: ["md"],
-      width: "20%",
+      title: t('Size'),
+      dataIndex: 'size',
+      responsive: ['md'],
+      width: '20%',
     },
     {
-      title: t("Last Modified"),
-      dataIndex: "last_modified",
-      responsive: ["md"],
-      width: "20%",
+      title: t('Last Modified'),
+      dataIndex: 'last_modified',
+      responsive: ['md'],
+      width: '20%',
     },
     {
-      title: t("Actions"),
-      dataIndex: "actions",
-      width: "20%",
+      title: t('Actions'),
+      dataIndex: 'actions',
+      width: '20%',
     },
   ];
 
   const rowKey = (row) => {
-    if (row.type === "file") {
+    if (row.type === 'file') {
       return row.data.file_id;
-    } else if (row.type === "folder") {
+    }
+    if (row.type === 'folder') {
       return row.data.folder_id;
     }
+    return undefined;
   };
 
   return (
@@ -319,13 +321,13 @@ const FilesView = () => {
           confirmLoading={modalConfig.confirmLoading}
           onCancel={modalConfig.onCancel}
           okButtonProps={{ danger: true }}
-          okText={t("Yes")}
+          okText={t('Yes')}
         >
           <p>{modalConfig.description}</p>
         </Modal>
       </Col>
     </Row>
   );
-};
+}
 
 export default FilesView;

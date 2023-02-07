@@ -5,12 +5,14 @@ import {
   LogoutOutlined,
   MenuOutlined,
   UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Col, Divider, Drawer, Menu, Row } from "antd";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useMediaQuery } from "react-responsive";
-import { useLocation, useNavigate } from "react-router-dom";
+} from '@ant-design/icons';
+import {
+  Avatar, Button, Col, Divider, Drawer, Menu, Row,
+} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMediaQuery } from 'react-responsive';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import {
   get,
@@ -18,9 +20,9 @@ import {
   isUserLoggedIn,
   post,
   removeUserCredential,
-} from "../api";
+} from '../api';
 
-const NavigationMenu = () => {
+function NavigationMenu() {
   const { t } = useTranslation();
 
   const location = useLocation();
@@ -36,19 +38,20 @@ const NavigationMenu = () => {
       return;
     }
 
-    get("/v1/user", authHeaders).then((user) => {
-      if (user) {
-        setUser(user);
+    get('/v1/user', authHeaders).then((apiUser) => {
+      if (apiUser) {
+        setUser(apiUser);
       }
     });
   }, []);
 
   const mediaQueryMatch = useMediaQuery(
-    { query: "(min-width: 576px)" },
+    { query: '(min-width: 576px)' },
     undefined,
     (match) => {
+      // eslint-disable-next-line no-use-before-define
       setUseDrawer(!match);
-    }
+    },
   );
   const [useDrawer, setUseDrawer] = useState(!mediaQueryMatch);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -59,14 +62,14 @@ const NavigationMenu = () => {
     setIsDrawerOpen(false);
   };
 
-  let userMenuItems = [];
-  let mainMenuItems = [
+  const userMenuItems = [];
+  const mainMenuItems = [
     {
-      key: "/",
-      label: t("Home"),
+      key: '/',
+      label: t('Home'),
       icon: <HomeOutlined />,
       onClick: () => {
-        navigate("/");
+        navigate('/');
         closeDrawer();
       },
     },
@@ -74,52 +77,52 @@ const NavigationMenu = () => {
 
   if (isLoggedIn) {
     mainMenuItems.push({
-      key: "/files",
-      label: t("My Files"),
+      key: '/files',
+      label: t('My Files'),
       icon: <FileOutlined />,
       onClick: () => {
-        navigate("/files");
+        navigate('/files');
         closeDrawer();
       },
     });
 
     userMenuItems.push({
-      key: "/logout",
-      label: t("Logout"),
+      key: '/logout',
+      label: t('Logout'),
       icon: useDrawer ? (
         <LogoutOutlined />
       ) : (
         <Avatar
-          style={{ justifyContent: "center", verticalAlign: "middle" }}
+          style={{ justifyContent: 'center', verticalAlign: 'middle' }}
           size="default"
           icon={<UserOutlined />}
           src={user ? user.photo_url : null}
         />
       ),
       onClick: async () => {
-        const resp = await post("/v1/auth/signOut", {}, authHeaders);
+        const resp = await post('/v1/auth/signOut', {}, authHeaders);
         if (resp) {
           setUser();
           removeUserCredential();
-          navigate("/", { replace: true });
+          navigate('/', { replace: true });
           closeDrawer();
         }
       },
     });
   } else {
     userMenuItems.push({
-      key: "/login",
-      label: t("Login"),
+      key: '/login',
+      label: t('Login'),
       icon: <LoginOutlined />,
       onClick: () => {
-        navigate("/login");
+        navigate('/login');
         closeDrawer();
       },
     });
   }
 
   const menuStyles = {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   };
 
   return (
@@ -129,22 +132,22 @@ const NavigationMenu = () => {
           <>
             <div
               style={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               <Button style={{ border: 0 }} onClick={openDrawer}>
                 <MenuOutlined />
               </Button>
-              <Avatar src={process.env.PUBLIC_URL + "/logo192.png"} />
+              <Avatar src={`${process.env.PUBLIC_URL}/logo192.png`} />
               <p style={{ marginLeft: 10 }}>TeleDrive</p>
             </div>
             <Drawer
-              title={
+              title={(
                 <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
+                    display: 'flex',
+                    alignItems: 'center',
                     marginTop: -18,
                     marginBottom: -18,
                   }}
@@ -154,16 +157,16 @@ const NavigationMenu = () => {
                     src={
                       user
                         ? user.photo_url
-                        : process.env.PUBLIC_URL + "/logo192.png"
+                        : `${process.env.PUBLIC_URL}/logo192.png`
                     }
                   />
                   <p style={{ marginLeft: 10 }}>
                     {user
-                      ? user.first_name + " " + user.last_name
-                      : "TeleDrive"}
+                      ? `${user.first_name} ${user.last_name}`
+                      : 'TeleDrive'}
                   </p>
                 </div>
-              }
+              )}
               placement="left"
               onClose={closeDrawer}
               open={isDrawerOpen}
@@ -171,7 +174,7 @@ const NavigationMenu = () => {
               width={250}
             >
               <Menu
-                style={{ ...menuStyles, justifyContent: "left", border: 0 }}
+                style={{ ...menuStyles, justifyContent: 'left', border: 0 }}
                 mode="vertical"
                 selectedKeys={[location.pathname]}
                 items={mainMenuItems.concat(userMenuItems)}
@@ -182,7 +185,7 @@ const NavigationMenu = () => {
           </>
         ) : (
           <Menu
-            style={{ ...menuStyles, justifyContent: "left" }}
+            style={{ ...menuStyles, justifyContent: 'left' }}
             mode="horizontal"
             selectedKeys={[location.pathname]}
             items={mainMenuItems}
@@ -193,18 +196,16 @@ const NavigationMenu = () => {
       {!useDrawer ? (
         <Col span={11}>
           <Menu
-            style={{ ...menuStyles, justifyContent: "right" }}
+            style={{ ...menuStyles, justifyContent: 'right' }}
             mode="horizontal"
             selectedKeys={[location.pathname]}
             items={userMenuItems}
             overflowedIndicator={false}
           />
         </Col>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </Row>
   );
-};
+}
 
 export default NavigationMenu;

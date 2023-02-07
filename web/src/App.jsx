@@ -1,17 +1,18 @@
-import { ConfigProvider, Layout } from "antd";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from 'react';
+import { ConfigProvider, Layout } from 'antd';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import NavigationMenu from "./components/NavigationMenu";
-import FilesPage from "./pages/FilesPage";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import NoPage from "./pages/NoPage";
+import NavigationMenu from './components/NavigationMenu';
+import FilesPage from './pages/FilesPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import NoPage from './pages/NoPage';
 
-const App = () => {
+function App() {
   const defaultTheme = {
     token: {
-      colorPrimary: "#158bdc",
-      colorSplit: "#d9d9d9",
+      colorPrimary: '#158bdc',
+      colorSplit: '#d9d9d9',
     },
   };
 
@@ -27,9 +28,9 @@ const App = () => {
         </Routes>
         <Layout.Footer
           style={{
-            textAlign: "center",
-            margin: "50px 10px",
-            color: "GrayText",
+            textAlign: 'center',
+            margin: '50px 10px',
+            color: 'GrayText',
           }}
         >
           Copyright © 2023 TeleDrive All rights reserved.
@@ -37,6 +38,6 @@ const App = () => {
       </ConfigProvider>
     </BrowserRouter>
   );
-};
+}
 
 export default App;
