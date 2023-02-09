@@ -26,4 +26,4 @@ jobs:
       - name: Lint
         run: cd web && make lint
       - name: Build
-        run: cd web && npm run build --if-present
+        run: cd web && npm run build
