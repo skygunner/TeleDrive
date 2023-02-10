@@ -1,0 +1,14 @@
+---
+- name: Configure hostname
+  become: true
+  hosts: commons
+  tasks:
+    - hostname:
+        name: "{{ inventory_hostname }}"
+      when: ansible_hostname != inventory_hostname
+
+- name: Configure servers
+  become: true
+  hosts: commons
+  roles:
+    - commons

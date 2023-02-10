@@ -1,0 +1,5 @@
+- include_tasks: apt.yaml
+- include_tasks: pkgs.yaml
+- include_tasks: limits.yaml
+- include_tasks: modprobe.yaml
+- include_tasks: sysctl.yaml
