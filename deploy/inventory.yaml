@@ -1,7 +1,7 @@
 ---
 all:
   children:
-    commons:
+    droplet:
       hosts:
         all-in-one.teledrive.io:
           ansible_host: 157.245.76.59
