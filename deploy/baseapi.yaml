@@ -1,0 +1,5 @@
+- name: Deploy baseapi
+  become: true
+  hosts: baseapi
+  roles:
+    - baseapi

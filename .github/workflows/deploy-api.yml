@@ -1,0 +1,26 @@
+name: Deploy API
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Deployment commit hash'
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout hash
+      run: git checkout ${{ github.event.inputs.commit_hash }}
+    - name: Docker Build
+      uses: docker/build-push-action@v2
+      with:
+        file: api/Dockerfile
+        context: api
+        tags: baseapi:${{ github.event.inputs.commit_hash }}
+    - name: Docker Save
+      run: docker save baseapi:${{ github.event.inputs.commit_hash }} > baseapi-image.tar

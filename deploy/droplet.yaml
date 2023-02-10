@@ -1,4 +1,3 @@
----
 - name: Configure hostname
   become: true
   hosts: droplet
@@ -11,4 +10,5 @@
   become: true
   hosts: droplet
   roles:
-    - commons
+    - droplet
+    - docker

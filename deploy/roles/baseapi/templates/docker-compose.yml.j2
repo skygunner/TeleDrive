@@ -1,0 +1,29 @@
+version: "3.6"
+services:
+
+  baseapi:
+    image: baseapi:{{ baseapi_version }}
+    hostname: baseapi
+    container_name: baseapi
+    networks:
+      - baseapi
+    environment:
+      SECRET_KEY="{{ django_secret_key }}"
+      LOG_LEVEL="WARNING"
+      DATABASE_NAME="baseapi"
+      DATABASE_USER="baseapi"
+      DATABASE_PASSWORD="{{ postgresql_password }}"
+      DATABASE_HOST="10.110.32.2"
+      JWT_TOKEN_KEY="{{ jwt_secret_key }}"
+      TELEGRAM_API_ID={{ telepram_api_id }}
+      TELEGRAM_API_HASH="{{ telepram_api_hash }}"
+      TELEGRAM_BOT_TOKEN="{{ telepram_bot_token }}"
+      TELEGRAM_BOT_SESSION="{{ telepram_bot_session }}"
+    command: bash -c "make db-migrate && make gunicorn"
+    ports:
+      - 8000:8000
+
+networks:
+  baseapi:
+    name: baseapi
+    driver: bridge

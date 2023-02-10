@@ -11,7 +11,18 @@ basic_pkgs:
 basic_modprobe:
   - bonding
   - ip_conntrack
-  - nf_conntrack
+
+limits_config:
+  root_hard:
+    domain: root
+    limit_type: hard
+    limit_item: nofile
+    value: 1024000
+  root_soft:
+    domain: root
+    limit_type: soft
+    limit_item: nofile
+    value: 1024000
 
 sysctl_config:
   vm.swappiness: 1
@@ -31,15 +42,3 @@ sysctl_config:
   net.nf_conntrack_max: 450000
   vm.dirty_ratio: 10
   vm.dirty_background_ratio: 2
-
-limits_config:
-  root_hard:
-    domain: root
-    limit_type: hard
-    limit_item: nofile
-    value: 1024000
-  root_soft:
-    domain: root
-    limit_type: soft
-    limit_item: nofile
-    value: 1024000

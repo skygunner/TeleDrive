@@ -18,7 +18,7 @@ RUN mkdir -p $HOME \
     && addgroup -S app \
     && adduser -S app -G app
 
-ENV APP_HOME=$HOME/base-api
+ENV APP_HOME=$HOME/baseapi
 RUN mkdir -p $APP_HOME
 
 WORKDIR $APP_HOME

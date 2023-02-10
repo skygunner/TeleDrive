@@ -6,7 +6,7 @@ services:
     hostname: postgres
     container_name: postgres
     networks:
-      - base-api
+      - baseapi
     environment:
       POSTGRES_DB: baseapi
       POSTGRES_PASSWORD: secret
@@ -14,26 +14,26 @@ services:
     ports:
       - 5432:5432
 
-  base-api:
-    image: local/base-api:latest
+  baseapi:
+    image: local/baseapi:latest
     build:
       context: .
       dockerfile: Dockerfile
-    hostname: base-api
-    container_name: base-api
+    hostname: baseapi
+    container_name: baseapi
     depends_on:
       - postgres
     networks:
-      - base-api
+      - baseapi
     environment:
       DATABASE_HOST: postgres
     volumes:
-      - ${PWD}:/home/app/base-api
+      - ${PWD}:/home/app/baseapi
     command: bash -c "while !</dev/tcp/postgres/5432; do sleep 1; done; make db-migrate && make runserver"
     ports:
-      - 8000:8080
+      - 8000:8000
 
 networks:
-  base-api:
-    name: base-api
+  baseapi:
+    name: baseapi
     driver: bridge
