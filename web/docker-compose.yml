@@ -1,22 +1,22 @@
 version: "3.6"
 services:
-  teledrive:
-    image: local/teledrive:latest
+  web:
+    image: local/web:latest
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        - NODE_ENV=production
+        - NODE_ENV=development
         - REACT_APP_TELEGRAM_BOT_NAME=BotName
         - REACT_APP_API_BASE_URL=http://localhost:8000
-    hostname: teledrive
-    container_name: teledrive
+    hostname: web
+    container_name: web
     networks:
-      - teledrive
+      - web
     ports:
       - 8080:80
 
 networks:
-  teledrive:
-    name: teledrive
+  web:
+    name: web
     driver: bridge

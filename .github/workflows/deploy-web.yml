@@ -1,0 +1,40 @@
+name: Deploy Web
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Deploy commit hash'
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout hash
+      run: git checkout ${{ github.event.inputs.commit_hash }}
+    - name: Docker Build
+      uses: docker/build-push-action@v2
+      with:
+        file: web/Dockerfile
+        context: web
+        tags: web:${{ github.event.inputs.commit_hash }}
+        build-args: |
+          NODE_ENV=production
+          REACT_APP_TELEGRAM_BOT_NAME=TeleDriveAppBot
+          REACT_APP_API_BASE_URL=https://api.teledrive.io
+    - name: Docker Save
+      run: docker save web:${{ github.event.inputs.commit_hash }} > /tmp/web-image.tar
+    - name: Run Playbook
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        directory: deploy
+        playbook: web.yaml
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        requirements: requirements.yaml
+        options: |
+          -e "web_image_path=/tmp/web-image.tar"
+          -e "web_version=${{ github.event.inputs.commit_hash }}"

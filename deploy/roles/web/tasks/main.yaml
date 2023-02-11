@@ -1,0 +1,31 @@
+- name: Creates configuration directory
+  file:
+    path: /etc/web
+    state: directory
+
+- name: Copy docker image to host
+  copy:
+    src: "{{ web_image_path }}"
+    dest: /etc/web/web-image.tar
+
+- name: load docker image from .tar file
+  shell: |
+    docker load < /etc/web/web-image.tar
+
+- name: Delete docker image .tar file
+  file:
+    path: /etc/web/web-image.tar
+    state: absent
+
+- name: Copy docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /etc/web/docker-compose.yml
+
+- name: docker-compose up -d
+  shell: |
+    docker-compose -f /etc/web/docker-compose.yml up -d
+
+- name: Remove unused docker images
+  shell: |
+    docker image prune -a -f

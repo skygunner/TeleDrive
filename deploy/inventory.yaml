@@ -15,7 +15,7 @@ all:
         all-in-one.teledrive.io:
           ansible_host: 157.245.76.59
           ansible_user: root
-    teledrive:
+    web:
       hosts:
         all-in-one.teledrive.io:
           ansible_host: 157.245.76.59
