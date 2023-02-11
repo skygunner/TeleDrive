@@ -1,0 +1,30 @@
+name: Deploy Infra
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Deploy commit hash'
+        required: true
+      playbook_file:
+        description: 'Deploy playbook file'
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout hash
+      run: git checkout ${{ github.event.inputs.commit_hash }}
+    - name: Run Playbook
+      uses: dawidd6/action-ansible-playbook@v2
+      with:
+        directory: deploy
+        playbook: ${{ github.event.inputs.playbook_file }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        requirements: requirements.yaml
+        options: |
+          -e "postgresql_password=${{ secrets.POSTGRESQL_PASSWORD }}"
