@@ -1,0 +1,19 @@
+- name: Creates configuration directory
+  file:
+    path: /etc/nginx/ssl/teledrive.io
+    state: directory
+
+- name: Copy private key file
+  copy:
+    src: "{{ ssl_certificate_private_key_path }}"
+    dest: /etc/nginx/ssl/teledrive.io/privkey.pem
+
+- name: Copy full chain file
+  copy:
+    src: "{{ ssl_certificate_full_chain_path }}"
+    dest: /etc/nginx/ssl/teledrive.io/fullchain.pem
+
+- name: Copy dhparam file
+  copy:
+    src: "{{ ssl_certificate_dhparam_path }}"
+    dest: /etc/nginx/ssl/teledrive.io/dhparam.pem

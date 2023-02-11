@@ -17,7 +17,7 @@ To generate an SSL certificate, you need to use the below commands:
 
 ``` bash
 brew install certbot
-sudo certbot certonly --manual --preferred-challenges dns -d "*.teledrive.io"
+$ sudo certbot certonly --manual --preferred-challenges dns -d teledrive.io -d www.teledrive.io -d api.teledrive.io
 ```
 
 # References
