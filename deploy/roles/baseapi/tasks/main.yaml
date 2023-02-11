@@ -21,3 +21,11 @@
   template:
     src: docker-compose.yml.j2
     dest: /etc/baseapi/docker-compose.yml
+
+- name: docker-compose up -d
+  shell: |
+    docker-compose -f /etc/baseapi/docker-compose.yml up -d
+
+- name: Remove unused docker images
+  shell: |
+    docker image prune -a -f

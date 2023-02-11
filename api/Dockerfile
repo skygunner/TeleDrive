@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apk add --update --no-cache \
     libc6-compat ca-certificates bash build-base gcc \
     python3-dev libpq postgresql-dev musl-dev libffi-dev \
-    clang libjpeg-turbo-dev libwebp-dev zlib-dev rust cargo
+    clang libjpeg-turbo-dev libwebp-dev zlib-dev rust cargo curl
 
 ENV HOME=/home/app
 RUN mkdir -p $HOME \
