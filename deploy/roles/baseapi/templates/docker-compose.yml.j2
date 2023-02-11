@@ -19,5 +19,3 @@ services:
       TELEGRAM_BOT_TOKEN: "{{ telepram_bot_token }}"
       TELEGRAM_BOT_SESSION: "{{ telepram_bot_session }}"
     command: bash -c "make db-migrate && make gunicorn"
-    ports:
-      - 8000:8000
