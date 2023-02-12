@@ -35,5 +35,7 @@ jobs:
         requirements: requirements.yaml
         options: |
           -e "postgresql_password=${{ secrets.POSTGRESQL_PASSWORD }}"
+          -e "s3_access_id=${{ secrets.S3_ACCESS_ID }}"
+          -e "s3_secret_key=${{ secrets.S3_SECRET_KEY }}"
           -e "ssl_certificate_private_key_path=/tmp/privkey.pem"
           -e "ssl_certificate_full_chain_path=/tmp/fullchain.pem"

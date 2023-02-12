@@ -3,3 +3,4 @@
   hosts: postgresql
   roles:
     - postgresql
+    - wal-g
