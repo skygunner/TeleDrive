@@ -6,7 +6,7 @@ resource "digitalocean_project" "teledrive" {
     is_default  = false
     resources   = [
         digitalocean_droplet.all_in_one.urn,
-        digitalocean_spaces_bucket.teledrive_db_backup_bucket.urn
+        # digitalocean_spaces_bucket.teledrive_db_backup_bucket.urn
     ]
 }
 
@@ -29,6 +29,7 @@ resource "digitalocean_droplet" "all_in_one" {
     ssh_keys = [ 
         digitalocean_ssh_key.teledrive.fingerprint 
     ]
+    backups  = true
     tags     = [ "all-in-one" ]
 }
 
@@ -94,7 +95,7 @@ resource "cloudflare_record" "api_teledrive" {
     type    = "A"
 }
 
-resource "digitalocean_spaces_bucket" "teledrive_db_backup_bucket" {
-    name   = "teledrive-db-backup-bucket"
-    region = var.digitalocean_region
-}
+# resource "digitalocean_spaces_bucket" "teledrive_db_backup_bucket" {
+#     name   = "teledrive-db-backup-bucket"
+#     region = var.digitalocean_region
+# }

@@ -69,9 +69,6 @@ postgresql_users:
   - name: baseapi
     password: "{{ postgresql_password }}"
 
-walg_data_path: /var/lib/postgresql/12/main
-walg_pg_socket: /var/run/postgresql
-
 walg_s3_id: "{{ s3_access_id }}"
 walg_s3_secret: "{{ s3_secret_key }}"
 walg_s3_region: ams3
@@ -81,10 +78,3 @@ walg_s3_bucket: "teledrive-db-backup-bucket"
 walg_s3_prefix: ""
 walg_s3_storage_class: STANDARD_IA
 walg_s3_use_path_style: false
-
-walg_backup_upload_disk: 2
-walg_backup_upload: 10
-walg_backup_download: 10
-walg_backup_delta_steps: 7
-walg_backups_retain: 2
-walg_cron_enabled: true

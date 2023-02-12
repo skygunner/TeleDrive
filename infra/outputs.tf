@@ -8,12 +8,12 @@ output "all_in_one_ipv4_address_private" {
     value       = digitalocean_droplet.all_in_one.ipv4_address_private
 }
 
-output "db_backup_bucket_domain_name" {
-    description = "DB Backup Bucket Domain Name"
-    value       = digitalocean_spaces_bucket.teledrive_db_backup_bucket.bucket_domain_name
-}
+# output "db_backup_bucket_domain_name" {
+#     description = "DB Backup Bucket Domain Name"
+#     value       = digitalocean_spaces_bucket.teledrive_db_backup_bucket.bucket_domain_name
+# }
 
-output "db_backup_bucket_endpoint" {
-    description = "DB Backup Bucket Endpoint"
-    value       = digitalocean_spaces_bucket.teledrive_db_backup_bucket.endpoint
-}
+# output "db_backup_bucket_endpoint" {
+#     description = "DB Backup Bucket Endpoint"
+#     value       = digitalocean_spaces_bucket.teledrive_db_backup_bucket.endpoint
+# }
