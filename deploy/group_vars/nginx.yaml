@@ -22,7 +22,6 @@ nginx_vhosts:
     extra_parameters: |
       ssl_certificate /etc/nginx/ssl/teledrive.io/fullchain.pem;
       ssl_certificate_key /etc/nginx/ssl/teledrive.io/privkey.pem;
-      ssl_dhparam /etc/nginx/ssl/teledrive.io/dhparam.pem;
 
       location / {
           proxy_pass http://10.110.32.2:8080;
@@ -32,7 +31,6 @@ nginx_vhosts:
     extra_parameters: |
       ssl_certificate /etc/nginx/ssl/teledrive.io/fullchain.pem;
       ssl_certificate_key /etc/nginx/ssl/teledrive.io/privkey.pem;
-      ssl_dhparam /etc/nginx/ssl/teledrive.io/dhparam.pem;
 
       location / {
           proxy_pass http://10.110.32.2:8000;

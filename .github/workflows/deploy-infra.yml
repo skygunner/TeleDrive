@@ -23,11 +23,9 @@ jobs:
       run: |
         echo "$SSL_CERTIFICATE_PRIVATE_KEY" >> /tmp/privkey.pem
         echo "$SSL_CERTIFICATE_FULL_CHAIN" >> /tmp/fullchain.pem
-        echo "$SSL_CERTIFICATE_DHPARAM" >> /tmp/dhparam.pem
       env:
         SSL_CERTIFICATE_PRIVATE_KEY: ${{ secrets.SSL_CERTIFICATE_PRIVATE_KEY }}
         SSL_CERTIFICATE_FULL_CHAIN: ${{ secrets.SSL_CERTIFICATE_FULL_CHAIN }}
-        SSL_CERTIFICATE_DHPARAM: ${{ secrets.SSL_CERTIFICATE_DHPARAM }}
     - name: Run Playbook
       uses: dawidd6/action-ansible-playbook@v2
       with:
@@ -39,4 +37,3 @@ jobs:
           -e "postgresql_password=${{ secrets.POSTGRESQL_PASSWORD }}"
           -e "ssl_certificate_private_key_path=/tmp/privkey.pem"
           -e "ssl_certificate_full_chain_path=/tmp/fullchain.pem"
-          -e "ssl_certificate_dhparam_path=/tmp/dhparam.pem"
