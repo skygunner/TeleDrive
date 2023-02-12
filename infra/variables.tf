@@ -3,6 +3,16 @@ variable "digitalocean_api_token" {
     sensitive   = true
 }
 
+variable "digitalocean_space_access_id" {
+    description = "DigitalOcean Space Access Id"
+    sensitive   = true
+}
+
+variable "digitalocean_space_secret_key" {
+    description = "DigitalOcean Space Secret Key"
+    sensitive   = true
+}
+
 variable "digitalocean_region" {
     description = "DigitalOcean Region"
     default     = "ams3"

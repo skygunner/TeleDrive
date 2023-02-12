@@ -14,7 +14,9 @@ terraform {
 }
 
 provider "digitalocean" {
-    token = var.digitalocean_api_token
+    token             = var.digitalocean_api_token
+    spaces_access_id  = var.digitalocean_space_access_id
+    spaces_secret_key = var.digitalocean_space_secret_key
 }
 
 provider "cloudflare" {

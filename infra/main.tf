@@ -5,7 +5,8 @@ resource "digitalocean_project" "teledrive" {
     environment = "Production"
     is_default  = false
     resources   = [
-        digitalocean_droplet.all_in_one.urn
+        digitalocean_droplet.all_in_one.urn,
+        digitalocean_spaces_bucket.teledrive_db_backup_bucket.urn
     ]
 }
 
@@ -91,4 +92,9 @@ resource "cloudflare_record" "api_teledrive" {
     name    = "api"
     value   = digitalocean_droplet.all_in_one.ipv4_address
     type    = "A"
+}
+
+resource "digitalocean_spaces_bucket" "teledrive_db_backup_bucket" {
+    name   = "teledrive-db-backup-bucket"
+    region = var.digitalocean_region
 }
