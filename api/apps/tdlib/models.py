@@ -40,7 +40,7 @@ class Folder(BaseModelMixin):
             where = "WHERE user_id = {} AND parent_id = {} AND deleted_at IS NULL".format(user.id, parent.id)
 
         return self.objects.raw(
-            "SELECT * FROM folders {} ORDER BY created_at LIMIT {} OFFSET {}".format(where, limit, offset)
+            "SELECT * FROM folders {} ORDER BY created_at DESC LIMIT {} OFFSET {}".format(where, limit, offset)
         )
 
     def update(self, parent: "Folder", folder_name: str):
@@ -145,7 +145,7 @@ class File(BaseModelMixin):
             )
 
         return self.objects.raw(
-            "SELECT * FROM files {} ORDER BY uploaded_at LIMIT {} OFFSET {}".format(where, limit, offset)
+            "SELECT * FROM files {} ORDER BY uploaded_at DESC LIMIT {} OFFSET {}".format(where, limit, offset)
         )
 
     def update(self, parent: Folder, file_name: str):
