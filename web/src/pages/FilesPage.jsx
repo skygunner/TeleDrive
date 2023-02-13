@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import React from 'react';
 import { isUserLoggedIn } from '../api';
 import FileUploader from '../components/FileUploader';
-import FilesView from '../components/FilesView';
+import FilesView from '../components/FilesView/FilesView';
 
 function FilesPage() {
   const isLoggedIn = isUserLoggedIn();

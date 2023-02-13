@@ -12,9 +12,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 
-import { del, get, getAuthHeaders } from '../api';
-import cfg from '../config';
-import { fileExtension, humanReadableDate, humanReadableSize } from '../utils';
+import { del, get, getAuthHeaders } from '../../api';
+import cfg from '../../config';
+import { fileExtension, humanReadableDate, humanReadableSize } from '../../utils';
 
 function FilesView() {
   const { t } = useTranslation();
