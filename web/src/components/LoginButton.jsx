@@ -3,6 +3,7 @@ import TelegramLoginButton from 'react-telegram-login';
 
 import React from 'react';
 import { post, storeUserCredential } from '../api';
+import cfg from '../config';
 
 function LoginButton() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function LoginButton() {
   return (
     <div style={{ marginTop: 10 }}>
       <TelegramLoginButton
-        botName={process.env.REACT_APP_TELEGRAM_BOT_NAME}
+        botName={cfg.telegramBotName}
         dataOnauth={onTelegramResponse}
         buttonSize="large"
         requestAccess="write"

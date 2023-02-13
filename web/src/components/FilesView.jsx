@@ -13,6 +13,7 @@ import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 
 import { del, get, getAuthHeaders } from '../api';
+import cfg from '../config';
 import { fileExtension, humanReadableDate, humanReadableSize } from '../utils';
 
 function FilesView() {
@@ -108,7 +109,7 @@ function FilesView() {
         key: '1',
         label: (
           <a
-            href={`${process.env.REACT_APP_API_BASE_URL}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
+            href={`${cfg.apiBaseUrl}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
             download={file.file_name}
           >
             {t('Download')}

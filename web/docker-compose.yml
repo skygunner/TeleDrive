@@ -6,9 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - NODE_ENV=development
         - REACT_APP_TELEGRAM_BOT_NAME=BotName
-        - REACT_APP_API_BASE_URL=http://localhost:8000
     hostname: web
     container_name: web
     networks:

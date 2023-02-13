@@ -1,11 +1,10 @@
 import { message } from 'antd';
 import axios from 'axios';
+import cfg from '../config';
 
 const unknownError = new Error('Something went wrong! Please try again later.');
 
-const baseAPI = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
-});
+const baseAPI = axios.create({ baseURL: cfg.apiBaseUrl });
 
 const responseData = (resp) => {
   if (resp.data?.status === 'SUCCESS') {
