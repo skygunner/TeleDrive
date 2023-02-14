@@ -73,7 +73,26 @@ export const filesViewTableSlice = createSlice({
   },
   reducers: {
     fileUploaded: (state, action) => {
-      state.foldersOffset += action.payload.foldersOffset;
+      const file = {
+        type: 'file',
+        ...action.payload,
+      };
+
+      state.data = state.data.slice(0, state.foldersOffset)
+        .concat([file]).concat(state.data.slice(state.foldersOffset));
+      state.filesOffset += 1;
+    },
+    fileDeleted: (state, action) => {
+      const fileId = action.payload;
+
+      state.data = state.data.filter((row) => !(row.type === 'file' && row.file_id === fileId));
+      state.filesOffset -= 1;
+    },
+    folderDeleted: (state, action) => {
+      const folderId = action.payload;
+
+      state.data = state.data.filter((row) => !(row.type === 'folder' && row.folder_id === folderId));
+      state.foldersOffset -= 1;
     },
   },
   extraReducers: (builder) => {
@@ -95,5 +114,5 @@ export const filesViewTableSlice = createSlice({
 });
 
 export const selectDetails = (state) => state.filesViewTableDetails;
-export const { fileUploaded } = filesViewTableSlice.actions;
+export const { fileUploaded, fileDeleted, folderDeleted } = filesViewTableSlice.actions;
 export default filesViewTableSlice.reducer;

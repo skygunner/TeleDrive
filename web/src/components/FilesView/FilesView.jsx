@@ -12,7 +12,9 @@ import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectDetails, fetchDataAsync } from './FilesViewSlice';
+import {
+  selectDetails, fetchDataAsync, fileDeleted, folderDeleted,
+} from './FilesViewSlice';
 
 import { del, getAuthHeaders } from '../../api';
 import cfg from '../../config';
@@ -103,48 +105,6 @@ function FilesView() {
     return undefined;
   };
 
-  const getFolderActionItems = (folder) => {
-    const handleDeleteFolder = () => {
-      setModalConfig({
-        title: t(`Delete ${folder.folder_name}`),
-        description: t(
-          `Are you sure you want to delete ${folder.folder_name}?`,
-        ),
-        open: true,
-        onOk: async () => {
-          setModalConfig({ ...modalConfig, confirmLoading: true });
-          await del(`/v1/tdlib/folder/${folder.folder_id}`, authHeaders);
-          setModalConfig(defaultModalConfig);
-        },
-        confirmLoading: false,
-        onCancel: () => {
-          setModalConfig(defaultModalConfig);
-        },
-      });
-    };
-
-    return [
-      {
-        key: 'q',
-        label: <a>{t('Rename')}</a>,
-        icon: <EditOutlined />,
-      },
-      {
-        type: 'divider',
-      },
-      {
-        key: '2',
-        danger: true,
-        label: (
-          <a onClick={handleDeleteFolder} onKeyDown={handleDeleteFolder}>
-            {t('Delete')}
-          </a>
-        ),
-        icon: <DeleteOutlined />,
-      },
-    ];
-  };
-
   const getFileActionItems = (file) => {
     const handleDeleteFile = () => {
       setModalConfig({
@@ -153,7 +113,10 @@ function FilesView() {
         open: true,
         onOk: async () => {
           setModalConfig({ ...modalConfig, confirmLoading: true });
-          await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
+          const ok = await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
+          if (ok) {
+            dispatch(fileDeleted(file.file_id));
+          }
           setModalConfig(defaultModalConfig);
         },
         confirmLoading: false,
@@ -189,6 +152,51 @@ function FilesView() {
         danger: true,
         label: (
           <a onClick={handleDeleteFile} onKeyDown={handleDeleteFile}>
+            {t('Delete')}
+          </a>
+        ),
+        icon: <DeleteOutlined />,
+      },
+    ];
+  };
+
+  const getFolderActionItems = (folder) => {
+    const handleDeleteFolder = () => {
+      setModalConfig({
+        title: t(`Delete ${folder.folder_name}`),
+        description: t(
+          `Are you sure you want to delete ${folder.folder_name}?`,
+        ),
+        open: true,
+        onOk: async () => {
+          setModalConfig({ ...modalConfig, confirmLoading: true });
+          const ok = await del(`/v1/tdlib/folder/${folder.folder_id}`, authHeaders);
+          if (ok) {
+            dispatch(folderDeleted(folder.folder_id));
+          }
+          setModalConfig(defaultModalConfig);
+        },
+        confirmLoading: false,
+        onCancel: () => {
+          setModalConfig(defaultModalConfig);
+        },
+      });
+    };
+
+    return [
+      {
+        key: 'q',
+        label: <a>{t('Rename')}</a>,
+        icon: <EditOutlined />,
+      },
+      {
+        type: 'divider',
+      },
+      {
+        key: '2',
+        danger: true,
+        label: (
+          <a onClick={handleDeleteFolder} onKeyDown={handleDeleteFolder}>
             {t('Delete')}
           </a>
         ),

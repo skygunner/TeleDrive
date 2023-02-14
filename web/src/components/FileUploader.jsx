@@ -5,6 +5,8 @@ import {
 import md5 from 'md5';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { fileUploaded } from './FilesView/FilesViewSlice';
 
 import { getAuthHeaders, post } from '../api';
 
@@ -13,6 +15,8 @@ function FileUploader() {
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [fileList, setFileList] = useState([]);
 
@@ -63,6 +67,7 @@ function FileUploader() {
       if (fileInfo) {
         onProgress({ percent: Math.floor((filePart / totalParts) * 100) });
         if (filePart === totalParts) {
+          dispatch(fileUploaded(fileInfo));
           onSuccess('OK');
         } else {
           await uploadPart(filePart + 1, fileInfo.file_id);
