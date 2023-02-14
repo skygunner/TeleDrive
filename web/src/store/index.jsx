@@ -3,6 +3,6 @@ import filesViewTableReducer from '../components/FilesView/FilesViewSlice';
 
 export default configureStore({
   reducer: {
-    filesViewTable: filesViewTableReducer,
+    filesViewTableDetails: filesViewTableReducer,
   },
 });

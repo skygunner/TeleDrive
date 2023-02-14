@@ -8,23 +8,25 @@ import {
 import {
   Col, Dropdown, Modal, Row, Space, Table,
 } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectDetails, fetchDataAsync } from './FilesViewSlice';
 
-import { del, get, getAuthHeaders } from '../../api';
+import { del, getAuthHeaders } from '../../api';
 import cfg from '../../config';
 import { fileExtension, humanReadableDate, humanReadableSize } from '../../utils';
 
 function FilesView() {
+  const parentId = null; // Query string
+  const authHeaders = getAuthHeaders();
+
   const { t } = useTranslation();
 
-  const foldersOffset = useRef(0);
-  const folderListEnd = useRef(false);
-  const filesOffset = useRef(0);
-  const dataSource = useRef([]);
+  const details = useSelector(selectDetails);
+  const dispatch = useDispatch();
 
-  const [loading, setLoading] = useState(false);
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,
     window.innerHeight,
@@ -40,9 +42,66 @@ function FilesView() {
   };
   const [modalConfig, setModalConfig] = useState(defaultModalConfig);
 
-  const limit = 20;
-  const parentId = null; // Query string
-  const authHeaders = getAuthHeaders();
+  useEffect(() => {
+    // https://github.com/ant-design/ant-design/issues/5904#issuecomment-660817725
+    const table = document.querySelector('.files-view-table .ant-table-body');
+    if (table) {
+      table.addEventListener('scroll', async () => {
+        const percent = (table.scrollTop / (table.scrollHeight - table.clientHeight)) * 100;
+        if (percent >= 100) {
+          dispatch(fetchDataAsync(parentId));
+        }
+      });
+    }
+
+    window.addEventListener('resize', () => {
+      setWindowSize([window.innerWidth, window.innerHeight]);
+    });
+
+    dispatch(fetchDataAsync(parentId));
+  }, []);
+
+  const rowName = (row) => {
+    if (row.type === 'file') {
+      const extension = fileExtension(row.file_name);
+
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ maxWidth: 36, marginRight: 10 }}>
+            <FileIcon
+              labelUppercase
+              extension={extension}
+              {...defaultStyles[extension]}
+            />
+          </div>
+          <span>{row.file_name}</span>
+        </div>
+      );
+    }
+    if (row.type === 'folder') {
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div style={{ maxWidth: 36, marginRight: 10 }}>
+            <FolderOutlined style={{ fontSize: 38, padding: '6px 0' }} />
+          </div>
+          <a>{row.folder_name}</a>
+        </div>
+      );
+    }
+
+    return undefined;
+  };
+
+  const rowSize = (row) => {
+    if (row.type === 'file') {
+      return humanReadableSize(row.file_size, true);
+    }
+    if (row.type === 'folder') {
+      return '-';
+    }
+
+    return undefined;
+  };
 
   const getFolderActionItems = (folder) => {
     const handleDeleteFolder = () => {
@@ -138,132 +197,41 @@ function FilesView() {
     ];
   };
 
-  const fetchData = async () => {
-    setLoading(true);
+  const rowActions = (row) => {
+    let items = [];
 
-    let folders = [];
-    let files = [];
-
-    if (!folderListEnd.current) {
-      let url = `/v1/tdlib/folders?offset=${foldersOffset.current}&limit=${limit}`;
-      if (parentId) {
-        url += `&parent_id=${parentId}`;
-      }
-
-      folders = await get(url, authHeaders);
-      if (folders) {
-        folders = folders.map((folder) => ({
-          data: folder,
-          type: 'folder',
-          name: (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ maxWidth: 36, marginRight: 10 }}>
-                <FolderOutlined style={{ fontSize: 38, padding: '6px 0' }} />
-              </div>
-              <a>{folder.folder_name}</a>
-            </div>
-          ),
-          size: '-',
-          last_modified: humanReadableDate(folder.updated_at),
-          actions: (
-            <Dropdown menu={{ items: getFolderActionItems(folder) }}>
-              <a
-                onClick={(e) => e.preventDefault()}
-                onKeyDown={(e) => e.preventDefault()}
-              >
-                <Space>
-                  {t('Actions')}
-                  <DownOutlined />
-                </Space>
-              </a>
-            </Dropdown>
-          ),
-        }));
-      } else {
-        setLoading(false);
-        return;
-      }
-
-      foldersOffset.current += folders.length;
-      dataSource.current = dataSource.current.concat(folders);
+    if (row.type === 'file') {
+      items = getFileActionItems(row);
+    }
+    if (row.type === 'folder') {
+      items = getFolderActionItems(row);
     }
 
-    if (folders.length < limit) {
-      folderListEnd.current = true;
-      const filesLimit = limit - folders.length;
-
-      let url = `/v1/tdlib/files?offset=${filesOffset.current}&limit=${filesLimit}`;
-      if (parentId) {
-        url += `&parent_id=${parentId}`;
-      }
-
-      files = await get(url, authHeaders);
-      if (files) {
-        files = files.map((file) => {
-          const extension = fileExtension(file.file_name);
-
-          return {
-            data: file,
-            type: 'file',
-            name: (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ maxWidth: 36, marginRight: 10 }}>
-                  <FileIcon
-                    labelUppercase
-                    extension={extension}
-                    {...defaultStyles[extension]}
-                  />
-                </div>
-                <span>{file.file_name}</span>
-              </div>
-            ),
-            size: humanReadableSize(file.file_size, true),
-            last_modified: humanReadableDate(file.updated_at),
-            actions: (
-              <Dropdown menu={{ items: getFileActionItems(file) }}>
-                <a
-                  onClick={(e) => e.preventDefault()}
-                  onKeyDown={(e) => e.preventDefault()}
-                >
-                  <Space>
-                    {t('Actions')}
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            ),
-          };
-        });
-      } else {
-        setLoading(false);
-        return;
-      }
-
-      filesOffset.current += files.length;
-      dataSource.current = dataSource.current.concat(files);
-    }
-
-    setLoading(false);
+    return (
+      <Dropdown menu={{ items }}>
+        <a
+          onClick={(e) => e.preventDefault()}
+          onKeyDown={(e) => e.preventDefault()}
+        >
+          <Space>
+            {t('Actions')}
+            <DownOutlined />
+          </Space>
+        </a>
+      </Dropdown>
+    );
   };
 
-  useEffect(() => {
-    // https://github.com/ant-design/ant-design/issues/5904#issuecomment-660817725
-    const table = document.querySelector('.files-view-table .ant-table-body');
-    if (table) {
-      table.addEventListener('scroll', async () => {
-        const percent = (table.scrollTop / (table.scrollHeight - table.clientHeight)) * 100;
-        if (percent >= 100) {
-          await fetchData();
-        }
-      });
+  const rowKey = (row) => {
+    if (row.rowData.type === 'file') {
+      return row.rowData.file_id;
+    }
+    if (row.rowData.type === 'folder') {
+      return row.rowData.folder_id;
     }
 
-    window.addEventListener('resize', () => {
-      setWindowSize([window.innerWidth, window.innerHeight]);
-    });
-
-    fetchData();
-  }, []);
+    return undefined;
+  };
 
   const columns = [
     {
@@ -290,15 +258,13 @@ function FilesView() {
     },
   ];
 
-  const rowKey = (row) => {
-    if (row.type === 'file') {
-      return row.data.file_id;
-    }
-    if (row.type === 'folder') {
-      return row.data.folder_id;
-    }
-    return undefined;
-  };
+  const dataSource = details.data.map((row) => ({
+    rowData: row,
+    name: rowName(row),
+    size: rowSize(row),
+    last_modified: humanReadableDate(row.updated_at),
+    actions: rowActions(row),
+  }));
 
   return (
     <Row align="middle">
@@ -307,8 +273,8 @@ function FilesView() {
           className="files-view-table"
           columns={columns}
           rowKey={rowKey}
-          loading={loading}
-          dataSource={dataSource.current}
+          loading={details.loading}
+          dataSource={dataSource}
           pagination={false}
           scroll={{
             scrollToFirstRowOnChange: false,

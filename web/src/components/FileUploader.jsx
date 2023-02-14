@@ -9,12 +9,12 @@ import { useTranslation } from 'react-i18next';
 import { getAuthHeaders, post } from '../api';
 
 function FileUploader() {
+  const parentId = null; // Query string
+  const authHeaders = getAuthHeaders();
+
   const { t } = useTranslation();
 
   const [fileList, setFileList] = useState([]);
-
-  const parentId = null; // Query string
-  const authHeaders = getAuthHeaders();
 
   const onStatusChange = (info) => {
     const { status } = info.file;

@@ -73,6 +73,7 @@ export const post = async (url, data, headers = {}) => {
     return responseData(await baseAPI.post(url, data, { headers }));
   } catch (error) {
     handleError(error);
+
     return undefined;
   }
 };
@@ -82,6 +83,7 @@ export const get = async (url, headers = {}) => {
     return responseData(await baseAPI.get(url, { headers }));
   } catch (error) {
     handleError(error);
+
     return undefined;
   }
 };
@@ -91,6 +93,7 @@ export const del = async (url, headers = {}) => {
     return responseData(await baseAPI.delete(url, { headers }));
   } catch (error) {
     handleError(error);
+
     return undefined;
   }
 };

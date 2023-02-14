@@ -23,13 +23,13 @@ import {
 } from '../api';
 
 function NavigationMenu() {
+  const isLoggedIn = isUserLoggedIn();
+  const authHeaders = getAuthHeaders();
+
   const { t } = useTranslation();
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  const isLoggedIn = isUserLoggedIn();
-  const authHeaders = getAuthHeaders();
 
   const [user, setUser] = useState();
 
