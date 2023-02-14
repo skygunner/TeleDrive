@@ -4,7 +4,8 @@ from tdlib.views import create_folder, download, list_files, list_folders, ud_fi
 
 urlpatterns = [
     path("/upload", upload, name="upload"),
-    path("/download/<int:file_id>", download, name="download"),
+    path("/download/<int:file_id>", download, name="download_without_name"),
+    path("/download/<int:file_id>/<str:file_name>", download, name="download_with_name"),
     path("/files", list_files, name="list_files"),
     path("/folders", list_folders, name="list_folders"),
     path("/folder", create_folder, name="create_folder"),

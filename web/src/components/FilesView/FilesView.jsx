@@ -131,7 +131,7 @@ function FilesView() {
         key: '1',
         label: (
           <a
-            href={`${cfg.apiBaseUrl}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
+            href={`https://docs.google.com/gview?url=${cfg.apiBaseUrl}/v1/tdlib/download/${file.file_id}/${file.file_name}?secret=${file.file_token}`}
             download={file.file_name}
           >
             {t('Download')}
