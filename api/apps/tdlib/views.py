@@ -362,7 +362,7 @@ def upload(request: Request) -> Response:
 @api_view(["GET"])
 @authentication_classes([])
 @transaction.atomic
-def download(request: Request, file_id: int, file_name: str = None) -> Response:
+def download(request: Request, file_id: int) -> Response:
     request_data = request.query_params
 
     file_token = request_data.get("secret", None)
@@ -397,9 +397,7 @@ def download(request: Request, file_id: int, file_name: str = None) -> Response:
     response = StreamingHttpResponse(streaming_content=download_iter, status=status_code)
     response["Accept-Ranges"] = "bytes"
     response["Cache-Control"] = "public, max-age=604800"
-    response["Content-Disposition"] = 'attachment; filename="{}"'.format(
-        file_name if file_name is not None else file.file_name
-    )
+    response["Content-Disposition"] = 'attachment; filename="{}"'.format(file.file_name)
     response["Content-Length"] = end - start + 1
     if status_code == status.HTTP_206_PARTIAL_CONTENT:
         response["Content-Range"] = "bytes {}-{}/{}".format(start, end, file.file_size)
