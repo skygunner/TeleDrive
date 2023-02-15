@@ -34,7 +34,7 @@ function FloatButtonGroup() {
     <FloatButton.Group
       trigger="click"
       type="primary"
-      style={{ right: 24 }}
+      style={{ right: 45 }}
       icon={<PlusOutlined />}
     >
       <FloatButton icon={<FolderAddOutlined />} />
