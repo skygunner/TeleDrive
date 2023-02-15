@@ -25,9 +25,9 @@ function FilesView() {
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const details = useSelector(selectDetails);
-  const dispatch = useDispatch();
 
   const [windowSize, setWindowSize] = useState([
     window.innerWidth,

@@ -27,7 +27,6 @@ function NavigationMenu() {
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
-
   const location = useLocation();
   const navigate = useNavigate();
 
