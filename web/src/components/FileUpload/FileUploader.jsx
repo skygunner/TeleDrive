@@ -1,8 +1,9 @@
+import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import {
   Col, Row, Upload, message,
 } from 'antd';
-import React from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploadSlice';
@@ -12,6 +13,16 @@ function FileUploader() {
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  const mediaQueryMatch = useMediaQuery(
+    { query: '(min-width: 576px)' },
+    undefined,
+    (match) => {
+      // eslint-disable-next-line no-use-before-define
+      setUseDragger(!match);
+    },
+  );
+  const [useDragger, setUseDragger] = useState(!mediaQueryMatch);
 
   const { floatButtonFileList, uploadDraggerFileList } = useSelector(selectFiles);
   const fileList = floatButtonFileList.concat(uploadDraggerFileList);
@@ -37,30 +48,33 @@ function FileUploader() {
   return (
     <Row style={{ marginBottom: 10 }} align="middle">
       <Col offset={1} span={22}>
-        <Upload.Dragger
-          style={{ margin: '10px 0' }}
-          multiple
-          fileList={fileList}
-          onChange={onStatusChange}
-          customRequest={uploadFile}
-          showUploadList={{
-            showRemoveIcon: false,
-            showPreviewIcon: false,
-            showDownloadIcon: false,
-          }}
-        >
-          <p className="ant-upload-drag-icon">
-            <UploadOutlined />
-          </p>
-          <p className="ant-upload-text">
-            {t('Click or drag files to this area to upload')}
-          </p>
-          <p className="ant-upload-hint">
-            {t(
-              'Support for a single or bulk upload. Strictly prohibit uploading company data or other band files',
-            )}
-          </p>
-        </Upload.Dragger>
+        {useDragger ? <Upload fileList={fileList} />
+          : (
+            <Upload.Dragger
+              style={{ margin: '10px 0' }}
+              multiple
+              fileList={fileList}
+              onChange={onStatusChange}
+              customRequest={uploadFile}
+              showUploadList={{
+                showRemoveIcon: false,
+                showPreviewIcon: false,
+                showDownloadIcon: false,
+              }}
+            >
+              <p className="ant-upload-drag-icon">
+                <UploadOutlined />
+              </p>
+              <p className="ant-upload-text">
+                {t('Click or drag files to this area to upload')}
+              </p>
+              <p className="ant-upload-hint">
+                {t(
+                  'Support for a single or bulk upload. Strictly prohibit uploading company data or other band files',
+                )}
+              </p>
+            </Upload.Dragger>
+          )}
       </Col>
     </Row>
   );
