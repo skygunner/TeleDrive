@@ -2,10 +2,10 @@ import { UploadOutlined } from '@ant-design/icons';
 import {
   Col, Row, Upload, message,
 } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { uploadAsync } from './FileUploadSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploadSlice';
 
 function FileUploader() {
   const parentId = null; // Query string
@@ -13,15 +13,20 @@ function FileUploader() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const [fileList, setFileList] = useState([]);
+  const { floatButtonFileList, uploadDraggerFileList } = useSelector(selectFiles);
+  const fileList = floatButtonFileList.concat(uploadDraggerFileList);
 
   const onStatusChange = (info) => {
     const { status } = info.file;
     if (status === 'uploading' || status === 'error') {
-      setFileList(info.fileList.filter((file) => file.status === 'uploading'));
+      dispatch(setUploadDraggerFileList(
+        info.fileList.filter((file) => file.status === 'uploading'),
+      ));
     } else if (status === 'done' || status === 'success') {
       message.success(t(`${info.file.name} uploaded successfully.`));
-      setFileList(info.fileList.filter((file) => file.status === 'uploading'));
+      dispatch(setUploadDraggerFileList(
+        info.fileList.filter((file) => file.status === 'uploading'),
+      ));
     }
   };
 

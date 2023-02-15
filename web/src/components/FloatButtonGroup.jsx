@@ -4,7 +4,7 @@ import { UploadOutlined, PlusOutlined, FolderAddOutlined } from '@ant-design/ico
 import { FloatButton, Upload, message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { uploadAsync } from './FileUpload/FileUploadSlice';
+import { uploadAsync, setFloatButtonFileList } from './FileUpload/FileUploadSlice';
 
 function FloatButtonGroup() {
   const parentId = null; // Query string
@@ -14,8 +14,15 @@ function FloatButtonGroup() {
 
   const onStatusChange = (info) => {
     const { status } = info.file;
-    if (status === 'done' || status === 'success') {
+    if (status === 'uploading' || status === 'error') {
+      dispatch(setFloatButtonFileList(
+        info.fileList.filter((file) => file.status === 'uploading'),
+      ));
+    } else if (status === 'done' || status === 'success') {
       message.success(t(`${info.file.name} uploaded successfully.`));
+      dispatch(setFloatButtonFileList(
+        info.fileList.filter((file) => file.status === 'uploading'),
+      ));
     }
   };
 

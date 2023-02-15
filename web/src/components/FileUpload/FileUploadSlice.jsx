@@ -66,11 +66,19 @@ export const uploadAsync = createAsyncThunk(
 export const fileUploadSlice = createSlice({
   name: 'fileUploadList',
   initialState: {
-    files: [],
+    floatButtonFileList: [],
+    uploadDraggerFileList: [],
   },
-  reducers: {},
+  reducers: {
+    setFloatButtonFileList: (state, action) => {
+      state.floatButtonFileList = action.payload;
+    },
+    setUploadDraggerFileList: (state, action) => {
+      state.uploadDraggerFileList = action.payload;
+    },
+  },
 });
 
 export const selectFiles = (state) => state.fileUploadList;
-// export const {} = fileUploadSlice.actions;
+export const { setFloatButtonFileList, setUploadDraggerFileList } = fileUploadSlice.actions;
 export default fileUploadSlice.reducer;
