@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfigProvider, Layout } from 'antd';
+import { ConfigProvider } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import NavigationMenu from './components/NavigationMenu';
@@ -7,6 +7,7 @@ import FilesPage from './pages/FilesPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import NoPage from './pages/NoPage';
+import FooterMenu from './components/FooterMenu';
 
 function App() {
   const defaultTheme = {
@@ -26,15 +27,7 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
-        <Layout.Footer
-          style={{
-            textAlign: 'center',
-            margin: '50px 10px',
-            color: 'GrayText',
-          }}
-        >
-          Copyright © 2023 TeleDrive All rights reserved.
-        </Layout.Footer>
+        <FooterMenu />
       </ConfigProvider>
     </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import {
   DownOutlined,
   DownloadOutlined,
   EditOutlined,
-  FolderOutlined,
+  FolderFilled,
 } from '@ant-design/icons';
 import {
   Col, Dropdown, Modal, Row, Space, Table,
@@ -84,7 +84,7 @@ function FilesView() {
       return (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <div style={{ maxWidth: 36, marginRight: 10 }}>
-            <FolderOutlined style={{ fontSize: 38, padding: '6px 0' }} />
+            <FolderFilled style={{ fontSize: 38, padding: '6px 0' }} />
           </div>
           <a>{row.folder_name}</a>
         </div>
