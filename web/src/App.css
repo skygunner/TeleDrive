@@ -1,0 +1,9 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.ant-float-btn {
+  width: 55px;
+  height: 55px;
+}

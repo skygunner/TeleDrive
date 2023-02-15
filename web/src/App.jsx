@@ -9,6 +9,8 @@ import LoginPage from './pages/LoginPage';
 import NoPage from './pages/NoPage';
 import FooterMenu from './components/FooterMenu';
 
+import './App.css';
+
 function App() {
   const defaultTheme = {
     token: {
