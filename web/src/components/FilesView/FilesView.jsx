@@ -261,7 +261,7 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider orientation="left" orientationMargin={20}>Folders / Files</Divider>
+          <Divider orientation="center">Folders / Files</Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List
@@ -269,7 +269,14 @@ function FilesView() {
                 renderItem={(item) => listItem(item)}
               />
             )
-            : null}
+            : (
+              <Skeleton
+                active
+                paragraph={{ rows: 2 }}
+                avatar={{ shape: 'square' }}
+                style={{ display: 'flex', alignItems: 'center' }}
+              />
+            )}
         </InfiniteScroll>
         <Modal
           title={modalConfig.title}
