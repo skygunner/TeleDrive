@@ -33,11 +33,13 @@ function FilesView() {
 
   const defaultModalConfig = {
     title: '',
-    description: '',
     open: false,
     onOk: () => {},
     confirmLoading: false,
     onCancel: () => {},
+    okButtonProps: {},
+    okText: '',
+    boxy: '',
   };
   const [modalConfig, setModalConfig] = useState(defaultModalConfig);
 
@@ -57,9 +59,6 @@ function FilesView() {
     const handleDeleteFolder = () => {
       setModalConfig({
         title: t(`Delete ${folder.folder_name}`),
-        description: t(
-          `Are you sure you want to delete ${folder.folder_name}?`,
-        ),
         open: true,
         onOk: async () => {
           setModalConfig({ ...modalConfig, confirmLoading: true });
@@ -73,6 +72,9 @@ function FilesView() {
         onCancel: () => {
           setModalConfig(defaultModalConfig);
         },
+        okButtonProps: { danger: true },
+        okText: t('Yes'),
+        body: <p>{t(`Are you sure you want to delete ${folder.folder_name}?`)}</p>,
       });
     };
 
@@ -118,7 +120,6 @@ function FilesView() {
     const handleDeleteFile = () => {
       setModalConfig({
         title: t(`Delete ${file.file_name}`),
-        description: t(`Are you sure you want to delete ${file.file_name}?`),
         open: true,
         onOk: async () => {
           setModalConfig({ ...modalConfig, confirmLoading: true });
@@ -132,6 +133,9 @@ function FilesView() {
         onCancel: () => {
           setModalConfig(defaultModalConfig);
         },
+        okButtonProps: { danger: true },
+        okText: t('Yes'),
+        body: <p>{t(`Are you sure you want to delete ${file.file_name}?`)}</p>,
       });
     };
 
@@ -284,10 +288,10 @@ function FilesView() {
           onOk={modalConfig.onOk}
           confirmLoading={modalConfig.confirmLoading}
           onCancel={modalConfig.onCancel}
-          okButtonProps={{ danger: true }}
-          okText={t('Yes')}
+          okButtonProps={modalConfig.okButtonProps}
+          okText={modalConfig.okText}
         >
-          <p>{modalConfig.description}</p>
+          {modalConfig.body}
         </Modal>
       </Col>
     </Row>
