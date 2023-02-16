@@ -2,27 +2,29 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get, getAuthHeaders } from '../../api';
+import config from '../../config';
 
 export const fetchDataAsync = createAsyncThunk(
   'filesViewTableDetails/fetchDataAsync',
   async (parentId, thunkAPI) => {
-    const limit = 20;
     const authHeaders = getAuthHeaders();
 
     const states = thunkAPI.getState();
     const details = states.filesViewTableDetails;
     const payload = {
+      files: details.files,
+      filesOffset: details.filesOffset,
+      filesListEnd: details.filesListEnd,
+      folders: details.folders,
       foldersOffset: details.foldersOffset,
       folderListEnd: details.folderListEnd,
-      filesOffset: details.filesOffset,
-      data: details.data,
     };
 
     let files = [];
     let folders = [];
 
     if (!details.folderListEnd) {
-      let url = `/v1/tdlib/folders?offset=${details.foldersOffset}&limit=${limit}`;
+      let url = `/v1/tdlib/folders?offset=${details.foldersOffset}&limit=${config.listLoadLimit}`;
       if (parentId) {
         url += `&parent_id=${parentId}`;
       }
@@ -32,15 +34,14 @@ export const fetchDataAsync = createAsyncThunk(
         return payload;
       }
 
-      folders = folders.map((folder) => ({ type: 'folder', ...folder }));
-
       payload.foldersOffset += folders.length;
-      payload.data = payload.data.concat(folders);
+      payload.folders = payload.folders.concat(folders);
     }
 
-    if (folders.length < limit) {
+    if (folders.length < config.listLoadLimit) {
       payload.folderListEnd = true;
-      const filesLimit = limit - folders.length;
+
+      const filesLimit = config.listLoadLimit - folders.length;
 
       let url = `/v1/tdlib/files?offset=${details.filesOffset}&limit=${filesLimit}`;
       if (parentId) {
@@ -52,10 +53,12 @@ export const fetchDataAsync = createAsyncThunk(
         return payload;
       }
 
-      files = files.map((file) => ({ type: 'file', ...file }));
-
       payload.filesOffset += files.length;
-      payload.data = payload.data.concat(files);
+      payload.files = payload.files.concat(files);
+
+      if (files.length < filesLimit) {
+        payload.filesListEnd = true;
+      }
     }
 
     return payload;
@@ -66,33 +69,25 @@ export const filesViewTableSlice = createSlice({
   name: 'filesViewTableDetails',
   initialState: {
     loading: false,
+    files: [],
+    filesOffset: 0,
+    filesListEnd: false,
+    folders: [],
     foldersOffset: 0,
     folderListEnd: false,
-    filesOffset: 0,
-    data: [],
   },
   reducers: {
     fileUploaded: (state, action) => {
-      const file = {
-        type: 'file',
-        ...action.payload,
-      };
-
-      state.data = state.data.slice(0, state.foldersOffset)
-        .concat([file]).concat(state.data.slice(state.foldersOffset));
       state.filesOffset += 1;
+      state.files = [action.payload].concat(state.files);
     },
     fileDeleted: (state, action) => {
-      const fileId = action.payload;
-
-      state.data = state.data.filter((row) => !(row.type === 'file' && row.file_id === fileId));
       state.filesOffset -= 1;
+      state.files = state.files.filter((file) => file.file_id !== action.payload);
     },
     folderDeleted: (state, action) => {
-      const folderId = action.payload;
-
-      state.data = state.data.filter((row) => !(row.type === 'folder' && row.folder_id === folderId));
       state.foldersOffset -= 1;
+      state.folders = state.folders.filter((folder) => folder.folder_id !== action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -105,10 +100,12 @@ export const filesViewTableSlice = createSlice({
       })
       .addCase(fetchDataAsync.fulfilled, (state, action) => {
         state.loading = false;
+        state.files = action.payload.files;
+        state.filesOffset = action.payload.filesOffset;
+        state.filesListEnd = action.payload.filesListEnd;
+        state.folders = action.payload.folders;
         state.foldersOffset = action.payload.foldersOffset;
         state.folderListEnd = action.payload.folderListEnd;
-        state.filesOffset = action.payload.filesOffset;
-        state.data = action.payload.data;
       });
   },
 });
