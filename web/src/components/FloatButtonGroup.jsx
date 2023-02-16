@@ -34,17 +34,17 @@ function FloatButtonGroup() {
     <FloatButton.Group
       trigger="click"
       type="primary"
-      style={{ right: 35, marginBottom: -25 }}
+      style={{ right: 40, marginBottom: -20 }}
       icon={<PlusOutlined />}
     >
-      <FloatButton style={{ display: 'flex', alignItems: 'center' }} icon={<FolderAddOutlined />} />
+      <FloatButton icon={<FolderAddOutlined />} />
       <Upload
         multiple
         showUploadList={false}
         customRequest={uploadFile}
         onChange={onStatusChange}
       >
-        <FloatButton style={{ display: 'flex', alignItems: 'center' }} icon={<UploadOutlined />} />
+        <FloatButton icon={<UploadOutlined />} />
       </Upload>
     </FloatButton.Group>
   );
