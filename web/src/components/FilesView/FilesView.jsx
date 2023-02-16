@@ -29,6 +29,7 @@ function FilesView() {
   const dispatch = useDispatch();
 
   const details = useSelector(selectDetails);
+  const dataSource = details.folders.concat(details.files);
 
   const defaultModalConfig = {
     title: '',
@@ -247,14 +248,25 @@ function FilesView() {
         <InfiniteScroll
           dataLength={details.folders.length + details.files.length}
           next={() => { dispatch(fetchDataAsync(parentId)); }}
-          hasMore={details.folderListEnd && details.filesListEnd}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+          hasMore={!details.folderListEnd || !details.filesListEnd}
+          loader={(
+            <Skeleton
+              active
+              paragraph={{ rows: 2 }}
+              avatar={{ shape: 'square' }}
+              style={{ display: 'flex', alignItems: 'center' }}
+            />
+          )}
           scrollableTarget="scrollableDiv"
         >
-          <List
-            dataSource={details.folders.concat(details.files)}
-            renderItem={(item) => listItem(item)}
-          />
+          {dataSource.length !== 0 || !details.loading
+            ? (
+              <List
+                dataSource={dataSource}
+                renderItem={(item) => listItem(item)}
+              />
+            )
+            : null}
         </InfiniteScroll>
         <Modal
           title={modalConfig.title}
