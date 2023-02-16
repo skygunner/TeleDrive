@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import {
-  Col, Row, Upload, message,
+  Col, Row, Upload, message, Divider,
 } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { useTranslation } from 'react-i18next';
@@ -29,12 +29,7 @@ function FileUploader() {
 
   const onStatusChange = (info) => {
     const { status } = info.file;
-    if (status === 'uploading' || status === 'error') {
-      dispatch(setUploadDraggerFileList(
-        info.fileList.filter((file) => file.status === 'uploading'),
-      ));
-    } else if (status === 'done' || status === 'success') {
-      message.success(t(`${info.file.name} uploaded successfully.`));
+    if (status === 'uploading' || status === 'error' || status === 'done' || status === 'success') {
       dispatch(setUploadDraggerFileList(
         info.fileList.filter((file) => file.status === 'uploading'),
       ));
@@ -48,33 +43,35 @@ function FileUploader() {
   return (
     <Row style={{ marginBottom: 10 }} align="middle">
       <Col offset={1} span={22}>
-        {useDragger ? <Upload fileList={fileList} />
-          : (
-            <Upload.Dragger
-              style={{ margin: '10px 0' }}
-              multiple
-              fileList={fileList}
-              onChange={onStatusChange}
-              customRequest={uploadFile}
-              showUploadList={{
-                showRemoveIcon: false,
-                showPreviewIcon: false,
-                showDownloadIcon: false,
-              }}
-            >
-              <p className="ant-upload-drag-icon">
-                <UploadOutlined />
-              </p>
-              <p className="ant-upload-text">
-                {t('Click or drag files to this area to upload')}
-              </p>
-              <p className="ant-upload-hint">
-                {t(
-                  'Support for a single or bulk upload. Strictly prohibit uploading company data or other band files',
-                )}
-              </p>
-            </Upload.Dragger>
-          )}
+        {!useDragger ? (
+          <Upload.Dragger
+            style={{ margin: '10px 0' }}
+            multiple
+            onChange={onStatusChange}
+            customRequest={uploadFile}
+            showUploadList={false}
+          >
+            <p className="ant-upload-drag-icon">
+              <UploadOutlined />
+            </p>
+            <p className="ant-upload-text">
+              {t('Click or drag files to this area to upload')}
+            </p>
+            <p className="ant-upload-hint">
+              {t(
+                'Support for a single or bulk upload. Strictly prohibit uploading company data or other band files',
+              )}
+            </p>
+          </Upload.Dragger>
+        ) : null}
+        {fileList.length > 0
+          ? (
+            <div>
+              <Divider orientation="left" orientationMargin={20}>Uploads</Divider>
+              <Upload fileList={fileList} />
+            </div>
+          )
+          : null}
       </Col>
     </Row>
   );

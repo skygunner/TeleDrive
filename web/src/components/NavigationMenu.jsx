@@ -120,10 +120,6 @@ function NavigationMenu() {
     });
   }
 
-  const menuStyles = {
-    fontWeight: 'bold',
-  };
-
   return (
     <div style={{
       position: 'sticky', top: 0, zIndex: 1, width: '100%', backgroundColor: '#ffffff',
@@ -177,7 +173,7 @@ function NavigationMenu() {
                 width={250}
               >
                 <Menu
-                  style={{ ...menuStyles, justifyContent: 'left', border: 0 }}
+                  style={{ fontWeight: 'bold', justifyContent: 'left', border: 0 }}
                   mode="vertical"
                   selectedKeys={[location.pathname]}
                   items={mainMenuItems.concat(userMenuItems)}
@@ -188,7 +184,7 @@ function NavigationMenu() {
             </>
           ) : (
             <Menu
-              style={{ ...menuStyles, justifyContent: 'left' }}
+              style={{ fontWeight: 'bold', justifyContent: 'left' }}
               mode="horizontal"
               selectedKeys={[location.pathname]}
               items={mainMenuItems}
@@ -199,7 +195,7 @@ function NavigationMenu() {
         {!useDrawer ? (
           <Col span={11}>
             <Menu
-              style={{ ...menuStyles, justifyContent: 'right' }}
+              style={{ fontWeight: 'bold', justifyContent: 'right' }}
               mode="horizontal"
               selectedKeys={[location.pathname]}
               items={userMenuItems}

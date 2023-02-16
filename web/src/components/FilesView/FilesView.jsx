@@ -6,7 +6,7 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List, Skeleton, Button,
+  Col, Dropdown, Modal, Row, List, Skeleton, Button, Divider,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -216,6 +216,8 @@ function FilesView() {
             description={(
               <div>
                 <span>
+                  File
+                  {' '}
                   {`${humanReadableSize(item.file_size)}`}
                 </span>
                 <br />
@@ -259,6 +261,7 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
+          <Divider orientation="left" orientationMargin={20}>Folders / Files</Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List
