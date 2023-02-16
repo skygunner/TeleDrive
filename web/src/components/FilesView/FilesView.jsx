@@ -184,11 +184,11 @@ function FilesView() {
             description={(
               <div>
                 <span>
-                  Folder
+                  {t('Folder')}
                 </span>
                 <br />
                 <span>
-                  {`Modified ${humanReadableDate(item.updated_at)}`}
+                  {`${t('Modified')} ${humanReadableDate(item.updated_at)}`}
                 </span>
               </div>
             )}
@@ -198,7 +198,7 @@ function FilesView() {
               <Button
                 type="text"
                 shape="circle"
-                icon={<EllipsisOutlined />}
+                icon={<EllipsisOutlined style={{ fontSize: 25 }} />}
                 onClick={(e) => e.preventDefault()}
               />
             </Dropdown>
@@ -216,13 +216,13 @@ function FilesView() {
             description={(
               <div>
                 <span>
-                  File
+                  {t('File')}
                   {' '}
                   {`${humanReadableSize(item.file_size)}`}
                 </span>
                 <br />
                 <span>
-                  {`Modified ${humanReadableDate(item.updated_at)}`}
+                  {`${t('Modified')} ${humanReadableDate(item.updated_at)}`}
                 </span>
               </div>
             )}
@@ -232,7 +232,7 @@ function FilesView() {
               <Button
                 type="text"
                 shape="circle"
-                icon={<EllipsisOutlined />}
+                icon={<EllipsisOutlined style={{ fontSize: 25 }} />}
                 onClick={(e) => e.preventDefault()}
               />
             </Dropdown>
@@ -261,7 +261,7 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider orientation="center">Folders / Files</Divider>
+          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={15}>{t('Folders / Files')}</Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List

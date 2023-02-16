@@ -67,7 +67,7 @@ function FileUploader() {
         {fileList.length > 0
           ? (
             <div>
-              <Divider orientation="center">Uploads</Divider>
+              <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={15}>{t('Uploads')}</Divider>
               <Upload fileList={fileList} />
             </div>
           )
