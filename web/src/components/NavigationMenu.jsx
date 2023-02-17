@@ -122,7 +122,11 @@ function NavigationMenu() {
 
   return (
     <div style={{
-      position: 'sticky', top: 0, zIndex: 1, width: '100%', backgroundColor: '#ffffff',
+      top: 0,
+      zIndex: 1,
+      width: '100%',
+      position: 'sticky',
+      backgroundColor: '#ffffff',
     }}
     >
       <Row align="middle">

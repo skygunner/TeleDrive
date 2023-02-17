@@ -3,6 +3,16 @@ body {
   margin: 0px;
 }
 
+.page {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.page-content {
+  flex-grow: 1;
+}
+
 .ant-list-item-meta-title {
   margin: 0px;
 }

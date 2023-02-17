@@ -22,14 +22,18 @@ function App() {
   return (
     <BrowserRouter>
       <ConfigProvider theme={defaultTheme}>
-        <NavigationMenu />
-        <Routes>
-          <Route index element={<HomePage />} />
-          <Route path="files" element={<FilesPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="*" element={<NoPage />} />
-        </Routes>
-        <FooterMenu />
+        <div className="page">
+          <div className="page-content">
+            <NavigationMenu />
+            <Routes>
+              <Route index element={<HomePage />} />
+              <Route path="files" element={<FilesPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="*" element={<NoPage />} />
+            </Routes>
+          </div>
+          <FooterMenu />
+        </div>
       </ConfigProvider>
     </BrowserRouter>
   );
