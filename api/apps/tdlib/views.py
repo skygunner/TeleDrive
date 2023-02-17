@@ -266,12 +266,12 @@ def upload(request: Request) -> Response:
         if file_size is None or not is_integer(file_size) or int(file_size) < 1:
             return api_error(_("Invalid file size."), status.HTTP_400_BAD_REQUEST)
         file_size = int(file_size)
-        if file_size > 2 * 1024 * 1024 * 1024:  # 2GB
-            return api_error(_("The file size must be less or equal to 2 GB."), status.HTTP_400_BAD_REQUEST)
+        if file_size > 2 * 1024 * 1024 * 1024:  # 2 GiB
+            return api_error(_("The file size must be less or equal to 2 GiB."), status.HTTP_400_BAD_REQUEST)
 
         part_size = file_obj.size
         if part_size / 1024 > 512:
-            return api_error(_("The file part size must be less or equal to 512 KB."), status.HTTP_400_BAD_REQUEST)
+            return api_error(_("The file part size must be less or equal to 512 KiB."), status.HTTP_400_BAD_REQUEST)
 
         if file_part != total_parts:
             if part_size % 1024 != 0:
@@ -345,12 +345,12 @@ def upload(request: Request) -> Response:
 
     if file_part < file.total_parts and file_obj.size != file.part_size:
         return api_error(
-            _("The file part size must be equal to {} KB.".format(file.part_size // 1024)), status.HTTP_400_BAD_REQUEST
+            _("The file part size must be equal to {} KiB.".format(file.part_size // 1024)), status.HTTP_400_BAD_REQUEST
         )
 
     if file_part == file.total_parts and file_obj.size > file.part_size:
         return api_error(
-            _("The file part size must be less or equal to {} KB.".format(file.part_size // 1024)),
+            _("The file part size must be less or equal to {} KiB.".format(file.part_size // 1024)),
             status.HTTP_400_BAD_REQUEST,
         )
 

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-13 15:50+0000\n"
+"POT-Creation-Date: 2023-02-17 18:58+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -79,11 +79,11 @@ msgid "Invalid file size."
 msgstr ""
 
 #: apps/tdlib/views.py:270
-msgid "The file size must be less or equal to 2 GB."
+msgid "The file size must be less or equal to 2 GiB."
 msgstr ""
 
 #: apps/tdlib/views.py:274
-msgid "The file part size must be less or equal to 512 KB."
+msgid "The file part size must be less or equal to 512 KiB."
 msgstr ""
 
 #: apps/tdlib/views.py:278
@@ -111,11 +111,11 @@ msgid "You must upload part {} now."
 msgstr ""
 
 #: apps/tdlib/views.py:348
-msgid "The file part size must be equal to {} KB."
+msgid "The file part size must be equal to {} KiB."
 msgstr ""
 
 #: apps/tdlib/views.py:353
-msgid "The file part size must be less or equal to {} KB."
+msgid "The file part size must be less or equal to {} KiB."
 msgstr ""
 
 #: apps/tdlib/views.py:391

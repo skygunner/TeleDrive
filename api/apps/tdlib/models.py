@@ -162,7 +162,7 @@ class File(BaseModelMixin):
     def upload_part(self, file_bytes: bytes, file_part: int):
         from tdlib.wrapper import TD_CLIENT
 
-        is_big = self.file_size > 10 * 1024 * 1024  # 10MB
+        is_big = self.file_size > 10 * 1024 * 1024  # 10 MiB
         if is_big:
             request = functions.upload.SaveBigFilePartRequest(
                 file_id=self.file_id,
