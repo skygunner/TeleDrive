@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UploadOutlined, PlusOutlined, FolderAddOutlined } from '@ant-design/icons';
+import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 import { FloatButton, Upload } from 'antd';
 import { useDispatch } from 'react-redux';
 import { uploadAsync, setFloatButtonFileList } from './FileUpload/FileUploadSlice';
@@ -30,7 +30,7 @@ function FloatButtonGroup() {
       style={{ right: 40, marginBottom: -20 }}
       icon={<PlusOutlined />}
     >
-      <FloatButton icon={<FolderAddOutlined />} />
+      {/* <FloatButton icon={<FolderAddOutlined />} /> */}
       <Upload
         multiple
         showUploadList={false}

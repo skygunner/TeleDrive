@@ -83,6 +83,7 @@ function FilesView() {
         key: 'q',
         label: <a>{t('Rename')}</a>,
         icon: <EditOutlined />,
+        disabled: true,
       },
       {
         type: 'divider',
@@ -156,6 +157,7 @@ function FilesView() {
         key: '2',
         label: <a>{t('Rename')}</a>,
         icon: <EditOutlined />,
+        disabled: true,
       },
       {
         type: 'divider',
