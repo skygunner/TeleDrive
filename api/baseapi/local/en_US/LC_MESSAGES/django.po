@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 18:58+0000\n"
+"POT-Creation-Date: 2023-02-17 22:23+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -79,7 +79,7 @@ msgid "Invalid file size."
 msgstr ""
 
 #: apps/tdlib/views.py:270
-msgid "The file size must be less or equal to 2 GiB."
+msgid "The file size must be less or equal to 2 GB."
 msgstr ""
 
 #: apps/tdlib/views.py:274
