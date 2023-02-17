@@ -198,12 +198,13 @@ function FilesView() {
             )}
           />
           <div>
-            <Dropdown.Button
+            <Dropdown
               type="text"
               trigger="click"
               menu={{ items: folderMenuItems(item) }}
-              icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
-            />
+            >
+              <EllipsisOutlined style={{ fontSize: 20 }} />
+            </Dropdown>
           </div>
         </List.Item>
       );
@@ -230,12 +231,13 @@ function FilesView() {
             )}
           />
           <div>
-            <Dropdown.Button
+            <Dropdown
               type="text"
               trigger="click"
               menu={{ items: fileMenuItems(item) }}
-              icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
-            />
+            >
+              <EllipsisOutlined style={{ fontSize: 20 }} />
+            </Dropdown>
           </div>
         </List.Item>
       );
