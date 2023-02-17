@@ -6,7 +6,7 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List, Skeleton, Button, Divider,
+  Col, Dropdown, Modal, Row, List, Skeleton, Divider,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -198,14 +198,12 @@ function FilesView() {
             )}
           />
           <div>
-            <Dropdown menu={{ items: folderMenuItems(item) }}>
-              <Button
-                type="text"
-                shape="circle"
-                icon={<EllipsisOutlined style={{ fontSize: 25 }} />}
-                onClick={(e) => e.preventDefault()}
-              />
-            </Dropdown>
+            <Dropdown.Button
+              type="text"
+              trigger="click"
+              menu={{ items: folderMenuItems(item) }}
+              icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+            />
           </div>
         </List.Item>
       );
@@ -232,14 +230,12 @@ function FilesView() {
             )}
           />
           <div>
-            <Dropdown menu={{ items: fileMenuItems(item) }}>
-              <Button
-                type="text"
-                shape="circle"
-                icon={<EllipsisOutlined style={{ fontSize: 25 }} />}
-                onClick={(e) => e.preventDefault()}
-              />
-            </Dropdown>
+            <Dropdown.Button
+              type="text"
+              trigger="click"
+              menu={{ items: fileMenuItems(item) }}
+              icon={<EllipsisOutlined style={{ fontSize: 20 }} />}
+            />
           </div>
         </List.Item>
       );

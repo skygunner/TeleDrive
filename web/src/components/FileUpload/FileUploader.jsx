@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import {
-  Col, Row, Upload, message, Divider,
+  Col, Row, Upload, Divider,
 } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { useTranslation } from 'react-i18next';
