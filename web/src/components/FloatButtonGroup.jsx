@@ -86,14 +86,15 @@ function FloatButtonGroup() {
         style={{ right: 40, marginBottom: -20 }}
         icon={<PlusOutlined />}
       >
-        <FloatButton icon={<FolderAddOutlined />} onClick={handleCreateFolder} />
+        <FloatButton icon={<FolderAddOutlined />} onClick={handleCreateFolder} tooltip={t('Create folder')} />
         <Upload
           multiple
           showUploadList={false}
           customRequest={uploadFile}
           onChange={onStatusChange}
+          style={{ margin: 0 }}
         >
-          <FloatButton icon={<UploadOutlined />} />
+          <FloatButton icon={<UploadOutlined />} tooltip={t('Upload file')} />
         </Upload>
       </FloatButton.Group>
       <Modal
