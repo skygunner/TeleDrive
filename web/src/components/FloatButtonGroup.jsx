@@ -68,7 +68,7 @@ function FloatButtonGroup() {
             name="folder_name"
             rules={[{
               required: true,
-              message: t('Please input the folder name.'),
+              message: t('Please input the folder name!'),
             }]}
           >
             <Input placeholder={t('Folder name')} />
@@ -86,15 +86,21 @@ function FloatButtonGroup() {
         style={{ right: 40, marginBottom: -20 }}
         icon={<PlusOutlined />}
       >
-        <FloatButton icon={<FolderAddOutlined />} onClick={handleCreateFolder} tooltip={t('Create folder')} />
+        <FloatButton
+          icon={<FolderAddOutlined />}
+          tooltip={t('Create folder')}
+          onClick={handleCreateFolder}
+        />
         <Upload
           multiple
           showUploadList={false}
           customRequest={uploadFile}
           onChange={onStatusChange}
-          style={{ margin: 0 }}
         >
-          <FloatButton icon={<UploadOutlined />} tooltip={t('Upload file')} />
+          <FloatButton
+            icon={<UploadOutlined />}
+            tooltip={t('Upload file')}
+          />
         </Upload>
       </FloatButton.Group>
       <Modal
