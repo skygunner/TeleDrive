@@ -107,7 +107,7 @@ function FilesView() {
               initialValue={folder.folder_name}
               rules={[{
                 required: true,
-                message: t('Please input the folder name!'),
+                message: t('Please input the folder name.'),
               }]}
             >
               <Input placeholder={t('Folder name')} />
@@ -219,7 +219,7 @@ function FilesView() {
               initialValue={file.file_name}
               rules={[{
                 required: true,
-                message: t('Please input the file name!'),
+                message: t('Please input the file name.'),
               }]}
             >
               <Input placeholder={t('File name')} />

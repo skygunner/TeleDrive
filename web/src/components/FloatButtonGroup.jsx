@@ -68,7 +68,7 @@ function FloatButtonGroup() {
             name="folder_name"
             rules={[{
               required: true,
-              message: t('Please input the folder name!'),
+              message: t('Please input the folder name.'),
             }]}
           >
             <Input placeholder={t('Folder name')} />
