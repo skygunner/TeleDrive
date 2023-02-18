@@ -90,6 +90,10 @@ export const filesViewTableSlice = createSlice({
       state.filesOffset -= 1;
       state.files = state.files.filter((file) => file.file_id !== action.payload);
     },
+    folderCreated: (state, action) => {
+      state.foldersOffset += 1;
+      state.folders = [action.payload].concat(state.folders);
+    },
     folderRenamed: (state, action) => {
       state.folders = state.folders.map((folder) => (
         folder.folder_id === action.payload.folder_id ? action.payload : folder
@@ -122,6 +126,6 @@ export const filesViewTableSlice = createSlice({
 
 export const selectDetails = (state) => state.filesViewTableDetails;
 export const {
-  fileUploaded, fileRenamed, fileDeleted, folderRenamed, folderDeleted,
+  fileUploaded, fileRenamed, fileDeleted, folderCreated, folderRenamed, folderDeleted,
 } = filesViewTableSlice.actions;
 export default filesViewTableSlice.reducer;
