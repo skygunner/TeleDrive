@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
 
 import App from './App';
 import store from './store';
@@ -9,9 +9,9 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <StoreProvider store={store}>
       <App />
-    </Provider>
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

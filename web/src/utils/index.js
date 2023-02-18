@@ -1,4 +1,4 @@
-export const humanReadableSize = (size, si = false, dp = 1) => {
+export const humanReadableSize = (size, si = true, dp = 1) => {
   const thresh = si ? 1000 : 1024;
 
   if (Math.abs(size) < thresh) {

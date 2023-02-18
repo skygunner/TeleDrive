@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider as DesignProvider } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import NavigationMenu from './components/NavigationMenu';
@@ -21,8 +21,8 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
-      <ConfigProvider theme={defaultTheme}>
+    <DesignProvider theme={defaultTheme}>
+      <BrowserRouter>
         <div className="page">
           <div className="page-content">
             <NavigationMenu />
@@ -35,8 +35,8 @@ function App() {
           </div>
           <FooterMenu />
         </div>
-      </ConfigProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </DesignProvider>
   );
 }
 

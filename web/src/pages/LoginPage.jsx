@@ -1,7 +1,6 @@
-import { Row } from 'antd';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import React from 'react';
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
 
@@ -12,9 +11,7 @@ function LoginPage() {
   }
 
   return (
-    <Row align="middle" style={{ justifyContent: 'center', marginTop: 50 }}>
-      <LoginButton />
-    </Row>
+    <LoginButton />
   );
 }
 

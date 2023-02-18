@@ -19,7 +19,7 @@ import {
 
 import { del, put, getAuthHeaders } from '../../api';
 import cfg from '../../config';
-import { fileExtension, humanReadableDate, humanReadableSize } from '../../utils';
+import { fileExtension, humanReadableDate } from '../../utils';
 
 function FilesView() {
   const parentId = null; // Query string
@@ -282,10 +282,6 @@ function FilesView() {
             description={(
               <div>
                 <span>
-                  {t('Folder')}
-                </span>
-                <br />
-                <span>
                   {`${t('Modified')} ${humanReadableDate(item.updated_at)}`}
                 </span>
               </div>
@@ -312,12 +308,6 @@ function FilesView() {
             title={item.file_name}
             description={(
               <div>
-                <span>
-                  {t('File')}
-                  {' '}
-                  {`${humanReadableSize(item.file_size)}`}
-                </span>
-                <br />
                 <span>
                   {`${t('Modified')} ${humanReadableDate(item.updated_at)}`}
                 </span>
@@ -350,14 +340,14 @@ function FilesView() {
           loader={(
             <Skeleton
               active
-              paragraph={{ rows: 2 }}
+              paragraph={{ rows: 1 }}
               avatar={{ shape: 'square' }}
-              style={{ display: 'flex', alignItems: 'center' }}
+              style={{ display: 'flex', alignItems: 'center', padding: '0px 24px' }}
             />
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={15}>{t('Folders / Files')}</Divider>
+          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={14}>{t('Folders / Files')}</Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List
@@ -368,9 +358,9 @@ function FilesView() {
             : (
               <Skeleton
                 active
-                paragraph={{ rows: 2 }}
+                paragraph={{ rows: 1 }}
                 avatar={{ shape: 'square' }}
-                style={{ display: 'flex', alignItems: 'center' }}
+                style={{ display: 'flex', alignItems: 'center', padding: '0px 24px' }}
               />
             )}
         </InfiniteScroll>
