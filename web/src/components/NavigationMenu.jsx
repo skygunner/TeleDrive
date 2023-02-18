@@ -139,7 +139,7 @@ function NavigationMenu() {
                   alignItems: 'center',
                 }}
               >
-                <Button style={{ border: 0 }} onClick={openDrawer}>
+                <Button style={{ backgroundColor: '#ffffff', border: 0 }} onClick={openDrawer}>
                   <MenuOutlined />
                 </Button>
                 <Avatar src={`${process.env.PUBLIC_URL}/logo192.png`} />

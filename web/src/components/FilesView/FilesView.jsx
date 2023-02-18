@@ -6,7 +6,7 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List, Skeleton, Divider,
+  Col, Dropdown, Modal, Row, List, Skeleton, Divider, Form, Input,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -14,10 +14,10 @@ import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  selectDetails, fetchDataAsync, fileDeleted, folderDeleted,
+  selectDetails, fetchDataAsync, fileDeleted, folderDeleted, fileRenamed, folderRenamed,
 } from './FilesViewSlice';
 
-import { del, getAuthHeaders } from '../../api';
+import { del, put, getAuthHeaders } from '../../api';
 import cfg from '../../config';
 import { fileExtension, humanReadableDate, humanReadableSize } from '../../utils';
 
@@ -31,17 +31,9 @@ function FilesView() {
   const details = useSelector(selectDetails);
   const dataSource = details.folders.concat(details.files);
 
-  const defaultModalConfig = {
-    title: '',
-    open: false,
-    onOk: () => {},
-    confirmLoading: false,
-    onCancel: () => {},
-    okButtonProps: {},
-    okText: '',
-    boxy: '',
-  };
-  const [modalConfig, setModalConfig] = useState(defaultModalConfig);
+  const [form] = Form.useForm();
+  const [modalConfig, setModalConfig] = useState({});
+  const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDataAsync(parentId));
@@ -58,32 +50,82 @@ function FilesView() {
   const folderMenuItems = (folder) => {
     const handleDeleteFolder = () => {
       setModalConfig({
-        title: t(`Delete ${folder.folder_name}`),
         open: true,
+        title: t('Delete folder'),
+        okText: t('Delete'),
+        okButtonProps: { danger: true },
+        onCancel: () => {
+          setModalConfig({});
+        },
         onOk: async () => {
-          setModalConfig({ ...modalConfig, confirmLoading: true });
+          setModalConfirmLoading(true);
+
           const ok = await del(`/v1/tdlib/folder/${folder.folder_id}`, authHeaders);
           if (ok) {
             dispatch(folderDeleted(folder.folder_id));
           }
-          setModalConfig(defaultModalConfig);
+
+          setModalConfirmLoading(false);
+          setModalConfig({});
         },
-        confirmLoading: false,
-        onCancel: () => {
-          setModalConfig(defaultModalConfig);
-        },
-        okButtonProps: { danger: true },
-        okText: t('Yes'),
         body: <p>{t(`Are you sure you want to delete ${folder.folder_name}?`)}</p>,
+      });
+    };
+
+    const handleRenameFolder = () => {
+      form.resetFields();
+
+      setModalConfig({
+        open: true,
+        title: t('Rename folder'),
+        okText: t('Rename'),
+        okButtonProps: { type: 'primary' },
+        onCancel: () => {
+          setModalConfig({});
+        },
+        onOk: async () => {
+          form
+            .validateFields()
+            .then(async (values) => {
+              setModalConfirmLoading(true);
+
+              const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, values, authHeaders);
+              if (renamedFolder) {
+                dispatch(folderRenamed(renamedFolder));
+              }
+
+              setModalConfirmLoading(false);
+              setModalConfig({});
+            })
+            .catch(() => {});
+        },
+        body: (
+          <Form form={form}>
+            <Form.Item
+              style={{ marginTop: 20 }}
+              name="folder_name"
+              initialValue={folder.folder_name}
+              rules={[{
+                required: true,
+                message: t('Please input the folder name!'),
+              }]}
+            >
+              <Input placeholder={t('Folder name')} />
+            </Form.Item>
+          </Form>
+        ),
       });
     };
 
     return [
       {
         key: 'q',
-        label: <a>{t('Rename')}</a>,
+        label: (
+          <a onClick={handleRenameFolder} onKeyDown={handleRenameFolder}>
+            {t('Rename')}
+          </a>
+        ),
         icon: <EditOutlined />,
-        disabled: true,
       },
       {
         type: 'divider',
@@ -120,23 +162,70 @@ function FilesView() {
   const fileMenuItems = (file) => {
     const handleDeleteFile = () => {
       setModalConfig({
-        title: t(`Delete ${file.file_name}`),
         open: true,
+        title: t('Delete file'),
+        okText: t('Delete'),
+        okButtonProps: { danger: true },
+        onCancel: () => {
+          setModalConfig({});
+        },
         onOk: async () => {
-          setModalConfig({ ...modalConfig, confirmLoading: true });
+          setModalConfirmLoading(true);
+
           const ok = await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
           if (ok) {
             dispatch(fileDeleted(file.file_id));
           }
-          setModalConfig(defaultModalConfig);
+
+          setModalConfirmLoading(false);
+          setModalConfig({});
         },
-        confirmLoading: false,
-        onCancel: () => {
-          setModalConfig(defaultModalConfig);
-        },
-        okButtonProps: { danger: true },
-        okText: t('Yes'),
         body: <p>{t(`Are you sure you want to delete ${file.file_name}?`)}</p>,
+      });
+    };
+
+    const handleRenameFile = () => {
+      form.resetFields();
+
+      setModalConfig({
+        open: true,
+        title: t('Rename file'),
+        okText: t('Rename'),
+        okButtonProps: { type: 'primary' },
+        onCancel: () => {
+          setModalConfig({});
+        },
+        onOk: async () => {
+          form
+            .validateFields()
+            .then(async (values) => {
+              setModalConfirmLoading(true);
+
+              const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, values, authHeaders);
+              if (renamedFile) {
+                dispatch(fileRenamed(renamedFile));
+              }
+
+              setModalConfirmLoading(false);
+              setModalConfig({});
+            })
+            .catch(() => {});
+        },
+        body: (
+          <Form form={form}>
+            <Form.Item
+              style={{ marginTop: 20 }}
+              name="file_name"
+              initialValue={file.file_name}
+              rules={[{
+                required: true,
+                message: t('Please input the file name!'),
+              }]}
+            >
+              <Input placeholder={t('File name')} />
+            </Form.Item>
+          </Form>
+        ),
       });
     };
 
@@ -155,9 +244,12 @@ function FilesView() {
       },
       {
         key: '2',
-        label: <a>{t('Rename')}</a>,
+        label: (
+          <a onClick={handleRenameFile} onKeyDown={handleRenameFile}>
+            {t('Rename')}
+          </a>
+        ),
         icon: <EditOutlined />,
-        disabled: true,
       },
       {
         type: 'divider',
@@ -283,13 +375,13 @@ function FilesView() {
             )}
         </InfiniteScroll>
         <Modal
-          title={modalConfig.title}
           open={modalConfig.open}
-          onOk={modalConfig.onOk}
-          confirmLoading={modalConfig.confirmLoading}
-          onCancel={modalConfig.onCancel}
-          okButtonProps={modalConfig.okButtonProps}
+          title={modalConfig.title}
           okText={modalConfig.okText}
+          okButtonProps={modalConfig.okButtonProps}
+          confirmLoading={modalConfirmLoading}
+          onCancel={modalConfig.onCancel}
+          onOk={modalConfig.onOk}
         >
           {modalConfig.body}
         </Modal>

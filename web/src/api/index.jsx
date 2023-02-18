@@ -88,6 +88,16 @@ export const get = async (url, headers = {}) => {
   }
 };
 
+export const put = async (url, data, headers = {}) => {
+  try {
+    return responseData(await baseAPI.put(url, data, { headers }));
+  } catch (error) {
+    handleError(error);
+
+    return undefined;
+  }
+};
+
 export const del = async (url, headers = {}) => {
   try {
     return responseData(await baseAPI.delete(url, { headers }));
