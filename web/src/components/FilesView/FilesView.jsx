@@ -6,7 +6,8 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List, Skeleton, Divider, Form, Input,
+  Col, Dropdown, Modal, Row, List,
+  Skeleton, Divider, Form, Input, Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -275,9 +276,13 @@ function FilesView() {
             style={{ display: 'flex', alignItems: 'center' }}
             avatar={folderAvatar(item)}
             title={(
-              <a href={`/files?parentId=${item.folder_id}`}>
+              <Typography.Link
+                ellipsis
+                style={{ paddingRight: 15 }}
+                href={`/files?parentId=${item.folder_id}`}
+              >
                 {item.folder_name}
-              </a>
+              </Typography.Link>
             )}
             description={(
               <div>
@@ -305,7 +310,14 @@ function FilesView() {
           <List.Item.Meta
             style={{ display: 'flex', alignItems: 'center' }}
             avatar={fileAvatar(item)}
-            title={item.file_name}
+            title={(
+              <Typography.Text
+                ellipsis
+                style={{ paddingRight: 15 }}
+              >
+                {item.file_name}
+              </Typography.Text>
+            )}
             description={(
               <div>
                 <span>
@@ -347,7 +359,16 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={0}>{t('Folders / Files')}</Divider>
+          <Divider
+            style={{
+              borderBlockStart: '0px transparent',
+              fontSize: 16,
+            }}
+            orientation="left"
+            orientationMargin={10}
+          >
+            {t('Folders / Files')}
+          </Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List

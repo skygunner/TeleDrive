@@ -1,4 +1,4 @@
-import { Row, Col } from 'antd';
+import { Row, Col, Result } from 'antd';
 import { useTranslation } from 'react-i18next';
 import React from 'react';
 
@@ -8,14 +8,11 @@ function NoPage() {
   return (
     <Row align="middle">
       <Col offset={1} span={22}>
-        <div
-          style={{
-            marginTop: 50,
-            textAlign: 'center',
-          }}
-        >
-          <h1>{t('404 Not Found')}</h1>
-        </div>
+        <Result
+          status="404"
+          title="404 Not Found"
+          subTitle={t('Sorry, the page you visited does not exist.')}
+        />
       </Col>
     </Row>
   );
