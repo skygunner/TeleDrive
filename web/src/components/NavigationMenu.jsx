@@ -126,6 +126,7 @@ function NavigationMenu() {
       zIndex: 1,
       width: '100%',
       position: 'sticky',
+      backgroundColor: '#ffffff',
     }}
     >
       <Row align="middle">
