@@ -16,7 +16,7 @@ function FileUploader() {
 
   const mediaQueryMatch = useMediaQuery(
     { query: '(min-width: 576px)' },
-    undefined,
+    null,
     (match) => {
       // eslint-disable-next-line no-use-before-define
       setUseDragger(!match);
@@ -67,7 +67,7 @@ function FileUploader() {
         {fileList.length > 0
           ? (
             <div>
-              <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={14}>{t('Uploads')}</Divider>
+              <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={0}>{t('Uploads')}</Divider>
               <Upload fileList={fileList} />
             </div>
           )

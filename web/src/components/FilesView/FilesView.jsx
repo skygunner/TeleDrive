@@ -347,7 +347,7 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={14}>{t('Folders / Files')}</Divider>
+          <Divider style={{ borderBlockStart: '0px transparent' }} orientation="left" orientationMargin={0}>{t('Folders / Files')}</Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List

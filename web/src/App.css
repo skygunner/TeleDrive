@@ -24,7 +24,9 @@ body {
   align-items: center;
 }
 
-.ant-float-btn-body {
+.ant-float-btn-group-circle
+  .ant-float-btn-circle:not(:last-child)
+  .ant-float-btn-body {
   width: 60px;
   height: 60px;
   display: flex;

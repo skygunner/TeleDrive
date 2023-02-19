@@ -46,7 +46,7 @@ function NavigationMenu() {
 
   const mediaQueryMatch = useMediaQuery(
     { query: '(min-width: 576px)' },
-    undefined,
+    null,
     (match) => {
       // eslint-disable-next-line no-use-before-define
       setUseDrawer(!match);
