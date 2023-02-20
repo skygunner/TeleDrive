@@ -64,8 +64,8 @@ def sign_in(request: Request) -> Response:
         user = User.create(
             id=request_data["id"],
             first_name=request_data["first_name"],
-            last_name=request_data["last_name"],
-            username=request_data["username"],
+            last_name=request_data.get("last_name", None),
+            username=request_data.get("username", None),
         )
 
         welcome_message = render_to_string(template_name="welcome.txt")
@@ -73,8 +73,8 @@ def sign_in(request: Request) -> Response:
     else:
         user.update(
             first_name=request_data["first_name"],
-            last_name=request_data["last_name"],
-            username=request_data["username"],
+            last_name=request_data.get("last_name", None),
+            username=request_data.get("username", None),
         )
 
     jwt_token, expire_at = generate_user_token(user)
