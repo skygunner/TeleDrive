@@ -7,7 +7,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import {
-  Avatar, Button, Col, Divider, Drawer, Menu, Row,
+  Avatar, Button, Col, Divider, Drawer, Menu, Row, Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -163,9 +163,16 @@ function NavigationMenu() {
                         : `${process.env.PUBLIC_URL}/logo192.png`
                     }
                     />
-                    <p style={{ marginLeft: 10 }}>
+                    <p style={{ marginLeft: 10, maxWidth: 185 }}>
                       {user
-                        ? `${user.first_name} ${user.last_name}`
+                        ? (
+                          <Typography.Text
+                            ellipsis
+                            style={{ paddingRight: 15 }}
+                          >
+                            {`${user.first_name} ${user.last_name}`}
+                          </Typography.Text>
+                        )
                         : 'TeleDrive'}
                     </p>
                   </div>

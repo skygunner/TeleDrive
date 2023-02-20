@@ -4,15 +4,17 @@ import {
   Col, Row, Upload, Divider,
 } from 'antd';
 import { useMediaQuery } from 'react-responsive';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploadSlice';
 
 function FileUploader() {
-  const parentId = null; // Query string
-
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  const [searchParams] = useSearchParams();
+  const parentId = searchParams.get('parentId');
 
   const mediaQueryMatch = useMediaQuery(
     { query: '(min-width: 576px)' },

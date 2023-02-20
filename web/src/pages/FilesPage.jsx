@@ -1,6 +1,6 @@
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 
-import React from 'react';
 import { isUserLoggedIn } from '../api';
 import FileUploader from '../components/FileUpload/FileUploader';
 import FilesView from '../components/FilesView/FilesView';

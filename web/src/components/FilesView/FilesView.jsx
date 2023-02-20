@@ -11,11 +11,12 @@ import {
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  selectDetails, fetchDataAsync, fileDeleted, folderDeleted, fileRenamed, folderRenamed,
+  resetState, selectDetails, fetchDataAsync, fileDeleted, folderDeleted, fileRenamed, folderRenamed,
 } from './FilesViewSlice';
 
 import { del, put, getAuthHeaders } from '../../api';
@@ -23,11 +24,13 @@ import cfg from '../../config';
 import { fileExtension, humanReadableDate } from '../../utils';
 
 function FilesView() {
-  const parentId = null; // Query string
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const parentId = searchParams.get('parentId');
 
   const details = useSelector(selectDetails);
   const dataSource = details.folders.concat(details.files);
@@ -37,8 +40,9 @@ function FilesView() {
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
   useEffect(() => {
+    dispatch(resetState(parentId));
     dispatch(fetchDataAsync(parentId));
-  }, []);
+  }, [parentId]);
 
   const folderAvatar = () => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -122,9 +126,9 @@ function FilesView() {
       {
         key: 'q',
         label: (
-          <a onClick={handleRenameFolder} onKeyDown={handleRenameFolder}>
+          <Typography.Link onClick={handleRenameFolder}>
             {t('Rename')}
-          </a>
+          </Typography.Link>
         ),
         icon: <EditOutlined />,
       },
@@ -135,9 +139,9 @@ function FilesView() {
         key: '2',
         danger: true,
         label: (
-          <a onClick={handleDeleteFolder} onKeyDown={handleDeleteFolder}>
+          <Typography.Link onClick={handleDeleteFolder}>
             {t('Delete')}
-          </a>
+          </Typography.Link>
         ),
         icon: <DeleteOutlined />,
       },
@@ -234,21 +238,21 @@ function FilesView() {
       {
         key: '1',
         label: (
-          <a
+          <Typography.Link
             href={`${cfg.apiBaseUrl}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
             download={file.file_name}
           >
             {t('Download')}
-          </a>
+          </Typography.Link>
         ),
         icon: <DownloadOutlined />,
       },
       {
         key: '2',
         label: (
-          <a onClick={handleRenameFile} onKeyDown={handleRenameFile}>
+          <Typography.Link onClick={handleRenameFile}>
             {t('Rename')}
-          </a>
+          </Typography.Link>
         ),
         icon: <EditOutlined />,
       },
@@ -259,9 +263,9 @@ function FilesView() {
         key: '3',
         danger: true,
         label: (
-          <a onClick={handleDeleteFile} onKeyDown={handleDeleteFile}>
+          <Typography.Link onClick={handleDeleteFile}>
             {t('Delete')}
-          </a>
+          </Typography.Link>
         ),
         icon: <DeleteOutlined />,
       },
@@ -279,7 +283,9 @@ function FilesView() {
               <Typography.Link
                 ellipsis
                 style={{ paddingRight: 15 }}
-                href={`/files?parentId=${item.folder_id}`}
+                onClick={() => {
+                  setSearchParams({ parentId: item.folder_id });
+                }}
               >
                 {item.folder_name}
               </Typography.Link>

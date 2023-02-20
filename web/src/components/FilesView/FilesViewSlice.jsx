@@ -4,6 +4,17 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get, getAuthHeaders } from '../../api';
 import config from '../../config';
 
+const initialState = {
+  parentId: null,
+  loading: false,
+  files: [],
+  filesOffset: 0,
+  filesListEnd: false,
+  folders: [],
+  foldersOffset: 0,
+  folderListEnd: false,
+};
+
 export const fetchDataAsync = createAsyncThunk(
   'filesViewTableDetails/fetchDataAsync',
   async (parentId, thunkAPI) => {
@@ -67,19 +78,24 @@ export const fetchDataAsync = createAsyncThunk(
 
 export const filesViewTableSlice = createSlice({
   name: 'filesViewTableDetails',
-  initialState: {
-    loading: false,
-    files: [],
-    filesOffset: 0,
-    filesListEnd: false,
-    folders: [],
-    foldersOffset: 0,
-    folderListEnd: false,
-  },
+  initialState,
   reducers: {
+    resetState: (state, action) => {
+      state.parentId = action.payload;
+      state.loading = initialState.loading;
+      state.files = initialState.files;
+      state.filesOffset = initialState.filesOffset;
+      state.filesListEnd = initialState.filesListEnd;
+      state.folders = initialState.folders;
+      state.foldersOffset = initialState.foldersOffset;
+      state.folderListEnd = initialState.folderListEnd;
+    },
     fileUploaded: (state, action) => {
-      state.filesOffset += 1;
-      state.files = [action.payload].concat(state.files);
+      const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
+      if (parentId === action.payload.parent_id) {
+        state.filesOffset += 1;
+        state.files = [action.payload].concat(state.files);
+      }
     },
     fileRenamed: (state, action) => {
       state.files = state.files.map((file) => (
@@ -91,8 +107,11 @@ export const filesViewTableSlice = createSlice({
       state.files = state.files.filter((file) => file.file_id !== action.payload);
     },
     folderCreated: (state, action) => {
-      state.foldersOffset += 1;
-      state.folders = [action.payload].concat(state.folders);
+      const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
+      if (parentId === action.payload.parent_id) {
+        state.foldersOffset += 1;
+        state.folders = [action.payload].concat(state.folders);
+      }
     },
     folderRenamed: (state, action) => {
       state.folders = state.folders.map((folder) => (
@@ -126,6 +145,6 @@ export const filesViewTableSlice = createSlice({
 
 export const selectDetails = (state) => state.filesViewTableDetails;
 export const {
-  fileUploaded, fileRenamed, fileDeleted, folderCreated, folderRenamed, folderDeleted,
+  resetState, fileUploaded, fileRenamed, fileDeleted, folderCreated, folderRenamed, folderDeleted,
 } = filesViewTableSlice.actions;
 export default filesViewTableSlice.reducer;

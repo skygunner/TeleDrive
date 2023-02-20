@@ -6,16 +6,19 @@ import {
 } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { post, getAuthHeaders } from '../api';
 import { uploadAsync, setFloatButtonFileList } from './FileUpload/FileUploadSlice';
 import { folderCreated } from './FilesView/FilesViewSlice';
 
 function FloatButtonGroup() {
-  const parentId = null; // Query string
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
   const dispatch = useDispatch();
+
+  const [searchParams] = useSearchParams();
+  const parentId = searchParams.get('parentId');
 
   const [form] = Form.useForm();
   const [modalConfig, setModalConfig] = useState({});
@@ -51,7 +54,7 @@ function FloatButtonGroup() {
           .then(async (values) => {
             setModalConfirmLoading(true);
 
-            const folder = await post('/v1/tdlib/folder', { ...values, parent_id: parentId }, authHeaders);
+            const folder = await post('/v1/tdlib/folder', { ...values, parent_id: parseInt(parentId, 10) }, authHeaders);
             if (folder) {
               dispatch(folderCreated(folder));
             }

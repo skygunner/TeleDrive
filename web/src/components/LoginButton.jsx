@@ -1,8 +1,8 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TelegramLoginButton from 'react-telegram-login';
 import { Row, Col } from 'antd';
 
-import React from 'react';
 import { post, storeUserCredential } from '../api';
 import cfg from '../config';
 
