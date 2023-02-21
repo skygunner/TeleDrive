@@ -6,8 +6,8 @@ import {
   EllipsisOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List,
-  Skeleton, Divider, Form, Input, Typography,
+  Col, Dropdown, Modal, Row, List, Breadcrumb,
+  Skeleton, Form, Input, Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -19,7 +19,9 @@ import {
   resetState, selectDetails, fetchDataAsync, fileDeleted, folderDeleted, fileRenamed, folderRenamed,
 } from './FilesViewSlice';
 
-import { del, put, getAuthHeaders } from '../../api';
+import {
+  get, del, put, getAuthHeaders,
+} from '../../api';
 import cfg from '../../config';
 import { fileExtension, humanReadableDate } from '../../utils';
 
@@ -36,11 +38,63 @@ function FilesView() {
   const dataSource = details.folders.concat(details.files);
 
   const [form] = Form.useForm();
+  const [breadcrumb, setBreadcrumb] = useState();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
+  const fetchBreadcrumb = () => {
+    if (!parentId) {
+      setBreadcrumb(
+        <span
+          style={{
+            fontSize: 16,
+            marginLeft: 14,
+          }}
+        >
+          {t('My Drive')}
+        </span>,
+      );
+      return;
+    }
+
+    get(`/v1/tdlib/folder/${parentId}`, authHeaders)
+      .then((folder) => {
+        if (!folder) {
+          return;
+        }
+
+        setBreadcrumb(
+          <Breadcrumb
+            style={{
+              fontSize: 16,
+              marginLeft: 14,
+            }}
+            separator=">"
+          >
+            {folder.breadcrumb.map((item) => {
+              const itemName = item.folder_id ? item.folder_name : t('My Drive');
+
+              return (
+                <Breadcrumb.Item
+                  key={item.folder_id}
+                  onClick={() => {
+                    if (item.folder_id !== parentId) {
+                      setSearchParams(item.folder_id ? { parentId: item.folder_id } : {});
+                    }
+                  }}
+                >
+                  {item.folder_id === parentId ? itemName : (<a>{itemName}</a>)}
+                </Breadcrumb.Item>
+              );
+            })}
+          </Breadcrumb>,
+        );
+      });
+  };
+
   useEffect(() => {
     dispatch(resetState(parentId));
+    fetchBreadcrumb();
     dispatch(fetchDataAsync(parentId));
   }, [parentId]);
 
@@ -365,19 +419,10 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          <Divider
-            style={{
-              borderBlockStart: '0px transparent',
-              fontSize: 16,
-            }}
-            orientation="left"
-            orientationMargin={10}
-          >
-            {t('Folders / Files')}
-          </Divider>
           {dataSource.length !== 0 || !details.loading
             ? (
               <List
+                header={breadcrumb}
                 dataSource={dataSource}
                 renderItem={(item) => listItem(item)}
               />

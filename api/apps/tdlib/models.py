@@ -29,7 +29,7 @@ class Folder(BaseModelMixin):
         folder = self
         breadcrumb = []
         while folder:
-            breadcrumb.append({"folder_id": folder.id, "folder_name": folder.folder_name})
+            breadcrumb.append({"folder_id": str(folder.id), "folder_name": folder.folder_name})
             folder = folder.parent
         breadcrumb.append({"folder_id": None, "folder_name": _("Home")})
         breadcrumb.reverse()

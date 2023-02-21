@@ -75,11 +75,13 @@ function FileUploader() {
                   fontSize: 16,
                 }}
                 orientation="left"
-                orientationMargin={10}
+                orientationMargin={14}
               >
                 {t('Uploads')}
               </Divider>
-              <Upload fileList={fileList} />
+              <div style={{ margin: '0px 24px', marginBottom: 10 }}>
+                <Upload fileList={fileList} />
+              </div>
             </div>
           )
           : null}
