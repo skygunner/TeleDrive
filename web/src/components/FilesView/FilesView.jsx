@@ -4,10 +4,11 @@ import {
   EditOutlined,
   FolderTwoTone,
   EllipsisOutlined,
+  FolderOpenOutlined,
 } from '@ant-design/icons';
 import {
   Col, Dropdown, Modal, Row, List, Breadcrumb,
-  Skeleton, Form, Input, Typography,
+  Skeleton, Form, Input, Typography, Result,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -419,22 +420,20 @@ function FilesView() {
           )}
           scrollableTarget="scrollableDiv"
         >
-          {dataSource.length !== 0 || !details.loading
-            ? (
-              <List
-                header={breadcrumb}
-                dataSource={dataSource}
-                renderItem={(item) => listItem(item)}
-              />
-            )
-            : (
-              <Skeleton
-                active
-                paragraph={{ rows: 1 }}
-                avatar={{ shape: 'square' }}
-                style={{ display: 'flex', alignItems: 'center', padding: '0px 24px' }}
-              />
-            )}
+          <List
+            header={breadcrumb}
+            dataSource={dataSource}
+            renderItem={(item) => listItem(item)}
+            locale={details.loading ? ({
+              emptyText: <span />,
+            }) : ({
+              emptyText: <Result
+                icon={<FolderOpenOutlined />}
+                title={t('No files or folders yet')}
+                subTitle={t('Click + to create folders or upload files')}
+              />,
+            })}
+          />
         </InfiniteScroll>
         <Modal
           open={modalConfig.open}
