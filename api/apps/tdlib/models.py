@@ -3,6 +3,7 @@ import os
 
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from auth.models import User
 from simple_history.models import HistoricalRecords
@@ -22,6 +23,17 @@ class Folder(BaseModelMixin):
 
     class Meta:
         db_table = "folders"
+
+    @property
+    def breadcrumb(self):
+        folder = self
+        breadcrumb = []
+        while folder:
+            breadcrumb.append({"folder_id": folder.id, "folder_name": folder.folder_name})
+            folder = folder.parent
+        breadcrumb.append({"folder_id": None, "folder_name": _("Home")})
+        breadcrumb.reverse()
+        return breadcrumb
 
     @classmethod
     def find_by_user_and_id(self, user: User, id: str):

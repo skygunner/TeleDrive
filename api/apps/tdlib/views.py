@@ -118,13 +118,26 @@ def create_folder(request: Request) -> Response:
     return api_success(FolderSerializer(folder).data)
 
 
-@api_view(["PUT", "DELETE"])
+@api_view(["GET", "PUT", "DELETE"])
 @transaction.atomic
-def ud_folder(request: Request, folder_id: int) -> Response:
-    if request.method == "PUT":
+def rud_folder(request: Request, folder_id: int) -> Response:
+    if request.method == "GET":
+        return get_folder(request=request, folder_id=folder_id)
+    elif request.method == "PUT":
         return update_folder(request=request, folder_id=folder_id)
     elif request.method == "DELETE":
         return delete_folder(request=request, folder_id=folder_id)
+
+
+def get_folder(request: Request, folder_id: int) -> Response:
+    if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
+        return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
+
+    folder = Folder.find_by_user_and_id(user=request.user, id=folder_id)
+    if folder is None:
+        return api_error(_("Folder not found."), status.HTTP_404_NOT_FOUND)
+
+    return api_success(FolderSerializer(folder).data)
 
 
 @request_validator
@@ -168,7 +181,7 @@ def update_folder(request: Request, folder_id: int) -> Response:
 
 def delete_folder(request: Request, folder_id: int) -> Response:
     if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
-        return api_error(_("Invalid folder_id."), status.HTTP_400_BAD_REQUEST)
+        return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
 
     folder = Folder.find_by_user_and_id(user=request.user, id=folder_id)
     if folder is None:

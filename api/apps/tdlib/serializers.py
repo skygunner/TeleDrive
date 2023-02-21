@@ -39,6 +39,7 @@ class FolderSerializer(serializers.ModelSerializer):
             "folder_id",
             "parent_id",
             "folder_name",
+            "breadcrumb",
             "created_at",
             "updated_at",
         ]
