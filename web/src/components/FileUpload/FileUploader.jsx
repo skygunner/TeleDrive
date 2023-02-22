@@ -71,8 +71,9 @@ function FileUploader() {
             <div>
               <Divider
                 style={{
-                  borderBlockStart: '0px transparent',
                   fontSize: 16,
+                  fontWeight: 'bold',
+                  borderBlockStart: '0px transparent',
                 }}
                 orientation="left"
                 orientationMargin={14}

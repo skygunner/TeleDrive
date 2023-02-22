@@ -43,53 +43,50 @@ function FilesView() {
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
+  const applyBreadcrumb = (items) => {
+    setBreadcrumb(
+      <Breadcrumb
+        style={{
+          fontSize: 16,
+          fontWeight: 'bold',
+          marginLeft: 14,
+        }}
+        separator=">"
+      >
+        {items.map((item) => {
+          const itemName = item.folder_id ? item.folder_name : t('My Drive');
+
+          return (
+            <Breadcrumb.Item
+              key={item.folder_id}
+              onClick={() => {
+                if (item.folder_id !== parentId) {
+                  setSearchParams(item.folder_id ? { parentId: item.folder_id } : {});
+                }
+              }}
+            >
+              {item.folder_id === parentId ? itemName : (<a>{itemName}</a>)}
+            </Breadcrumb.Item>
+          );
+        })}
+      </Breadcrumb>,
+    );
+  };
+
   const fetchBreadcrumb = () => {
     if (!parentId) {
-      setBreadcrumb(
-        <span
-          style={{
-            fontSize: 16,
-            marginLeft: 14,
-          }}
-        >
-          {t('My Drive')}
-        </span>,
-      );
+      applyBreadcrumb([{
+        folder_id: null,
+        folder_name: null,
+      }]);
       return;
     }
 
     get(`/v1/tdlib/folder/${parentId}`, authHeaders)
       .then((folder) => {
-        if (!folder) {
-          return;
+        if (folder) {
+          applyBreadcrumb(folder.breadcrumb);
         }
-
-        setBreadcrumb(
-          <Breadcrumb
-            style={{
-              fontSize: 16,
-              marginLeft: 14,
-            }}
-            separator=">"
-          >
-            {folder.breadcrumb.map((item) => {
-              const itemName = item.folder_id ? item.folder_name : t('My Drive');
-
-              return (
-                <Breadcrumb.Item
-                  key={item.folder_id}
-                  onClick={() => {
-                    if (item.folder_id !== parentId) {
-                      setSearchParams(item.folder_id ? { parentId: item.folder_id } : {});
-                    }
-                  }}
-                >
-                  {item.folder_id === parentId ? itemName : (<a>{itemName}</a>)}
-                </Breadcrumb.Item>
-              );
-            })}
-          </Breadcrumb>,
-        );
       });
   };
 
