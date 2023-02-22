@@ -1,6 +1,6 @@
-import { message } from 'antd';
 import axios from 'axios';
 import cfg from '../config';
+import { alertError } from '../utils';
 
 const unknownError = new Error('Something went wrong! Please try again later.');
 
@@ -23,15 +23,13 @@ const handleError = (error) => {
     const detailsLength = error.response?.data?.details?.length;
     if (detailsLength > 0) {
       error.response.data.details.forEach((detail) => {
-        message.error(detail);
+        alertError(detail);
       });
     } else {
-      console.error(error);
-      message.error(unknownError.message);
+      alertError(unknownError.message);
     }
   } else {
-    console.error(error);
-    message.error(unknownError.message);
+    alertError(unknownError.message);
   }
 };
 

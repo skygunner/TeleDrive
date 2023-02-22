@@ -18,6 +18,11 @@ body {
   flex-grow: 1;
 }
 
+.ant-message-notice .ant-message-notice-content {
+  padding: 0px;
+  text-align: left;
+}
+
 .ant-list-item-meta-title {
   margin: 0px;
 }

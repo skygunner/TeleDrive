@@ -1,3 +1,6 @@
+import React from 'react';
+import { message, Alert } from 'antd';
+
 export const humanReadableSize = (size, si = true, dp = 1) => {
   const thresh = si ? 1000 : 1024;
 
@@ -40,4 +43,17 @@ export const fileExtension = (fileName) => {
   }
 
   return '';
+};
+
+export const alertError = (description) => {
+  message.open({
+    duration: 5,
+    content: <Alert
+      showIcon
+      closable
+      type="error"
+      message="Error"
+      description={description}
+    />,
+  });
 };
