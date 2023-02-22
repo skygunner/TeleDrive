@@ -28,6 +28,7 @@ import cfg from '../../config';
 import { fileExtension, humanReadableDate, isTouchScreen } from '../../utils';
 
 function FilesView() {
+  const touchScreen = isTouchScreen();
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
@@ -91,11 +92,13 @@ function FilesView() {
       });
   };
 
-  useEffect(() => {
-    dispatch(resetState(parentId));
+  const refresh = () => {
     fetchBreadcrumb();
+    dispatch(resetState(parentId));
     dispatch(fetchDataAsync(parentId));
-  }, [parentId]);
+  };
+
+  useEffect(refresh, [parentId]);
 
   const folderAvatar = () => (
     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -405,12 +408,9 @@ function FilesView() {
     <Row align="middle">
       <Col offset={1} span={22}>
         <InfiniteScroll
-          pullDownToRefresh={isTouchScreen()}
-          refreshFunction={() => {
-            dispatch(resetState(parentId));
-            dispatch(fetchDataAsync(parentId));
-          }}
+          refreshFunction={refresh}
           pullDownToRefreshThreshold={50}
+          pullDownToRefresh={touchScreen}
           pullDownToRefreshContent={(
             <div style={{ textAlign: 'center' }}>
               <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />
