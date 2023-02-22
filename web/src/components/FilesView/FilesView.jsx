@@ -407,14 +407,14 @@ function FilesView() {
           dataLength={details.folders.length + details.files.length}
           next={() => { dispatch(fetchDataAsync(parentId)); }}
           hasMore={!details.folderListEnd || !details.filesListEnd}
-          loader={(
+          loader={details.loading ? (
             <Skeleton
               active
               paragraph={{ rows: 1 }}
               avatar={{ shape: 'square' }}
               style={{ display: 'flex', alignItems: 'center', padding: '0px 24px' }}
             />
-          )}
+          ) : null}
           scrollableTarget="scrollableDiv"
         >
           <List
