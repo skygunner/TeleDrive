@@ -25,7 +25,7 @@ import {
   get, del, put, getAuthHeaders,
 } from '../../api';
 import cfg from '../../config';
-import { fileExtension, humanReadableDate } from '../../utils';
+import { fileExtension, humanReadableDate, isTouchScreen } from '../../utils';
 
 function FilesView() {
   const authHeaders = getAuthHeaders();
@@ -405,12 +405,17 @@ function FilesView() {
     <Row align="middle">
       <Col offset={1} span={22}>
         <InfiniteScroll
-          pullDownToRefresh
+          pullDownToRefresh={isTouchScreen()}
           refreshFunction={() => {
             dispatch(resetState(parentId));
             dispatch(fetchDataAsync(parentId));
           }}
           pullDownToRefreshThreshold={50}
+          pullDownToRefreshContent={(
+            <div style={{ textAlign: 'center' }}>
+              <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />
+            </div>
+          )}
           releaseToRefreshContent={(
             <div style={{ textAlign: 'center' }}>
               <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />

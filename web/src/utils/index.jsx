@@ -57,3 +57,5 @@ export const alertError = (description) => {
     />,
   });
 };
+
+export const isTouchScreen = () => 'ontouchstart' in window || window.navigator.msMaxTouchPoints;
