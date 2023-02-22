@@ -5,10 +5,11 @@ import {
   FolderTwoTone,
   EllipsisOutlined,
   FolderOpenOutlined,
+  ReloadOutlined,
 } from '@ant-design/icons';
 import {
   Col, Dropdown, Modal, Row, List, Breadcrumb,
-  Skeleton, Form, Input, Typography, Result,
+  Skeleton, Form, Input, Typography, Result, Spin,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -404,6 +405,17 @@ function FilesView() {
     <Row align="middle">
       <Col offset={1} span={22}>
         <InfiniteScroll
+          pullDownToRefresh
+          refreshFunction={() => {
+            dispatch(resetState(parentId));
+            dispatch(fetchDataAsync(parentId));
+          }}
+          pullDownToRefreshThreshold={50}
+          releaseToRefreshContent={(
+            <div style={{ textAlign: 'center' }}>
+              <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />
+            </div>
+          )}
           dataLength={details.folders.length + details.files.length}
           next={() => { dispatch(fetchDataAsync(parentId)); }}
           hasMore={!details.folderListEnd || !details.filesListEnd}
