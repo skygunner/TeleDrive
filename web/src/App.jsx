@@ -17,7 +17,7 @@ function App() {
     token: {
       colorPrimary: '#0d5b96',
       colorSplit: '#d9d9d9',
-      colorInfo: '#1579be',
+      colorInfo: '#0d5b96',
     },
   };
 

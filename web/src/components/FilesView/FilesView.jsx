@@ -10,7 +10,7 @@ import {
   Col, Dropdown, Modal, Row, List, Breadcrumb,
   Skeleton, Form, Input, Typography, Result,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -38,6 +38,7 @@ function FilesView() {
   const details = useSelector(selectDetails);
   const dataSource = details.folders.concat(details.files);
 
+  const textInput = useRef();
   const [form] = Form.useForm();
   const [breadcrumb, setBreadcrumb] = useState();
   const [modalConfig, setModalConfig] = useState({});
@@ -95,6 +96,12 @@ function FilesView() {
     dispatch(resetState(parentId));
     dispatch(fetchDataAsync(parentId));
   };
+
+  useEffect(() => {
+    if (textInput && textInput.current) {
+      textInput.current.focus();
+    }
+  });
 
   useEffect(refresh, [parentId]);
 
@@ -172,6 +179,7 @@ function FilesView() {
               }]}
             >
               <Input
+                ref={textInput}
                 placeholder={t('Folder name')}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -189,7 +197,7 @@ function FilesView() {
       {
         key: 'q',
         label: (
-          <Typography.Link href="" onClick={handleRenameFolder}>
+          <Typography.Link onClick={handleRenameFolder}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -202,7 +210,7 @@ function FilesView() {
         key: '2',
         danger: true,
         label: (
-          <Typography.Link href="" onClick={handleDeleteFolder}>
+          <Typography.Link onClick={handleDeleteFolder}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -293,6 +301,7 @@ function FilesView() {
               }]}
             >
               <Input
+                ref={textInput}
                 placeholder={t('File name')}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -322,7 +331,7 @@ function FilesView() {
       {
         key: '2',
         label: (
-          <Typography.Link href="" onClick={handleRenameFile}>
+          <Typography.Link onClick={handleRenameFile}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -335,7 +344,7 @@ function FilesView() {
         key: '3',
         danger: true,
         label: (
-          <Typography.Link href="" onClick={handleDeleteFile}>
+          <Typography.Link onClick={handleDeleteFile}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -354,7 +363,6 @@ function FilesView() {
             title={(
               <Typography.Link
                 style={{ paddingRight: 15 }}
-                href=""
                 ellipsis
                 onClick={() => {
                   setSearchParams({ parentId: item.folder_id });

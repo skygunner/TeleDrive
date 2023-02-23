@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { UploadOutlined, PlusOutlined, FolderAddOutlined } from '@ant-design/icons';
 import {
@@ -20,9 +20,16 @@ function FloatButtonGroup() {
   const [searchParams] = useSearchParams();
   const parentId = searchParams.get('parentId');
 
+  const textInput = useRef();
   const [form] = Form.useForm();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
+
+  useEffect(() => {
+    if (textInput && textInput.current) {
+      textInput.current.focus();
+    }
+  });
 
   const onStatusChange = (info) => {
     const { status } = info.file;
@@ -77,6 +84,7 @@ function FloatButtonGroup() {
             }]}
           >
             <Input
+              ref={textInput}
               placeholder={t('Folder name')}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') {
