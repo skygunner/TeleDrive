@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ConfigProvider as DesignProvider } from 'antd';
+import { ConfigProvider as DesignProvider, Typography } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import NavigationMenu from './components/NavigationMenu';
@@ -15,7 +15,7 @@ import './App.css';
 function App() {
   const defaultTheme = {
     token: {
-      colorPrimary: '#158bdc',
+      colorPrimary: '#0d5b96',
       colorSplit: '#d9d9d9',
       colorInfo: '#1579be',
     },
@@ -37,8 +37,8 @@ function App() {
       {online
         ? (
           <BrowserRouter>
-            <div className="page">
-              <div className="page-content">
+            <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+              <div style={{ flexGrow: 1 }}>
                 <NavigationMenu />
                 <Routes>
                   <Route index element={<HomePage />} />

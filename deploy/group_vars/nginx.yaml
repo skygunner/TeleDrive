@@ -23,6 +23,8 @@ nginx_vhosts:
       ssl_certificate /etc/nginx/ssl/teledrive.io/fullchain.pem;
       ssl_certificate_key /etc/nginx/ssl/teledrive.io/privkey.pem;
 
+      add_header Cache-Control "max-age=604800";
+
       location / {
           proxy_pass http://10.110.32.2:8080;
       }

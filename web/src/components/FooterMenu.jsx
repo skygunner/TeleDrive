@@ -8,13 +8,7 @@ function FooterMenu() {
   return (
     <Row align="middle">
       <Col offset={1} span={22}>
-        <div
-          style={{
-            textAlign: 'center',
-            margin: '50px 0px',
-            color: 'GrayText',
-          }}
-        >
+        <div style={{ textAlign: 'center', margin: '50px 0px', color: 'rgba(0, 0, 0, 0.45)' }}>
           {t('Copyright © 2023 teledrive.io all rights reserved.')}
         </div>
       </Col>

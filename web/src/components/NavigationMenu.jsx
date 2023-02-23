@@ -93,6 +93,7 @@ function NavigationMenu() {
       ) : (
         <Avatar
           style={{ justifyContent: 'center', verticalAlign: 'middle' }}
+          alt={user ? `${user.first_name} ${user.last_name}` : null}
           size="default"
           icon={<UserOutlined />}
           src={user ? user.photo_url : null}
@@ -133,16 +134,11 @@ function NavigationMenu() {
         <Col offset={1} span={useDrawer ? 22 : 11}>
           {useDrawer ? (
             <>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Button style={{ border: 0, boxShadow: 'none' }} onClick={openDrawer}>
                   <MenuOutlined />
                 </Button>
-                <Avatar src={`${process.env.PUBLIC_URL}/logo192.png`} />
+                <Avatar alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} />
                 <p style={{ marginLeft: 10 }}>TeleDrive</p>
               </div>
               <Drawer
@@ -157,11 +153,8 @@ function NavigationMenu() {
                   >
                     <Avatar
                       size="default"
-                      src={
-                      user
-                        ? user.photo_url
-                        : `${process.env.PUBLIC_URL}/logo192.png`
-                    }
+                      alt={user ? `${user.first_name} ${user.last_name}` : 'TeleDrive'}
+                      src={user ? user.photo_url : `${process.env.PUBLIC_URL}/logo192.png`}
                     />
                     <p style={{ marginLeft: 10, maxWidth: 185 }}>
                       {user

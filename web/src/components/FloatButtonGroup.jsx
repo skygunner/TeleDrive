@@ -40,6 +40,23 @@ function FloatButtonGroup() {
   const handleCreateFolder = () => {
     form.resetFields();
 
+    const onOk = async () => {
+      form
+        .validateFields()
+        .then(async (values) => {
+          setModalConfirmLoading(true);
+
+          const folder = await post('/v1/tdlib/folder', { ...values, parent_id: parseInt(parentId, 10) }, authHeaders);
+          if (folder) {
+            dispatch(folderCreated(folder));
+          }
+
+          setModalConfirmLoading(false);
+          setModalConfig({});
+        })
+        .catch(() => {});
+    };
+
     setModalConfig({
       open: true,
       title: t('Create folder'),
@@ -48,22 +65,7 @@ function FloatButtonGroup() {
       onCancel: () => {
         setModalConfig({});
       },
-      onOk: async () => {
-        form
-          .validateFields()
-          .then(async (values) => {
-            setModalConfirmLoading(true);
-
-            const folder = await post('/v1/tdlib/folder', { ...values, parent_id: parseInt(parentId, 10) }, authHeaders);
-            if (folder) {
-              dispatch(folderCreated(folder));
-            }
-
-            setModalConfirmLoading(false);
-            setModalConfig({});
-          })
-          .catch(() => {});
-      },
+      onOk,
       body: (
         <Form form={form}>
           <Form.Item
@@ -74,7 +76,14 @@ function FloatButtonGroup() {
               message: t('Please input the folder name!'),
             }]}
           >
-            <Input placeholder={t('Folder name')} />
+            <Input
+              placeholder={t('Folder name')}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  onOk();
+                }
+              }}
+            />
           </Form.Item>
         </Form>
       ),

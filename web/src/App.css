@@ -1,21 +1,11 @@
-html,
+/* html,
 body {
   overscroll-behavior: none;
-}
+} */
 
 body {
   padding: 0px;
   margin: 0px;
-}
-
-.page {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-}
-
-.page-content {
-  flex-grow: 1;
 }
 
 .ant-message-notice .ant-message-notice-content {

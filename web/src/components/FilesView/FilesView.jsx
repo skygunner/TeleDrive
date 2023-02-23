@@ -5,11 +5,10 @@ import {
   FolderTwoTone,
   EllipsisOutlined,
   FolderOpenOutlined,
-  ReloadOutlined,
 } from '@ant-design/icons';
 import {
   Col, Dropdown, Modal, Row, List, Breadcrumb,
-  Skeleton, Form, Input, Typography, Result, Spin,
+  Skeleton, Form, Input, Typography, Result,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -25,10 +24,9 @@ import {
   get, del, put, getAuthHeaders,
 } from '../../api';
 import cfg from '../../config';
-import { fileExtension, humanReadableDate, isTouchScreen } from '../../utils';
+import { fileExtension, humanReadableDate } from '../../utils';
 
 function FilesView() {
-  const touchScreen = isTouchScreen();
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
@@ -136,6 +134,23 @@ function FilesView() {
     const handleRenameFolder = () => {
       form.resetFields();
 
+      const onOk = async () => {
+        form
+          .validateFields()
+          .then(async (values) => {
+            setModalConfirmLoading(true);
+
+            const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, values, authHeaders);
+            if (renamedFolder) {
+              dispatch(folderRenamed(renamedFolder));
+            }
+
+            setModalConfirmLoading(false);
+            setModalConfig({});
+          })
+          .catch(() => {});
+      };
+
       setModalConfig({
         open: true,
         title: t('Rename folder'),
@@ -144,22 +159,7 @@ function FilesView() {
         onCancel: () => {
           setModalConfig({});
         },
-        onOk: async () => {
-          form
-            .validateFields()
-            .then(async (values) => {
-              setModalConfirmLoading(true);
-
-              const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, values, authHeaders);
-              if (renamedFolder) {
-                dispatch(folderRenamed(renamedFolder));
-              }
-
-              setModalConfirmLoading(false);
-              setModalConfig({});
-            })
-            .catch(() => {});
-        },
+        onOk,
         body: (
           <Form form={form}>
             <Form.Item
@@ -171,7 +171,14 @@ function FilesView() {
                 message: t('Please input the folder name.'),
               }]}
             >
-              <Input placeholder={t('Folder name')} />
+              <Input
+                placeholder={t('Folder name')}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    onOk();
+                  }
+                }}
+              />
             </Form.Item>
           </Form>
         ),
@@ -182,7 +189,7 @@ function FilesView() {
       {
         key: 'q',
         label: (
-          <Typography.Link onClick={handleRenameFolder}>
+          <Typography.Link href="" onClick={handleRenameFolder}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -195,7 +202,7 @@ function FilesView() {
         key: '2',
         danger: true,
         label: (
-          <Typography.Link onClick={handleDeleteFolder}>
+          <Typography.Link href="" onClick={handleDeleteFolder}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -248,6 +255,23 @@ function FilesView() {
     const handleRenameFile = () => {
       form.resetFields();
 
+      const onOk = async () => {
+        form
+          .validateFields()
+          .then(async (values) => {
+            setModalConfirmLoading(true);
+
+            const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, values, authHeaders);
+            if (renamedFile) {
+              dispatch(fileRenamed(renamedFile));
+            }
+
+            setModalConfirmLoading(false);
+            setModalConfig({});
+          })
+          .catch(() => {});
+      };
+
       setModalConfig({
         open: true,
         title: t('Rename file'),
@@ -256,22 +280,7 @@ function FilesView() {
         onCancel: () => {
           setModalConfig({});
         },
-        onOk: async () => {
-          form
-            .validateFields()
-            .then(async (values) => {
-              setModalConfirmLoading(true);
-
-              const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, values, authHeaders);
-              if (renamedFile) {
-                dispatch(fileRenamed(renamedFile));
-              }
-
-              setModalConfirmLoading(false);
-              setModalConfig({});
-            })
-            .catch(() => {});
-        },
+        onOk,
         body: (
           <Form form={form}>
             <Form.Item
@@ -283,7 +292,14 @@ function FilesView() {
                 message: t('Please input the file name.'),
               }]}
             >
-              <Input placeholder={t('File name')} />
+              <Input
+                placeholder={t('File name')}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    onOk();
+                  }
+                }}
+              />
             </Form.Item>
           </Form>
         ),
@@ -306,7 +322,7 @@ function FilesView() {
       {
         key: '2',
         label: (
-          <Typography.Link onClick={handleRenameFile}>
+          <Typography.Link href="" onClick={handleRenameFile}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -319,7 +335,7 @@ function FilesView() {
         key: '3',
         danger: true,
         label: (
-          <Typography.Link onClick={handleDeleteFile}>
+          <Typography.Link href="" onClick={handleDeleteFile}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -337,8 +353,9 @@ function FilesView() {
             avatar={folderAvatar(item)}
             title={(
               <Typography.Link
-                ellipsis
                 style={{ paddingRight: 15 }}
+                href=""
+                ellipsis
                 onClick={() => {
                   setSearchParams({ parentId: item.folder_id });
                 }}
@@ -408,19 +425,6 @@ function FilesView() {
     <Row align="middle">
       <Col offset={1} span={22}>
         <InfiniteScroll
-          refreshFunction={refresh}
-          pullDownToRefreshThreshold={50}
-          pullDownToRefresh={touchScreen}
-          pullDownToRefreshContent={(
-            <div style={{ textAlign: 'center' }}>
-              <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />
-            </div>
-          )}
-          releaseToRefreshContent={(
-            <div style={{ textAlign: 'center' }}>
-              <Spin indicator={<ReloadOutlined style={{ fontSize: 20 }} />} />
-            </div>
-          )}
           dataLength={details.folders.length + details.files.length}
           next={() => { dispatch(fetchDataAsync(parentId)); }}
           hasMore={!details.folderListEnd || !details.filesListEnd}
