@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { UploadOutlined, PlusOutlined, FolderAddOutlined } from '@ant-design/icons';
 import {
@@ -24,12 +24,6 @@ function FloatButtonGroup() {
   const [form] = Form.useForm();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
-
-  useEffect(() => {
-    if (textInput && textInput.current) {
-      textInput.current.focus();
-    }
-  });
 
   const onStatusChange = (info) => {
     const { status } = info.file;
@@ -58,6 +52,7 @@ function FloatButtonGroup() {
             dispatch(folderCreated(folder));
           }
 
+          textInput.current.blur();
           setModalConfirmLoading(false);
           setModalConfig({});
         })
@@ -70,6 +65,7 @@ function FloatButtonGroup() {
       okText: t('Create'),
       okButtonProps: { type: 'primary' },
       onCancel: () => {
+        textInput.current.blur();
         setModalConfig({});
       },
       onOk,
@@ -96,6 +92,10 @@ function FloatButtonGroup() {
         </Form>
       ),
     });
+
+    setTimeout(() => {
+      textInput.current.focus();
+    }, 500);
   };
 
   return (

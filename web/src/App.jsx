@@ -15,9 +15,9 @@ import './App.css';
 function App() {
   const defaultTheme = {
     token: {
-      colorPrimary: '#0d5b96',
+      colorPrimary: '#158bdc',
       colorSplit: '#d9d9d9',
-      colorInfo: '#0d5b96',
+      colorInfo: '#158bdc',
     },
   };
 

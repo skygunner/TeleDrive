@@ -97,12 +97,6 @@ function FilesView() {
     dispatch(fetchDataAsync(parentId));
   };
 
-  useEffect(() => {
-    if (textInput && textInput.current) {
-      textInput.current.focus();
-    }
-  });
-
   useEffect(refresh, [parentId]);
 
   const folderAvatar = () => (
@@ -152,6 +146,7 @@ function FilesView() {
               dispatch(folderRenamed(renamedFolder));
             }
 
+            textInput.current.blur();
             setModalConfirmLoading(false);
             setModalConfig({});
           })
@@ -164,6 +159,7 @@ function FilesView() {
         okText: t('Rename'),
         okButtonProps: { type: 'primary' },
         onCancel: () => {
+          textInput.current.blur();
           setModalConfig({});
         },
         onOk,
@@ -191,6 +187,10 @@ function FilesView() {
           </Form>
         ),
       });
+
+      setTimeout(() => {
+        textInput.current.focus();
+      }, 500);
     };
 
     return [
@@ -274,6 +274,7 @@ function FilesView() {
               dispatch(fileRenamed(renamedFile));
             }
 
+            textInput.current.blur();
             setModalConfirmLoading(false);
             setModalConfig({});
           })
@@ -286,6 +287,7 @@ function FilesView() {
         okText: t('Rename'),
         okButtonProps: { type: 'primary' },
         onCancel: () => {
+          textInput.current.blur();
           setModalConfig({});
         },
         onOk,
@@ -313,6 +315,10 @@ function FilesView() {
           </Form>
         ),
       });
+
+      setTimeout(() => {
+        textInput.current.focus();
+      }, 500);
     };
 
     return [
