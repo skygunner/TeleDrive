@@ -1,3 +1,5 @@
+nginx_conf_template: "{{ playbook_dir }}/templates/nginx.conf.j2"
+
 nginx_listen_ipv6: false
 
 nginx_remove_default_vhost: true
