@@ -170,7 +170,7 @@ resource "digitalocean_monitor_alert" "high_disk_usage_alert" {
 }
 
 resource "digitalocean_uptime_check" "api_uptime_check" {
-    name    = "teledrive-api"
+    name    = "TeleDrive API"
     target  = "https://api.teledrive.io/health"
     type    = "https"
     regions = [
@@ -180,11 +180,63 @@ resource "digitalocean_uptime_check" "api_uptime_check" {
 }
 
 resource "digitalocean_uptime_check" "web_uptime_check" {
-    name    = "teledrive-web"
+    name    = "TeleDrive Web"
     target  = "https://teledrive.io"
     type    = "https"
     regions = [
         "eu_west",
     ]
     enabled = true
+}
+
+resource "digitalocean_uptime_alert" "api_uptime_alert_downtime" {
+    name      = "TeleDrive API Down"
+    check_id  = "${digitalocean_uptime_check.api_uptime_check.id}"
+    type      = "down_global"
+    threshold = 1
+    period    = "2m"
+    notifications {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+}
+
+resource "digitalocean_uptime_alert" "web_uptime_alert_downtime" {
+    name      = "TeleDrive Web Down"
+    check_id  = "${digitalocean_uptime_check.web_uptime_check.id}"
+    type      = "down_global"
+    threshold = 1
+    period    = "2m"
+    notifications {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+}
+
+resource "digitalocean_uptime_alert" "api_uptime_alert_ssl_expiry" {
+    name      = "TeleDrive API SLL Renew"
+    check_id  = "${digitalocean_uptime_check.api_uptime_check.id}"
+    type      = "ssl_expiry"
+    threshold = 10
+    period    = "2m"
+    notifications {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+}
+
+resource "digitalocean_uptime_alert" "web_uptime_alert_ssl_expiry" {
+    name      = "TeleDrive Web SLL Renew"
+    check_id  = "${digitalocean_uptime_check.web_uptime_check.id}"
+    type      = "ssl_expiry"
+    threshold = 10
+    period    = "2m"
+    notifications {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
 }
