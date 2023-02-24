@@ -66,7 +66,7 @@ function FilesView() {
                 }
               }}
             >
-              {item.folder_id === parentId ? itemName : (<a>{itemName}</a>)}
+              {item.folder_id === parentId ? itemName : (<a tabIndex={-1}>{itemName}</a>)}
             </Breadcrumb.Item>
           );
         })}
@@ -197,7 +197,7 @@ function FilesView() {
       {
         key: 'q',
         label: (
-          <Typography.Link onClick={handleRenameFolder}>
+          <Typography.Link tabIndex={-1} onClick={handleRenameFolder}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -210,7 +210,7 @@ function FilesView() {
         key: '2',
         danger: true,
         label: (
-          <Typography.Link onClick={handleDeleteFolder}>
+          <Typography.Link tabIndex={-1} onClick={handleDeleteFolder}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -326,6 +326,7 @@ function FilesView() {
         key: '1',
         label: (
           <Typography.Link
+            tabIndex={-1}
             href={`${cfg.apiBaseUrl}/v1/tdlib/download/${file.file_id}?secret=${file.file_token}`}
             download={file.file_name}
           >
@@ -337,7 +338,7 @@ function FilesView() {
       {
         key: '2',
         label: (
-          <Typography.Link onClick={handleRenameFile}>
+          <Typography.Link tabIndex={-1} onClick={handleRenameFile}>
             {t('Rename')}
           </Typography.Link>
         ),
@@ -350,7 +351,7 @@ function FilesView() {
         key: '3',
         danger: true,
         label: (
-          <Typography.Link onClick={handleDeleteFile}>
+          <Typography.Link tabIndex={-1} onClick={handleDeleteFile}>
             {t('Delete')}
           </Typography.Link>
         ),
@@ -368,6 +369,7 @@ function FilesView() {
             avatar={folderAvatar(item)}
             title={(
               <Typography.Link
+                tabIndex={-1}
                 style={{ paddingRight: 15 }}
                 ellipsis
                 onClick={() => {
@@ -405,6 +407,7 @@ function FilesView() {
             avatar={fileAvatar(item)}
             title={(
               <Typography.Text
+                tabIndex={-1}
                 ellipsis
                 style={{ paddingRight: 15 }}
               >

@@ -135,7 +135,7 @@ function NavigationMenu() {
           {useDrawer ? (
             <>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Button style={{ border: 0, boxShadow: 'none' }} onClick={openDrawer}>
+                <Button tabIndex={-1} style={{ border: 0, boxShadow: 'none' }} onClick={openDrawer}>
                   <MenuOutlined />
                 </Button>
                 <Avatar alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} />
@@ -161,6 +161,7 @@ function NavigationMenu() {
                         ? (
                           <Typography.Text
                             ellipsis
+                            tabIndex={-1}
                             style={{ paddingRight: 15 }}
                           >
                             {`${user.first_name} ${user.last_name}`}
