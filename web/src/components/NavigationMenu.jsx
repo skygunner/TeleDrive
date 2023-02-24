@@ -5,6 +5,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
   UserOutlined,
+  LockOutlined,
 } from '@ant-design/icons';
 import {
   Avatar, Button, Col, Divider, Drawer, Menu, Row, Typography,
@@ -69,6 +70,15 @@ function NavigationMenu() {
       icon: <HomeOutlined />,
       onClick: () => {
         navigate('/');
+        closeDrawer();
+      },
+    },
+    {
+      key: '/privacy',
+      label: t('Privacy'),
+      icon: <LockOutlined />,
+      onClick: () => {
+        navigate('/privacy');
         closeDrawer();
       },
     },
