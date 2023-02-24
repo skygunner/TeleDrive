@@ -110,13 +110,11 @@ function NavigationMenu() {
         />
       ),
       onClick: async () => {
-        const resp = await post('/v1/auth/signOut', {}, authHeaders);
-        if (resp) {
-          setUser();
-          removeUserCredential();
-          navigate('/', { replace: true });
-          closeDrawer();
-        }
+        await post('/v1/auth/signOut', {}, authHeaders);
+        setUser();
+        removeUserCredential();
+        navigate('/', { replace: true });
+        closeDrawer();
       },
     });
   } else {
