@@ -3,25 +3,25 @@ all:
     droplet:
       hosts:
         all-in-one.teledrive.io:
-          ansible_host: 157.245.76.59
+          ansible_host: 167.71.1.123
           ansible_user: root
     postgresql:
       hosts:
         all-in-one.teledrive.io:
-          ansible_host: 157.245.76.59
+          ansible_host: 167.71.1.123
           ansible_user: root
     baseapi:
       hosts:
         all-in-one.teledrive.io:
-          ansible_host: 157.245.76.59
+          ansible_host: 167.71.1.123
           ansible_user: root
     web:
       hosts:
         all-in-one.teledrive.io:
-          ansible_host: 157.245.76.59
+          ansible_host: 167.71.1.123
           ansible_user: root
     nginx:
       hosts:
         all-in-one.teledrive.io:
-          ansible_host: 157.245.76.59
+          ansible_host: 167.71.1.123
           ansible_user: root
