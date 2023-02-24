@@ -27,7 +27,7 @@ resource "digitalocean_droplet" "all_in_one" {
     size       = "s-1vcpu-1gb" # https://slugs.do-api.dev/
     vpc_uuid   = digitalocean_vpc.teledrive.id
     ssh_keys   = [ 
-        digitalocean_ssh_key.teledrive.fingerprint 
+        digitalocean_ssh_key.teledrive.fingerprint,
     ]
     backups    = true
     monitoring = true
@@ -38,7 +38,7 @@ resource "digitalocean_firewall" "all_in_one" {
     name = "all-in-one"
 
     droplet_ids = [
-        digitalocean_droplet.all_in_one.id
+        digitalocean_droplet.all_in_one.id,
     ]
 
     inbound_rule {
@@ -100,3 +100,91 @@ resource "cloudflare_record" "api_teledrive" {
 #     name   = "teledrive-db-backup-bucket"
 #     region = var.digitalocean_region
 # }
+
+resource "digitalocean_monitor_alert" "high_cpu_usage_alert" {
+    alerts {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+    window      = "10m"
+    type        = "v1/insights/droplet/cpu"
+    compare     = "GreaterThan"
+    value       = 80
+    enabled     = true
+    entities    = [
+        digitalocean_droplet.all_in_one.id,
+    ]
+    description = "High CPU Usage"
+}
+
+resource "digitalocean_monitor_alert" "high_cpu_load_alert" {
+    alerts {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+    window      = "10m"
+    type        = "v1/insights/droplet/load_15"
+    compare     = "GreaterThan"
+    value       = 60
+    enabled     = true
+    entities    = [
+        digitalocean_droplet.all_in_one.id,
+    ]
+    description = "High CPU Load"
+}
+
+resource "digitalocean_monitor_alert" "high_memory_usage_alert" {
+    alerts {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+    window      = "10m"
+    type        = "v1/insights/droplet/memory_utilization_percent"
+    compare     = "GreaterThan"
+    value       = 80
+    enabled     = true
+    entities    = [
+        digitalocean_droplet.all_in_one.id,
+    ]
+    description = "High Memory Usage"
+}
+
+resource "digitalocean_monitor_alert" "high_disk_usage_alert" {
+    alerts {
+        email = [
+            "rashad.ansari@teledrive.io",
+        ]
+    }
+    window      = "10m"
+    type        = "v1/insights/droplet/disk_utilization_percent"
+    compare     = "GreaterThan"
+    value       = 60
+    enabled     = true
+    entities    = [
+        digitalocean_droplet.all_in_one.id,
+    ]
+    description = "High Disk Usage"
+}
+
+resource "digitalocean_uptime_check" "api_uptime_check" {
+    name    = "teledrive-api"
+    target  = "https://api.teledrive.io/health"
+    type    = "https"
+    regions = [
+        "eu_west",
+    ]
+    enabled = true
+}
+
+resource "digitalocean_uptime_check" "web_uptime_check" {
+    name    = "teledrive-web"
+    target  = "https://teledrive.io"
+    type    = "https"
+    regions = [
+        "eu_west",
+    ]
+    enabled = true
+}
