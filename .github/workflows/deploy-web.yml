@@ -26,6 +26,7 @@ jobs:
           NODE_ENV=production
           REACT_APP_TELEGRAM_BOT_NAME=TeleDriveAppBot
           REACT_APP_API_BASE_URL=https://api.teledrive.io
+          REACT_APP_PIWIK_PRO_CONTAINER_ID=${{ secrets.PIWIK_PRO_CONTAINER_ID }}
     - name: Docker Save
       run: docker save web:${{ github.event.inputs.commit_hash }} > /tmp/web-image.tar
     - name: Run Playbook

@@ -1,11 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider as StoreProvider } from 'react-redux';
+import PiwikPro from '@piwikpro/react-piwik-pro';
 
 import App from './App';
 import store from './store';
+import config from './config';
 import './i18n';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+
+if (config.piwikProContainerId) {
+  PiwikPro.initialize(
+    config.piwikProContainerId,
+    'https://teledrive.containers.piwik.pro',
+  );
+}
 
 ReactDOM.render(
   <React.StrictMode>
