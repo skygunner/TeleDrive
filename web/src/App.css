@@ -1,7 +1,7 @@
-/* html,
+html,
 body {
-  overscroll-behavior: none;
-} */
+  overscroll-behavior-x: none;
+}
 
 body {
   padding: 0px;
