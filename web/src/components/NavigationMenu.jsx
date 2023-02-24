@@ -141,7 +141,7 @@ function NavigationMenu() {
     }}
     >
       <Row align="middle">
-        <Col offset={1} span={useDrawer ? 22 : 11}>
+        <Col offset={1} span={useDrawer ? 22 : 15}>
           {useDrawer ? (
             <>
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -208,7 +208,7 @@ function NavigationMenu() {
           )}
         </Col>
         {!useDrawer ? (
-          <Col span={11}>
+          <Col span={7}>
             <Menu
               style={{ fontWeight: 'bold', justifyContent: 'right' }}
               mode="horizontal"
