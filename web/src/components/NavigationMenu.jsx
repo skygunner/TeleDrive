@@ -191,6 +191,7 @@ function NavigationMenu() {
                   selectedKeys={[location.pathname]}
                   items={mainMenuItems.concat(userMenuItems)}
                   overflowedIndicator={false}
+                  tabIndex={-1}
                 />
               </Drawer>
               <Divider style={{ margin: 0 }} type="horizontal" />
@@ -202,6 +203,7 @@ function NavigationMenu() {
               selectedKeys={[location.pathname]}
               items={mainMenuItems}
               overflowedIndicator={false}
+              tabIndex={-1}
             />
           )}
         </Col>
@@ -213,6 +215,7 @@ function NavigationMenu() {
               selectedKeys={[location.pathname]}
               items={userMenuItems}
               overflowedIndicator={false}
+              tabIndex={-1}
             />
           </Col>
         ) : null}
