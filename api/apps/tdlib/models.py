@@ -3,7 +3,6 @@ import os
 
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import gettext as _
 
 from auth.models import User
 from simple_history.models import HistoricalRecords
@@ -31,7 +30,7 @@ class Folder(BaseModelMixin):
         while folder:
             breadcrumb.append({"folder_id": str(folder.id), "folder_name": folder.folder_name})
             folder = folder.parent
-        breadcrumb.append({"folder_id": None, "folder_name": _("Home")})
+        breadcrumb.append({"folder_id": None, "folder_name": None})
         breadcrumb.reverse()
         return breadcrumb
 
