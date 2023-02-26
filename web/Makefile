@@ -1,7 +1,10 @@
-local: install format lint
+local: install tramslations format lint
 
 install:
 	npm install
+
+tramslations:
+	npx i18next -c src/i18next-parser.config.mjs 'src/**/*.{js,jsx}'
 
 format:
 	npx prettier --write --ignore-unknown .
