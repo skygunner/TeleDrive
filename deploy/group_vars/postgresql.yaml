@@ -68,13 +68,3 @@ postgresql_databases:
 postgresql_users:
   - name: baseapi
     password: "{{ postgresql_password }}"
-
-walg_s3_id: "{{ s3_access_id }}"
-walg_s3_secret: "{{ s3_secret_key }}"
-walg_s3_region: ams3
-walg_s3_endpoint: "ams3.digitaloceanspaces.com"
-
-walg_s3_bucket: "teledrive-db-backup-bucket"
-walg_s3_prefix: ""
-walg_s3_storage_class: STANDARD_IA
-walg_s3_use_path_style: false

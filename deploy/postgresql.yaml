@@ -3,6 +3,3 @@
   hosts: postgresql
   roles:
     - postgresql
-    # https://github.com/crrlcx/ansible-wal-g
-    # https://www.fusionbox.com/blog/detail/postgresql-wal-archiving-with-wal-g-and-s3-complete-walkthrough/644/
-    # - wal-g
