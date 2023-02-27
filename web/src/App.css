@@ -1,24 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
-/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
+* {
+  font-family: "Roboto", sans-serif;
+}
 
 body {
   padding: 0px;
   margin: 0px;
   overscroll-behavior-x: none;
-  font-family: "Open Sans", sans-serif;
-  /* font-family: 'Roboto', sans-serif; */
-  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-  sans-serif; */
-  font-variant-numeric: tabular-nums;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
-
-/* code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-} */
 
 .ant-message-notice .ant-message-notice-content {
   padding: 0px;
@@ -51,6 +39,12 @@ body {
   justify-content: center;
 }
 
-.file-title:active {
-  color: rgba(0, 0, 0, 0.88);
+@media (hover: none) and (pointer: coarse) {
+  .ant-list
+    .ant-list-item
+    .ant-list-item-meta
+    .ant-list-item-meta-title
+    > a:hover {
+    color: rgba(0, 0, 0, 0.88);
+  }
 }
