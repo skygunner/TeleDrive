@@ -369,6 +369,7 @@ function FilesView() {
             avatar={folderAvatar(item)}
             title={(
               <Typography.Link
+                className="file-title"
                 tabIndex={-1}
                 style={{ paddingRight: 15 }}
                 ellipsis
@@ -407,6 +408,7 @@ function FilesView() {
             avatar={fileAvatar(item)}
             title={(
               <Typography.Text
+                className="file-title"
                 tabIndex={-1}
                 ellipsis
                 style={{ paddingRight: 15 }}
