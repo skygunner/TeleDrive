@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
+import colors from '../styles/colors';
 
 import {
   get,
@@ -82,6 +83,15 @@ function NavigationMenu() {
         closeDrawer();
       },
     },
+    {
+      key: '/support',
+      label: t('Support'),
+      icon: <LockOutlined />,
+      onClick: () => {
+        navigate('/support');
+        closeDrawer();
+      },
+    },
   ];
 
   if (isLoggedIn) {
@@ -147,7 +157,7 @@ function NavigationMenu() {
                   <MenuOutlined />
                 </Button>
                 <Avatar alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} />
-                <p style={{ marginLeft: 10 }}>TeleDrive</p>
+                <p style={{ marginLeft: 10, color: colors.colorText }}>TeleDrive</p>
               </div>
               <Drawer
                 title={(
@@ -164,7 +174,7 @@ function NavigationMenu() {
                       alt={user ? `${user.first_name} ${user.last_name}` : 'TeleDrive'}
                       src={user ? user.photo_url : `${process.env.PUBLIC_URL}/logo192.png`}
                     />
-                    <p style={{ marginLeft: 10, maxWidth: 185 }}>
+                    <p style={{ marginLeft: 10, maxWidth: 185, color: colors.colorText }}>
                       {user
                         ? (
                           <Typography.Text

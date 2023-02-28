@@ -10,6 +10,8 @@ import NoPage from './pages/NoPage';
 import OfflinePage from './pages/OfflinePage';
 import PrivacyPage from './pages/PrivacyPage';
 import FooterMenu from './components/FooterMenu';
+import SupportPage from './pages/SupportPage';
+import colors from './styles/colors';
 
 import './App.css';
 
@@ -17,9 +19,9 @@ function App() {
   const defaultTheme = {
     token: {
       // fontFamily: "'Roboto', sans-serif",
-      colorPrimary: '#158bdc',
-      colorSplit: '#d9d9d9',
-      colorInfo: '#158bdc',
+      colorPrimary: colors.colorPrimary,
+      colorSplit: colors.colorSplit,
+      colorInfo: colors.colorInfo,
     },
   };
 
@@ -47,6 +49,7 @@ function App() {
                   <Route path="files" element={<FilesPage />} />
                   <Route path="login" element={<LoginPage />} />
                   <Route path="privacy" element={<PrivacyPage />} />
+                  <Route path="support" element={<SupportPage />} />
                   <Route path="*" element={<NoPage />} />
                 </Routes>
               </div>
