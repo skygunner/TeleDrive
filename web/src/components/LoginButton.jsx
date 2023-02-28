@@ -22,12 +22,7 @@ function LoginButton() {
   };
 
   return (
-    <div
-      style={{
-        marginTop: 30,
-        display: 'flex',
-      }}
-    >
+    <div style={{ marginTop: 30 }}>
       <Spin spinning={loading}>
         <TelegramLoginButton
           botName={cfg.telegramBotName}

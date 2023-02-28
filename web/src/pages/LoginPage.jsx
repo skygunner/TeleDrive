@@ -37,12 +37,14 @@ function LoginPage() {
               {t('To log in, please click on the button below. This will redirect you to Telegram where you can authorize our website to access your account.')}
             </p>
           </div>
-          <div style={{ margin: sectionMargin }}>
+          <div style={{ margin: sectionMargin, marginBottom: -5 }}>
             <p>
               {t("If you do not have a Telegram account yet, you will need to create one before you can log in. Don't worry, it's quick and easy to sign up!")}
             </p>
           </div>
-          <LoginButton />
+          <div style={{ width: 'fit-content' }}>
+            <LoginButton />
+          </div>
         </div>
       </Col>
     </Row>

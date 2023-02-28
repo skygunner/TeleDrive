@@ -2,9 +2,14 @@ import React from 'react';
 import { Row, Col, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { CloudOutlined } from '@ant-design/icons';
 import colors from '../styles/colors';
+import { isUserLoggedIn } from '../api';
+import LoginButton from '../components/LoginButton';
 
 function HomePage() {
+  const isLoggedIn = isUserLoggedIn();
+
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -77,16 +82,21 @@ function HomePage() {
             <h4>
               {t('Try TeleDrive today and enjoy Telegram unlimited cloud storage for all your files')}
             </h4>
-            <Button
-              style={{ marginTop: 20 }}
-              size="large"
-              type="primary"
-              onClick={() => {
-                navigate('/login');
-              }}
-            >
-              {t('Sign up now')}
-            </Button>
+            {isLoggedIn
+              ? (
+                <Button
+                  style={{ marginTop: 10 }}
+                  size="large"
+                  type="primary"
+                  icon={<CloudOutlined />}
+                  onClick={() => {
+                    navigate('/files');
+                  }}
+                >
+                  {t('My Files')}
+                </Button>
+              )
+              : <LoginButton />}
           </div>
         </div>
       </Col>
