@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Spin } from 'antd';
 import TelegramLoginButton from 'react-telegram-login';
 
 import { post, storeUserCredential } from '../api';
@@ -8,12 +9,16 @@ import cfg from '../config';
 function LoginButton() {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   const onTelegramResponse = async (data) => {
+    setLoading(true);
     const userCredential = await post('/v1/auth/signIn', data);
     if (userCredential) {
       storeUserCredential(userCredential);
       navigate('/files', { replace: true });
     }
+    setLoading(false);
   };
 
   return (
@@ -23,14 +28,16 @@ function LoginButton() {
         display: 'flex',
       }}
     >
-      <TelegramLoginButton
-        botName={cfg.telegramBotName}
-        dataOnauth={onTelegramResponse}
-        buttonSize="large"
-        requestAccess="write"
-        usePic="true"
-        lang="en"
-      />
+      <Spin spinning={loading}>
+        <TelegramLoginButton
+          botName={cfg.telegramBotName}
+          dataOnauth={onTelegramResponse}
+          buttonSize="large"
+          requestAccess="write"
+          usePic="true"
+          lang="en"
+        />
+      </Spin>
     </div>
   );
 }
