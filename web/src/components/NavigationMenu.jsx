@@ -15,7 +15,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
 import { useLocation, useNavigate } from 'react-router-dom';
-import colors from '../styles/colors';
 
 import {
   get,
@@ -159,7 +158,9 @@ function NavigationMenu() {
                   <MenuOutlined />
                 </Button>
                 <Avatar alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} />
-                <p style={{ marginLeft: 10, color: colors.colorText }}>TeleDrive</p>
+                <p style={{ marginLeft: 10 }}>
+                  <Typography.Text strong>TeleDrive</Typography.Text>
+                </p>
               </div>
               <Drawer
                 title={(
@@ -176,18 +177,15 @@ function NavigationMenu() {
                       alt={user ? `${user.first_name} ${user.last_name}` : 'TeleDrive'}
                       src={user ? user.photo_url : `${process.env.PUBLIC_URL}/logo192.png`}
                     />
-                    <p style={{ marginLeft: 10, maxWidth: 185, color: colors.colorText }}>
-                      {user
-                        ? (
-                          <Typography.Text
-                            ellipsis
-                            tabIndex={-1}
-                            style={{ paddingRight: 15 }}
-                          >
-                            {`${user.first_name} ${user.last_name}`}
-                          </Typography.Text>
-                        )
-                        : 'TeleDrive'}
+                    <p style={{ marginLeft: 10, maxWidth: 185 }}>
+                      <Typography.Text
+                        strong
+                        ellipsis
+                        tabIndex={-1}
+                        style={{ paddingRight: 15 }}
+                      >
+                        {user ? `${user.first_name} ${user.last_name}` : 'TeleDrive'}
+                      </Typography.Text>
                     </p>
                   </div>
               )}

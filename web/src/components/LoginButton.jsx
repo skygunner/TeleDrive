@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import TelegramLoginButton from 'react-telegram-login';
-import { Row, Col } from 'antd';
 
 import { post, storeUserCredential } from '../api';
 import cfg from '../config';
@@ -18,26 +17,21 @@ function LoginButton() {
   };
 
   return (
-    <Row align="middle">
-      <Col offset={1} span={22}>
-        <div
-          style={{
-            marginTop: 60,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <TelegramLoginButton
-            botName={cfg.telegramBotName}
-            dataOnauth={onTelegramResponse}
-            buttonSize="large"
-            requestAccess="write"
-            usePic="true"
-            lang="en"
-          />
-        </div>
-      </Col>
-    </Row>
+    <div
+      style={{
+        marginTop: 30,
+        display: 'flex',
+      }}
+    >
+      <TelegramLoginButton
+        botName={cfg.telegramBotName}
+        dataOnauth={onTelegramResponse}
+        buttonSize="large"
+        requestAccess="write"
+        usePic="true"
+        lang="en"
+      />
+    </div>
   );
 }
 
