@@ -1,4 +1,6 @@
 {
+  "Something went wrong! Please try again later.": "Something went wrong! Please try again later.",
+  "Failed to store user credentials in the browser's local storage!": "Failed to store user credentials in the browser's local storage!",
   "My Drive": "My Drive",
   "Delete folder": "Delete folder",
   "Delete": "Delete",

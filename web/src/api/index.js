@@ -1,8 +1,9 @@
 import axios from 'axios';
 import cfg from '../config';
 import { alertError } from '../utils';
+import i18n from '../i18n';
 
-const unknownError = new Error('Something went wrong! Please try again later.');
+const unknownError = new Error(i18n.t('Something went wrong! Please try again later.'));
 
 const baseAPI = axios.create({ baseURL: cfg.apiBaseUrl });
 
@@ -39,7 +40,11 @@ export const storeUserCredential = (jwtObject) => {
     expire_at: jwtObject.expire_at,
   });
 
-  localStorage.setItem('jwt_object', jwtObjectStr);
+  try {
+    localStorage.setItem('jwt_object', jwtObjectStr);
+  } catch (error) {
+    alertError(i18n.t("Failed to store user credentials in the browser's local storage!"));
+  }
 };
 
 export const removeUserCredential = () => {

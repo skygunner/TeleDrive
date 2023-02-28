@@ -35,7 +35,7 @@ function NavigationMenu() {
   const [user, setUser] = useState();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn || user) {
       return;
     }
 
