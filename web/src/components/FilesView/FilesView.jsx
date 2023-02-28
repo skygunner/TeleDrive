@@ -128,7 +128,7 @@ function FilesView() {
           setModalConfirmLoading(false);
           setModalConfig({});
         },
-        body: <p>{t(`Are you sure you want to delete ${folder.folder_name}?`)}</p>,
+        body: <p>{t('Are you sure you want to delete {{ folderName }}?', { folderName: folder.folder_name })}</p>,
       });
     };
 
@@ -256,7 +256,7 @@ function FilesView() {
           setModalConfirmLoading(false);
           setModalConfig({});
         },
-        body: <p>{t(`Are you sure you want to delete ${file.file_name}?`)}</p>,
+        body: <p>{t('Are you sure you want to delete {{ fileName }}?', { fileName: file.file_name })}</p>,
       });
     };
 

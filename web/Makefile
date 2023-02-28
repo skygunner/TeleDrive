@@ -1,9 +1,9 @@
-local: install tramslations format lint
+local: install tramslation format lint
 
 install:
 	npm install
 
-tramslations:
+tramslation:
 	npx i18next -c src/i18next-parser.config.mjs 'src/**/*.{js,jsx}'
 
 format:
