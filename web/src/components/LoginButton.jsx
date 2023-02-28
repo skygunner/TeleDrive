@@ -14,7 +14,6 @@ function LoginButton() {
     if (userCredential) {
       storeUserCredential(userCredential);
       navigate('/files', { replace: true });
-      window.location.reload(true); // NavigationMenu issue
     }
   };
 

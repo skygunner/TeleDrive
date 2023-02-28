@@ -16,8 +16,9 @@ function FileUploader() {
   const [searchParams] = useSearchParams();
   const parentId = searchParams.get('parentId');
 
+  // https://ant.design/components/layout#breakpoint-width
   const mediaQueryMatch = useMediaQuery(
-    { query: '(min-width: 576px)' },
+    { query: '(min-width: 768px)' },
     null,
     (match) => {
       // eslint-disable-next-line no-use-before-define

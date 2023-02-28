@@ -1,11 +1,12 @@
 import {
-  FileOutlined,
   HomeOutlined,
   LoginOutlined,
   LogoutOutlined,
   MenuOutlined,
   UserOutlined,
   LockOutlined,
+  CustomerServiceOutlined,
+  CloudOutlined,
 } from '@ant-design/icons';
 import {
   Avatar, Button, Col, Divider, Drawer, Menu, Row, Typography,
@@ -44,10 +45,11 @@ function NavigationMenu() {
         setUser(apiUser);
       }
     });
-  }, []);
+  }, [location.pathname]);
 
+  // https://ant.design/components/layout#breakpoint-width
   const mediaQueryMatch = useMediaQuery(
-    { query: '(min-width: 576px)' },
+    { query: '(min-width: 768px)' },
     null,
     (match) => {
       // eslint-disable-next-line no-use-before-define
@@ -86,7 +88,7 @@ function NavigationMenu() {
     {
       key: '/support',
       label: t('Support'),
-      icon: <LockOutlined />,
+      icon: <CustomerServiceOutlined />,
       onClick: () => {
         navigate('/support');
         closeDrawer();
@@ -98,7 +100,7 @@ function NavigationMenu() {
     mainMenuItems.push({
       key: '/files',
       label: t('My Files'),
-      icon: <FileOutlined />,
+      icon: <CloudOutlined />,
       onClick: () => {
         navigate('/files');
         closeDrawer();
