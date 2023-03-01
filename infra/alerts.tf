@@ -15,23 +15,6 @@ resource "digitalocean_monitor_alert" "high_cpu_usage_alert" {
     }
 }
 
-resource "digitalocean_monitor_alert" "high_cpu_load_alert" {
-    enabled     = true
-    description = "High CPU Load"
-    type        = "v1/insights/droplet/load_15"
-    compare     = "GreaterThan"
-    value       = 0.6
-    window      = "10m"
-    entities    = [
-        digitalocean_droplet.all_in_one.id,
-    ]
-    alerts {
-        email = [
-            "rashad.ansari@teledrive.io",
-        ]
-    }
-}
-
 resource "digitalocean_monitor_alert" "high_memory_usage_alert" {
     enabled     = true
     description = "High Memory Usage"
