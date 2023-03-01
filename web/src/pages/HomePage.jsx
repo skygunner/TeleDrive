@@ -36,7 +36,7 @@ function HomePage() {
               {t('Welcome to TeleDrive')}
             </h1>
             <h2>
-              {t('The ultimate solution for managing your Telegram unlimited cloud storage!')}
+              {t('The ultimate solution for managing your Telegram unlimited cloud storage')}
             </h2>
           </div>
           <div style={{ margin: sectionMargin }}>
