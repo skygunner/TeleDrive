@@ -1,10 +1,14 @@
 import React from 'react';
-import { Row, Col, Typography } from 'antd';
+import {
+  Row, Col, Typography, theme,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
-import colors from '../styles/colors';
+
+const { useToken } = theme;
 
 function SupportPage() {
   const { t } = useTranslation();
+  const { token } = useToken();
 
   const topMargin = '30px 25px';
   const sectionMargin = '20px 0px';
@@ -14,13 +18,13 @@ function SupportPage() {
       <Col offset={1} span={22}>
         <div
           style={{
-            fontSize: 14,
             textAlign: 'left',
             margin: topMargin,
-            color: colors.colorTextSecondary,
+            fontSize: token.fontSize,
+            color: token.colorTextSecondary,
           }}
         >
-          <h1 style={{ color: colors.colorText }}>
+          <h1 style={{ color: token.colorText }}>
             {t('Support')}
           </h1>
           <div style={{ margin: sectionMargin }}>

@@ -11,17 +11,17 @@ import OfflinePage from './pages/OfflinePage';
 import PrivacyPage from './pages/PrivacyPage';
 import FooterMenu from './components/FooterMenu';
 import SupportPage from './pages/SupportPage';
-import colors from './styles/colors';
 
 import './App.css';
 
 function App() {
   const defaultTheme = {
+    // https://ant.design/theme-editor
     token: {
       // fontFamily: "'Roboto', sans-serif",
-      colorPrimary: colors.colorPrimary,
-      colorSplit: colors.colorSplit,
-      colorInfo: colors.colorInfo,
+      colorPrimary: '#158bdc',
+      colorSplit: '#d9d9d9',
+      colorInfo: '#158bdc',
     },
   };
 

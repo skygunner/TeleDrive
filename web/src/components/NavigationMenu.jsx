@@ -6,7 +6,7 @@ import {
   UserOutlined,
   LockOutlined,
   CustomerServiceOutlined,
-  CloudOutlined,
+  FileSyncOutlined,
 } from '@ant-design/icons';
 import {
   Avatar, Button, Col, Divider, Drawer, Menu, Row, Typography,
@@ -98,8 +98,8 @@ function NavigationMenu() {
   if (isLoggedIn) {
     mainMenuItems.push({
       key: '/files',
-      label: t('My Files'),
-      icon: <CloudOutlined />,
+      label: t('My Drive'),
+      icon: <FileSyncOutlined />,
       onClick: () => {
         navigate('/files');
         closeDrawer();

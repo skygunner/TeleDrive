@@ -1,14 +1,16 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
-import colors from '../styles/colors';
+
+const { useToken } = theme;
 
 function LoginPage() {
   const { t } = useTranslation();
+  const { token } = useToken();
 
   const isLoggedIn = isUserLoggedIn();
   if (isLoggedIn) {
@@ -23,13 +25,13 @@ function LoginPage() {
       <Col offset={1} span={22}>
         <div
           style={{
-            fontSize: 14,
             textAlign: 'left',
             margin: topMargin,
-            color: colors.colorTextSecondary,
+            fontSize: token.fontSize,
+            color: token.colorTextSecondary,
           }}
         >
-          <h1 style={{ color: colors.colorText }}>
+          <h1 style={{ color: token.colorText }}>
             {t('Login')}
           </h1>
           <div style={{ margin: sectionMargin }}>

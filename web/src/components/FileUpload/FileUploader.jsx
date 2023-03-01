@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import {
-  Col, Row, Upload, Divider,
+  Col, Row, Upload, Divider, theme,
 } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { useSearchParams } from 'react-router-dom';
@@ -9,8 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploadSlice';
 
+const { useToken } = theme;
+
 function FileUploader() {
   const { t } = useTranslation();
+  const { token } = useToken();
   const dispatch = useDispatch();
 
   const [searchParams] = useSearchParams();
@@ -72,7 +75,7 @@ function FileUploader() {
             <div>
               <Divider
                 style={{
-                  fontSize: 16,
+                  fontSize: token.fontSize + 2,
                   fontWeight: 'bold',
                   borderBlockStart: '0px transparent',
                 }}

@@ -48,6 +48,6 @@ body {
     .ant-list-item-meta
     .ant-list-item-meta-title
     > a:hover {
-    color: rgba(0, 0, 0, 0.88);
+    color: inherit;
   }
 }

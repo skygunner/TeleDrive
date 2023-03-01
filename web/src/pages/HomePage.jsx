@@ -1,17 +1,21 @@
 import React from 'react';
-import { Row, Col, Button } from 'antd';
+import {
+  Row, Col, Button, theme,
+} from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { CloudOutlined } from '@ant-design/icons';
-import colors from '../styles/colors';
+import { FileSyncOutlined } from '@ant-design/icons';
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
+
+const { useToken } = theme;
 
 function HomePage() {
   const isLoggedIn = isUserLoggedIn();
 
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { token } = useToken();
 
   const topMargin = '30px 25px';
   const sectionMargin = '30px 0px';
@@ -20,15 +24,15 @@ function HomePage() {
     <Row align="middle">
       <Col offset={1} span={22}>
         <div style={{
-          fontSize: 14,
           textAlign: 'left',
           margin: topMargin,
-          color: colors.colorTextSecondary,
+          fontSize: token.fontSize,
+          color: token.colorTextSecondary,
         }}
         >
           <div style={{ textAlign: 'center', margin: sectionMargin }}>
             <img alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} width={150} height={150} />
-            <h1 style={{ margin: '30px 0px', color: colors.colorText }}>
+            <h1 style={{ margin: '30px 0px', color: token.colorText }}>
               {t('Welcome to TeleDrive')}
             </h1>
             <h2>
@@ -88,12 +92,12 @@ function HomePage() {
                   style={{ marginTop: 10 }}
                   size="large"
                   type="primary"
-                  icon={<CloudOutlined />}
+                  icon={<FileSyncOutlined />}
                   onClick={() => {
                     navigate('/files');
                   }}
                 >
-                  {t('My Files')}
+                  {t('My Drive')}
                 </Button>
               )
               : <LoginButton />}

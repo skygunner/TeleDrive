@@ -1,12 +1,14 @@
 import React from 'react';
 import {
-  Row, Col, Button,
+  Row, Col, Button, theme,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import colors from '../styles/colors';
+
+const { useToken } = theme;
 
 function PrivacyPage() {
   const { t } = useTranslation();
+  const { token } = useToken();
 
   const topMargin = '30px 25px';
 
@@ -16,13 +18,13 @@ function PrivacyPage() {
         <div
           id="ppms_cm_privacy_settings"
           style={{
-            fontSize: 14,
             textAlign: 'left',
             margin: topMargin,
-            color: colors.colorTextSecondary,
+            fontSize: token.fontSize,
+            color: token.colorTextSecondary,
           }}
         >
-          <h1 style={{ color: colors.colorText }}>
+          <h1 style={{ color: token.colorText }}>
             {t('Privacy')}
           </h1>
           <p style={{ margin: '20px 0px' }}>

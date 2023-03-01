@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import {
   Col, Dropdown, Modal, Row, List, Breadcrumb,
-  Skeleton, Form, Input, Typography, Result,
+  Skeleton, Form, Input, Typography, Result, theme,
 } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -26,10 +26,13 @@ import {
 import cfg from '../../config';
 import { fileExtension, humanReadableDate } from '../../utils';
 
+const { useToken } = theme;
+
 function FilesView() {
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
+  const { token } = useToken();
   const dispatch = useDispatch();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -48,7 +51,7 @@ function FilesView() {
     setBreadcrumb(
       <Breadcrumb
         style={{
-          fontSize: 16,
+          fontSize: token.fontSize + 2,
           fontWeight: 'bold',
           marginLeft: 14,
         }}
