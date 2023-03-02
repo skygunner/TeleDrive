@@ -1,10 +1,10 @@
-local: install tramslation format lint
+local: install translation format lint
 
 install:
 	npm install
 
-tramslation:
-	npx i18next -c src/i18next-parser.config.mjs 'src/**/*.{js,jsx}'
+translation:
+	npm run translation
 
 format:
 	npx prettier --write --ignore-unknown .
@@ -15,4 +15,4 @@ lint:
 	npm run lint
 
 start:
-	DISABLE_ESLINT_PLUGIN=true sudo HOST=teledrive.local PORT=80 npm start
+	sudo HOST=teledrive.local PORT=80 npm start

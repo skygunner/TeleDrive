@@ -43,7 +43,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js src/**/*.jsx src/**/*.mjs",
-    "lint:fix": "eslint src/**/*.js src/**/*.jsx src/**/*.mjs --fix"
+    "lint:fix": "eslint src/**/*.js src/**/*.jsx src/**/*.mjs --fix",
+    "translation": "i18next -c src/i18next-parser.config.mjs 'src/**/*.{js,jsx}'"
   },
   "browserslist": {
     "production": [
