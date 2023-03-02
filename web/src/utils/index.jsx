@@ -1,5 +1,6 @@
 import React from 'react';
 import { message, Alert } from 'antd';
+import i18n from '../i18n';
 
 export const humanReadableSize = (size, si = true, dp = 1) => {
   const thresh = si ? 1000 : 1024;
@@ -52,7 +53,7 @@ export const alertError = (description) => {
       showIcon
       closable
       type="error"
-      message="Error"
+      message={i18n.t('Error')}
       description={description}
     />,
   });
