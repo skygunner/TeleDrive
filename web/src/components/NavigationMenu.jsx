@@ -9,7 +9,7 @@ import {
   FileSyncOutlined,
 } from '@ant-design/icons';
 import {
-  Avatar, Button, Col, Divider, Drawer, Menu, Typography,
+  Avatar, Button, Col, Divider, Drawer, Menu, Typography, theme,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,8 @@ import {
   removeUserCredential,
 } from '../api';
 
+const { useToken } = theme;
+
 function NavigationMenu() {
   const isLoggedIn = isUserLoggedIn();
   const authHeaders = getAuthHeaders();
@@ -31,6 +33,7 @@ function NavigationMenu() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const { token } = useToken();
 
   const [user, setUser] = useState();
 
@@ -147,7 +150,7 @@ function NavigationMenu() {
       width: '100%',
       display: 'flex',
       position: 'sticky',
-      backgroundColor: '#ffffff',
+      backgroundColor: token.colorBgBase,
     }}
     >
       <Col span={useDrawer ? 24 : 16}>
