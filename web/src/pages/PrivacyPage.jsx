@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
+import config from '../config';
 
 const { useToken } = theme;
 
@@ -8,14 +9,12 @@ function PrivacyPage() {
   const { t } = useTranslation();
   const { token } = useToken();
 
-  const topMargin = '30px 25px';
-
   return (
     <div
       id="ppms_cm_privacy_settings"
       style={{
         textAlign: 'left',
-        margin: topMargin,
+        margin: config.pageMargin,
         fontSize: token.fontSize,
         color: token.colorTextSecondary,
       }}

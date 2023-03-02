@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
+import config from '../config';
 
 const { useToken } = theme;
 
@@ -17,14 +18,13 @@ function LoginPage() {
     return <Navigate to="/files" replace />;
   }
 
-  const topMargin = '30px 25px';
   const sectionMargin = '20px 0px';
 
   return (
     <div
       style={{
         textAlign: 'left',
-        margin: topMargin,
+        margin: config.pageMargin,
         fontSize: token.fontSize,
         color: token.colorTextSecondary,
       }}

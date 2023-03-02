@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FileSyncOutlined } from '@ant-design/icons';
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
+import config from '../config';
 
 const { useToken } = theme;
 
@@ -15,13 +16,12 @@ function HomePage() {
   const navigate = useNavigate();
   const { token } = useToken();
 
-  const topMargin = '30px 25px';
   const sectionMargin = '30px 0px';
 
   return (
     <div style={{
       textAlign: 'left',
-      margin: topMargin,
+      margin: config.pageMargin,
       fontSize: token.fontSize,
       color: token.colorTextSecondary,
     }}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
+import config from '../config';
 
 const { useToken } = theme;
 
@@ -8,14 +9,13 @@ function SupportPage() {
   const { t } = useTranslation();
   const { token } = useToken();
 
-  const topMargin = '30px 25px';
   const sectionMargin = '20px 0px';
 
   return (
     <div
       style={{
         textAlign: 'left',
-        margin: topMargin,
+        margin: config.pageMargin,
         fontSize: token.fontSize,
         color: token.colorTextSecondary,
       }}
