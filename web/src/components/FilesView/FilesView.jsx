@@ -25,6 +25,7 @@ import {
 } from '../../api';
 import cfg from '../../config';
 import { fileExtension, humanReadableDate } from '../../utils';
+import MoveModalContent from '../MoveModalContent';
 
 const { useToken } = theme;
 
@@ -46,6 +47,7 @@ function FilesView() {
   const [breadcrumb, setBreadcrumb] = useState();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
+  const [moveParentId, setMoveParentId] = useState({});
 
   const applyBreadcrumb = (items) => {
     setBreadcrumb(
@@ -144,7 +146,12 @@ function FilesView() {
           .then(async (values) => {
             setModalConfirmLoading(true);
 
-            const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, values, authHeaders);
+            const body = {
+              parent_id: parseInt(parentId, 10),
+              ...values,
+            };
+
+            const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, body, authHeaders);
             if (renamedFolder) {
               dispatch(folderRenamed(renamedFolder));
             }
@@ -196,9 +203,49 @@ function FilesView() {
       }, 500);
     };
 
+    const handleMoveFolder = () => {
+      const onOk = async () => {
+        const body = {
+          parent_id: parseInt(moveParentId, 10),
+          folder_name: folder.folder_name,
+        };
+
+        const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, body, authHeaders);
+        if (renamedFolder) {
+          dispatch(folderRenamed(renamedFolder));
+        }
+
+        setModalConfirmLoading(false);
+        setModalConfig({});
+      };
+
+      setModalConfig({
+        open: true,
+        title: t('Move'),
+        okText: t('Move here'),
+        okButtonProps: { type: 'primary' },
+        onCancel: () => {
+          setModalConfig({});
+        },
+        onOk,
+        body: (
+          <MoveModalContent setMoveParentId={setMoveParentId} />
+        ),
+      });
+    };
+
     return [
       {
-        key: 'q',
+        key: '1',
+        label: (
+          <Typography.Link tabIndex={-1} onClick={handleMoveFolder}>
+            {t('Move')}
+          </Typography.Link>
+        ),
+        icon: <EditOutlined />,
+      },
+      {
+        key: '2',
         label: (
           <Typography.Link tabIndex={-1} onClick={handleRenameFolder}>
             {t('Rename')}
@@ -208,7 +255,7 @@ function FilesView() {
       },
       { type: 'divider' },
       {
-        key: '2',
+        key: '3',
         danger: true,
         label: (
           <Typography.Link tabIndex={-1} onClick={handleDeleteFolder}>
@@ -270,7 +317,12 @@ function FilesView() {
           .then(async (values) => {
             setModalConfirmLoading(true);
 
-            const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, values, authHeaders);
+            const body = {
+              parent_id: parseInt(parentId, 10),
+              ...values,
+            };
+
+            const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, body, authHeaders);
             if (renamedFile) {
               dispatch(fileRenamed(renamedFile));
             }
@@ -322,6 +374,10 @@ function FilesView() {
       }, 500);
     };
 
+    const handleMoveFile = () => {
+
+    };
+
     return [
       {
         key: '1',
@@ -339,6 +395,15 @@ function FilesView() {
       {
         key: '2',
         label: (
+          <Typography.Link tabIndex={-1} onClick={handleMoveFile}>
+            {t('Move')}
+          </Typography.Link>
+        ),
+        icon: <EditOutlined />,
+      },
+      {
+        key: '3',
+        label: (
           <Typography.Link tabIndex={-1} onClick={handleRenameFile}>
             {t('Rename')}
           </Typography.Link>
@@ -347,7 +412,7 @@ function FilesView() {
       },
       { type: 'divider' },
       {
-        key: '3',
+        key: '4',
         danger: true,
         label: (
           <Typography.Link tabIndex={-1} onClick={handleDeleteFile}>

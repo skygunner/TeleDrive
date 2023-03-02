@@ -102,6 +102,13 @@ export const filesViewTableSlice = createSlice({
         file.file_id === action.payload.file_id ? action.payload : file
       ));
     },
+    fileMoved: (state, action) => {
+      const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
+      if (parentId === action.payload.parent_id) {
+        state.filesOffset -= 1;
+        state.files = state.files.filter((file) => file.file_id !== action.payload.file_id);
+      }
+    },
     fileDeleted: (state, action) => {
       state.filesOffset -= 1;
       state.files = state.files.filter((file) => file.file_id !== action.payload);
@@ -117,6 +124,15 @@ export const filesViewTableSlice = createSlice({
       state.folders = state.folders.map((folder) => (
         folder.folder_id === action.payload.folder_id ? action.payload : folder
       ));
+    },
+    folderMoved: (state, action) => {
+      const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
+      if (parentId === action.payload.parent_id) {
+        state.foldersOffset -= 1;
+        state.folders = state.folders.filter(
+          (folder) => folder.folder_id !== action.payload.folder_id,
+        );
+      }
     },
     folderDeleted: (state, action) => {
       state.foldersOffset -= 1;
@@ -145,6 +161,7 @@ export const filesViewTableSlice = createSlice({
 
 export const selectDetails = (state) => state.filesViewTableDetails;
 export const {
-  resetState, fileUploaded, fileRenamed, fileDeleted, folderCreated, folderRenamed, folderDeleted,
+  resetState, fileUploaded, fileRenamed, fileMoved, fileDeleted,
+  folderCreated, folderRenamed, folderMoved, folderDeleted,
 } = filesViewTableSlice.actions;
 export default filesViewTableSlice.reducer;

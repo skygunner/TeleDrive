@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/destructuring-assignment */
-
 import React from 'react';
 import { ConfigProvider, Row, Col } from 'antd';
 
 function DesignProvider(props) {
+  const { children } = props;
+
   const defaultTheme = {
     // https://ant.design/theme-editor
     token: {
@@ -19,7 +18,7 @@ function DesignProvider(props) {
     <ConfigProvider theme={defaultTheme}>
       <Row align="middle">
         <Col offset={1} span={22}>
-          {props.children}
+          {children}
         </Col>
       </Row>
     </ConfigProvider>
