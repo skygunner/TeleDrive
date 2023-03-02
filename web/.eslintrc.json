@@ -12,9 +12,6 @@
   "plugins": ["react"],
   "rules": {
     "no-console": "off",
-    "no-plusplus": "off",
-    "jsx-a11y/anchor-is-valid": "off",
-    "react/jsx-props-no-spreading": "off",
-    "jsx-a11y/no-static-element-interactions": "off"
+    "no-plusplus": "off"
   }
 }

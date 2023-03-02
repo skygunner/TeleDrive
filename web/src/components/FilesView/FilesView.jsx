@@ -7,8 +7,8 @@ import {
   FolderOpenOutlined,
 } from '@ant-design/icons';
 import {
-  Col, Dropdown, Modal, Row, List, Breadcrumb,
-  Skeleton, Form, Input, Typography, Result, theme,
+  Dropdown, Modal, List, Breadcrumb, Skeleton,
+  Form, Input, Typography, Result, theme,
 } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
 import { FileIcon, defaultStyles } from 'react-file-icon';
@@ -51,9 +51,9 @@ function FilesView() {
     setBreadcrumb(
       <Breadcrumb
         style={{
-          fontSize: token.fontSize + 2,
-          fontWeight: 'bold',
           marginLeft: 14,
+          fontWeight: 'bold',
+          fontSize: token.fontSize + 2,
         }}
         separator=">"
       >
@@ -442,50 +442,52 @@ function FilesView() {
   };
 
   return (
-    <Row align="middle">
-      <Col offset={1} span={22}>
-        <InfiniteScroll
-          dataLength={details.folders.length + details.files.length}
-          next={() => { dispatch(fetchDataAsync(parentId)); }}
-          hasMore={!details.folderListEnd || !details.filesListEnd}
-          loader={details.loading ? (
-            <Skeleton
-              active
-              paragraph={{ rows: 1 }}
-              avatar={{ shape: 'square' }}
-              style={{ display: 'flex', alignItems: 'center', padding: '0px 24px' }}
-            />
-          ) : null}
-          scrollableTarget="scrollableDiv"
-        >
-          <List
-            header={breadcrumb}
-            dataSource={dataSource}
-            renderItem={(item) => listItem(item)}
-            locale={details.loading ? ({
-              emptyText: <span />,
-            }) : ({
-              emptyText: <Result
-                icon={<FolderOpenOutlined />}
-                title={t('No files or folders yet')}
-                subTitle={t('Click + to create folders or upload files')}
-              />,
-            })}
+    <>
+      <InfiniteScroll
+        dataLength={details.folders.length + details.files.length}
+        next={() => { dispatch(fetchDataAsync(parentId)); }}
+        hasMore={!details.folderListEnd || !details.filesListEnd}
+        loader={details.loading ? (
+          <Skeleton
+            active
+            paragraph={{ rows: 1 }}
+            avatar={{ shape: 'square' }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0px 24px',
+            }}
           />
-        </InfiniteScroll>
-        <Modal
-          open={modalConfig.open}
-          title={modalConfig.title}
-          okText={modalConfig.okText}
-          okButtonProps={modalConfig.okButtonProps}
-          confirmLoading={modalConfirmLoading}
-          onCancel={modalConfig.onCancel}
-          onOk={modalConfig.onOk}
-        >
-          {modalConfig.body}
-        </Modal>
-      </Col>
-    </Row>
+        ) : null}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          header={breadcrumb}
+          dataSource={dataSource}
+          renderItem={(item) => listItem(item)}
+          locale={details.loading ? ({
+            emptyText: <span />,
+          }) : ({
+            emptyText: <Result
+              icon={<FolderOpenOutlined />}
+              title={t('No files or folders yet')}
+              subTitle={t('Click + to create folders or upload files')}
+            />,
+          })}
+        />
+      </InfiniteScroll>
+      <Modal
+        open={modalConfig.open}
+        title={modalConfig.title}
+        okText={modalConfig.okText}
+        okButtonProps={modalConfig.okButtonProps}
+        confirmLoading={modalConfirmLoading}
+        onCancel={modalConfig.onCancel}
+        onOk={modalConfig.onOk}
+      >
+        {modalConfig.body}
+      </Modal>
+    </>
   );
 }
 

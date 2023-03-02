@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ConfigProvider as DesignProvider } from 'antd';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import NavigationMenu from './components/NavigationMenu';
@@ -11,20 +10,11 @@ import OfflinePage from './pages/OfflinePage';
 import PrivacyPage from './pages/PrivacyPage';
 import FooterMenu from './components/FooterMenu';
 import SupportPage from './pages/SupportPage';
+import DesignProvider from './components/DesignProvider';
 
 import './App.css';
 
 function App() {
-  const defaultTheme = {
-    // https://ant.design/theme-editor
-    token: {
-      // fontFamily: "'Roboto', sans-serif",
-      colorPrimary: '#158bdc',
-      colorSplit: '#d9d9d9',
-      colorInfo: '#158bdc',
-    },
-  };
-
   const [online, setOnline] = useState(window.navigator.onLine);
 
   useEffect(() => {
@@ -37,11 +27,16 @@ function App() {
   }, []);
 
   return (
-    <DesignProvider theme={defaultTheme}>
+    <DesignProvider>
       {online
         ? (
           <BrowserRouter>
-            <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+            <div style={{
+              display: 'flex',
+              minHeight: '100vh',
+              flexDirection: 'column',
+            }}
+            >
               <div style={{ flexGrow: 1 }}>
                 <NavigationMenu />
                 <Routes>

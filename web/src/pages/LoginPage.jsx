@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, theme } from 'antd';
+import { theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -21,35 +21,31 @@ function LoginPage() {
   const sectionMargin = '20px 0px';
 
   return (
-    <Row align="middle">
-      <Col offset={1} span={22}>
-        <div
-          style={{
-            textAlign: 'left',
-            margin: topMargin,
-            fontSize: token.fontSize,
-            color: token.colorTextSecondary,
-          }}
-        >
-          <h1 style={{ color: token.colorText }}>
-            {t('Login')}
-          </h1>
-          <div style={{ margin: sectionMargin }}>
-            <p>
-              {t('To log in, please click on the button below. This will redirect you to Telegram where you can authorize our website to access your account.')}
-            </p>
-          </div>
-          <div style={{ margin: sectionMargin, marginBottom: -5 }}>
-            <p>
-              {t("If you do not have a Telegram account yet, you will need to create one before you can log in. Don't worry, it's quick and easy to sign up!")}
-            </p>
-          </div>
-          <div style={{ width: 'fit-content' }}>
-            <LoginButton />
-          </div>
-        </div>
-      </Col>
-    </Row>
+    <div
+      style={{
+        textAlign: 'left',
+        margin: topMargin,
+        fontSize: token.fontSize,
+        color: token.colorTextSecondary,
+      }}
+    >
+      <h1 style={{ color: token.colorText }}>
+        {t('Login')}
+      </h1>
+      <div style={{ margin: sectionMargin }}>
+        <p>
+          {t('To log in, please click on the button below. This will redirect you to Telegram where you can authorize our website to access your account.')}
+        </p>
+      </div>
+      <div style={{ margin: sectionMargin, marginBottom: -5 }}>
+        <p>
+          {t("If you do not have a Telegram account yet, you will need to create one before you can log in. Don't worry, it's quick and easy to sign up!")}
+        </p>
+      </div>
+      <div style={{ width: 'fit-content' }}>
+        <LoginButton />
+      </div>
+    </div>
   );
 }
 
