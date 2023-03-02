@@ -206,9 +206,7 @@ function FilesView() {
         ),
         icon: <EditOutlined />,
       },
-      {
-        type: 'divider',
-      },
+      { type: 'divider' },
       {
         key: '2',
         danger: true,
@@ -347,9 +345,7 @@ function FilesView() {
         ),
         icon: <EditOutlined />,
       },
-      {
-        type: 'divider',
-      },
+      { type: 'divider' },
       {
         key: '3',
         danger: true,
@@ -465,9 +461,7 @@ function FilesView() {
           header={breadcrumb}
           dataSource={dataSource}
           renderItem={(item) => listItem(item)}
-          locale={details.loading ? ({
-            emptyText: <span />,
-          }) : ({
+          locale={details.loading ? ({ emptyText: <span /> }) : ({
             emptyText: <Result
               icon={<FolderOpenOutlined />}
               title={t('No files or folders yet')}

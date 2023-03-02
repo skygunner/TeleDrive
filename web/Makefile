@@ -15,4 +15,4 @@ lint:
 	npm run lint
 
 start:
-	sudo HOST=teledrive.local PORT=80 npm start
+	DISABLE_ESLINT_PLUGIN=true sudo HOST=teledrive.local PORT=80 npm start

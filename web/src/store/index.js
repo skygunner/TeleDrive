@@ -3,9 +3,7 @@ import filesViewTableReducer from '../components/FilesView/FilesViewSlice';
 import fileUploadListReducer from '../components/FileUpload/FileUploadSlice';
 
 export default configureStore({
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: false,
-  }),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
   reducer: {
     filesViewTableDetails: filesViewTableReducer,
     fileUploadList: fileUploadListReducer,

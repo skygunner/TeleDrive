@@ -154,7 +154,11 @@ function NavigationMenu() {
         {useDrawer ? (
           <>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button tabIndex={-1} style={{ border: 0, boxShadow: 'none' }} onClick={openDrawer}>
+              <Button
+                tabIndex={-1}
+                style={{ border: 0, boxShadow: 'none' }}
+                onClick={openDrawer}
+              >
                 <MenuOutlined />
               </Button>
               <Avatar alt="TeleDrive" src={`${process.env.PUBLIC_URL}/logo192.png`} />
@@ -196,7 +200,9 @@ function NavigationMenu() {
               width={250}
             >
               <Menu
-                style={{ fontWeight: 'bold', justifyContent: 'left', border: 0 }}
+                style={{
+                  fontWeight: 'bold', justifyContent: 'left', border: 0,
+                }}
                 mode="vertical"
                 selectedKeys={[location.pathname]}
                 items={mainMenuItems.concat(userMenuItems)}
@@ -204,7 +210,10 @@ function NavigationMenu() {
                 tabIndex={-1}
               />
             </Drawer>
-            <Divider style={{ margin: 0 }} type="horizontal" />
+            <Divider
+              style={{ margin: 0 }}
+              type="horizontal"
+            />
           </>
         ) : (
           <Menu
