@@ -37,7 +37,8 @@ export const fetchDataAsync = createAsyncThunk(
     }
 
     payload.foldersOffset += folders.length;
-    payload.folders = payload.folders.concat(folders);
+    payload.folders = payload.folders.concat(folders)
+      .filter((folder) => folder.folder_id !== details.entity.folder_id);
     payload.folderListEnd = folders.length < config.listLoadLimit;
 
     return payload;
