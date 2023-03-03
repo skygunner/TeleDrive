@@ -6,7 +6,7 @@ import {
   FolderOpenOutlined,
 } from '@ant-design/icons';
 import {
-  Dropdown, Modal, List, Breadcrumb, Skeleton,
+  Dropdown, Modal, List, Skeleton,
   Form, Input, Typography, Result, theme,
 } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
@@ -20,10 +20,9 @@ import {
 } from './FilesViewSlice';
 import { openMoveEntityModal } from '../MoveEntityModal/MoveEntityModalSlice';
 import MoveEntityModal from '../MoveEntityModal/MoveEntityModal';
+import Breadcrumb from '../Breadcrumb';
 
-import {
-  get, del, put, getAuthHeaders,
-} from '../../api';
+import { del, put, getAuthHeaders } from '../../api';
 import cfg from '../../config';
 import { fileExtension, humanReadableDate, folderAvatar } from '../../utils';
 
@@ -33,8 +32,8 @@ function FilesView() {
   const authHeaders = getAuthHeaders();
 
   const { t } = useTranslation();
-  const { token } = useToken();
   const dispatch = useDispatch();
+  const { token } = useToken();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const parentId = searchParams.get('parentId');
@@ -44,59 +43,10 @@ function FilesView() {
 
   const textInput = useRef();
   const [form] = Form.useForm();
-  const [breadcrumb, setBreadcrumb] = useState();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
-  const applyBreadcrumb = (items) => {
-    setBreadcrumb(
-      <Breadcrumb
-        style={{
-          marginLeft: 14,
-          fontWeight: 'bold',
-          fontSize: token.fontSize + 2,
-        }}
-        separator=">"
-      >
-        {items.map((item) => {
-          const itemName = item.folder_id ? item.folder_name : t('My Drive');
-
-          return (
-            <Breadcrumb.Item
-              key={item.folder_id}
-              onClick={() => {
-                if (item.folder_id !== parentId) {
-                  setSearchParams(item.folder_id ? { parentId: item.folder_id } : {});
-                }
-              }}
-            >
-              {item.folder_id === parentId ? itemName : (<a tabIndex={-1}>{itemName}</a>)}
-            </Breadcrumb.Item>
-          );
-        })}
-      </Breadcrumb>,
-    );
-  };
-
-  const fetchBreadcrumb = () => {
-    if (!parentId) {
-      applyBreadcrumb([{
-        folder_id: null,
-        folder_name: null,
-      }]);
-      return;
-    }
-
-    get(`/v1/tdlib/folder/${parentId}`, authHeaders)
-      .then((folder) => {
-        if (folder) {
-          applyBreadcrumb(folder.breadcrumb);
-        }
-      });
-  };
-
   const refresh = () => {
-    fetchBreadcrumb();
     dispatch(resetState(parentId));
     dispatch(fetchDataAsync(parentId));
   };
@@ -470,7 +420,18 @@ function FilesView() {
         ) : null}
       >
         <List
-          header={breadcrumb}
+          header={(
+            <Breadcrumb
+              folderId={parentId}
+              setFolderId={(folderId) => {
+                setSearchParams(folderId ? { parentId: folderId } : {});
+              }}
+              style={{
+                fontWeight: 'bold',
+                fontSize: token.fontSize + 2,
+              }}
+            />
+          )}
           dataSource={dataSource}
           renderItem={(item) => listItem(item)}
           locale={details.loading ? ({ emptyText: <span /> }) : ({

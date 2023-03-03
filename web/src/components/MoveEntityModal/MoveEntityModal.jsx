@@ -12,6 +12,7 @@ import {
 import { fileMoved, folderMoved } from '../FilesView/FilesViewSlice';
 import { put, getAuthHeaders } from '../../api';
 import { humanReadableDate, folderAvatar } from '../../utils';
+import Breadcrumb from '../Breadcrumb';
 
 function MoveEntityModal() {
   const authHeaders = getAuthHeaders();
@@ -33,6 +34,7 @@ function MoveEntityModal() {
   }, [parentId, entity]);
 
   if (!entity) {
+    // Avoid unnecessary render
     return null;
   }
 
@@ -87,7 +89,15 @@ function MoveEntityModal() {
   return (
     <Modal
       open
-      title={t('Move {{ entity }}', { entity: entityType === 'folder' ? t('folder') : t('file') })}
+      title={(
+        <Breadcrumb
+          folderId={parentId}
+          setFolderId={(folderId) => {
+            dispatch(changeMoveEntityModalParentId(folderId));
+          }}
+          style={{ fontWeight: 600, fontSize: '16px' }}
+        />
+      )}
       okText={t('Move here')}
       okButtonProps={{ type: 'primary' }}
       confirmLoading={confirmLoading}

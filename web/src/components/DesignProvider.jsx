@@ -1,9 +1,7 @@
 import React from 'react';
 import { ConfigProvider, Row, Col } from 'antd';
 
-function DesignProvider(props) {
-  const { children } = props;
-
+function DesignProvider({ children }) {
   const defaultTheme = {
     // https://ant.design/theme-editor
     token: {
