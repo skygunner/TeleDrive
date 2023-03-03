@@ -89,6 +89,7 @@ function MoveEntityModal() {
   return (
     <Modal
       open
+      centered
       title={(
         <Breadcrumb
           folderId={parentId}
