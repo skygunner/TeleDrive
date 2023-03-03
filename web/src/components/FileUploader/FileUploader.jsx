@@ -5,7 +5,7 @@ import { useMediaQuery } from 'react-responsive';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploadSlice';
+import { uploadAsync, setUploadDraggerFileList, selectFiles } from './FileUploaderSlice';
 
 const { useToken } = theme;
 

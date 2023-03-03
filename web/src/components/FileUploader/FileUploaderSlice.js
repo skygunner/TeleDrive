@@ -7,7 +7,7 @@ import { fileUploaded } from '../FilesView/FilesViewSlice';
 import { getAuthHeaders, post } from '../../api';
 
 export const uploadAsync = createAsyncThunk(
-  'fileUploadList/upload',
+  'fileUploaderList/upload',
   async (uploadOptions, thunkAPI) => {
     const {
       parentId, onSuccess, onError, onProgress, file,
@@ -63,8 +63,8 @@ export const uploadAsync = createAsyncThunk(
   },
 );
 
-export const fileUploadSlice = createSlice({
-  name: 'fileUploadList',
+export const fileUploaderSlice = createSlice({
+  name: 'fileUploaderList',
   initialState: {
     floatButtonFileList: [],
     uploadDraggerFileList: [],
@@ -79,6 +79,6 @@ export const fileUploadSlice = createSlice({
   },
 });
 
-export const selectFiles = (state) => state.fileUploadList;
-export const { setFloatButtonFileList, setUploadDraggerFileList } = fileUploadSlice.actions;
-export default fileUploadSlice.reducer;
+export const selectFiles = (state) => state.fileUploaderList;
+export const { setFloatButtonFileList, setUploadDraggerFileList } = fileUploaderSlice.actions;
+export default fileUploaderSlice.reducer;

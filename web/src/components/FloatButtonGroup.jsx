@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { post, getAuthHeaders } from '../api';
-import { uploadAsync, setFloatButtonFileList } from './FileUpload/FileUploadSlice';
+import { uploadAsync, setFloatButtonFileList } from './FileUploader/FileUploaderSlice';
 import { folderCreated } from './FilesView/FilesViewSlice';
 
 function FloatButtonGroup() {

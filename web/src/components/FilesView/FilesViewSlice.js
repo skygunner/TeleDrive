@@ -104,7 +104,7 @@ export const filesViewTableSlice = createSlice({
     },
     fileMoved: (state, action) => {
       const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
-      if (parentId === action.payload.parent_id) {
+      if (parentId !== action.payload.parent_id) {
         state.filesOffset -= 1;
         state.files = state.files.filter((file) => file.file_id !== action.payload.file_id);
       }
@@ -114,11 +114,8 @@ export const filesViewTableSlice = createSlice({
       state.files = state.files.filter((file) => file.file_id !== action.payload);
     },
     folderCreated: (state, action) => {
-      const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
-      if (parentId === action.payload.parent_id) {
-        state.foldersOffset += 1;
-        state.folders = [action.payload].concat(state.folders);
-      }
+      state.foldersOffset += 1;
+      state.folders = [action.payload].concat(state.folders);
     },
     folderRenamed: (state, action) => {
       state.folders = state.folders.map((folder) => (
@@ -127,7 +124,7 @@ export const filesViewTableSlice = createSlice({
     },
     folderMoved: (state, action) => {
       const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
-      if (parentId === action.payload.parent_id) {
+      if (parentId !== action.payload.parent_id) {
         state.foldersOffset -= 1;
         state.folders = state.folders.filter(
           (folder) => folder.folder_id !== action.payload.folder_id,

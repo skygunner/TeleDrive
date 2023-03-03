@@ -2,7 +2,6 @@ import {
   DeleteOutlined,
   DownloadOutlined,
   EditOutlined,
-  FolderTwoTone,
   EllipsisOutlined,
   FolderOpenOutlined,
 } from '@ant-design/icons';
@@ -19,13 +18,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   resetState, selectDetails, fetchDataAsync, fileDeleted, folderDeleted, fileRenamed, folderRenamed,
 } from './FilesViewSlice';
+import { openMoveEntityModal } from '../MoveEntityModal/MoveEntityModalSlice';
+import MoveEntityModal from '../MoveEntityModal/MoveEntityModal';
 
 import {
   get, del, put, getAuthHeaders,
 } from '../../api';
 import cfg from '../../config';
-import { fileExtension, humanReadableDate } from '../../utils';
-import MoveModalContent from '../MoveModalContent';
+import { fileExtension, humanReadableDate, folderAvatar } from '../../utils';
 
 const { useToken } = theme;
 
@@ -47,7 +47,6 @@ function FilesView() {
   const [breadcrumb, setBreadcrumb] = useState();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
-  const [moveParentId, setMoveParentId] = useState({});
 
   const applyBreadcrumb = (items) => {
     setBreadcrumb(
@@ -104,14 +103,6 @@ function FilesView() {
 
   useEffect(refresh, [parentId]);
 
-  const folderAvatar = () => (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <div style={{ maxWidth: 36, marginRight: 10 }}>
-        <FolderTwoTone style={{ fontSize: 38, padding: '6px 0' }} />
-      </div>
-    </div>
-  );
-
   const folderMenuItems = (folder) => {
     const handleDeleteFolder = () => {
       setModalConfig({
@@ -146,11 +137,7 @@ function FilesView() {
           .then(async (values) => {
             setModalConfirmLoading(true);
 
-            const body = {
-              parent_id: parseInt(parentId, 10),
-              ...values,
-            };
-
+            const body = { ...folder, ...values };
             const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, body, authHeaders);
             if (renamedFolder) {
               dispatch(folderRenamed(renamedFolder));
@@ -203,42 +190,11 @@ function FilesView() {
       }, 500);
     };
 
-    const handleMoveFolder = () => {
-      const onOk = async () => {
-        const body = {
-          parent_id: parseInt(moveParentId, 10),
-          folder_name: folder.folder_name,
-        };
-
-        const renamedFolder = await put(`/v1/tdlib/folder/${folder.folder_id}`, body, authHeaders);
-        if (renamedFolder) {
-          dispatch(folderRenamed(renamedFolder));
-        }
-
-        setModalConfirmLoading(false);
-        setModalConfig({});
-      };
-
-      setModalConfig({
-        open: true,
-        title: t('Move'),
-        okText: t('Move here'),
-        okButtonProps: { type: 'primary' },
-        onCancel: () => {
-          setModalConfig({});
-        },
-        onOk,
-        body: (
-          <MoveModalContent setMoveParentId={setMoveParentId} />
-        ),
-      });
-    };
-
     return [
       {
         key: '1',
         label: (
-          <Typography.Link tabIndex={-1} onClick={handleMoveFolder}>
+          <Typography.Link tabIndex={-1} onClick={() => { dispatch(openMoveEntityModal(folder)); }}>
             {t('Move')}
           </Typography.Link>
         ),
@@ -317,11 +273,7 @@ function FilesView() {
           .then(async (values) => {
             setModalConfirmLoading(true);
 
-            const body = {
-              parent_id: parseInt(parentId, 10),
-              ...values,
-            };
-
+            const body = { ...file, ...values };
             const renamedFile = await put(`/v1/tdlib/file/${file.file_id}`, body, authHeaders);
             if (renamedFile) {
               dispatch(fileRenamed(renamedFile));
@@ -374,10 +326,6 @@ function FilesView() {
       }, 500);
     };
 
-    const handleMoveFile = () => {
-
-    };
-
     return [
       {
         key: '1',
@@ -395,7 +343,7 @@ function FilesView() {
       {
         key: '2',
         label: (
-          <Typography.Link tabIndex={-1} onClick={handleMoveFile}>
+          <Typography.Link tabIndex={-1} onClick={() => { dispatch(openMoveEntityModal(file)); }}>
             {t('Move')}
           </Typography.Link>
         ),
@@ -520,7 +468,6 @@ function FilesView() {
             }}
           />
         ) : null}
-        scrollableTarget="scrollableDiv"
       >
         <List
           header={breadcrumb}
@@ -546,6 +493,7 @@ function FilesView() {
       >
         {modalConfig.body}
       </Modal>
+      <MoveEntityModal />
     </>
   );
 }
