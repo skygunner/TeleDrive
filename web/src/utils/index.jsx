@@ -14,18 +14,18 @@ export const humanReadableDate = (dateString) => {
 
 export const fileExtension = (fileName) => {
   const split = fileName.split('.');
-  if (split.length > 1) {
-    return split.pop();
-  }
-
-  return '';
+  return split.length > 1 ? split.pop() : '';
 };
 
 export const folderAvatar = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div style={{ maxWidth: 36, marginRight: 10 }}>
-      <FolderTwoTone style={{ fontSize: 38, padding: '6px 0' }} />
-    </div>
+    <FolderTwoTone style={{
+      fontSize: 38,
+      padding: '6px 0',
+      maxWidth: 36,
+      marginRight: 10,
+    }}
+    />
   </div>
 );
 

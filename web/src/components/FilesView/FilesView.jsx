@@ -5,6 +5,7 @@ import {
   EllipsisOutlined,
   FolderOpenOutlined,
 } from '@ant-design/icons';
+import { MdOutlineDriveFileMove } from 'react-icons/md';
 import {
   Dropdown, Modal, List, Skeleton,
   Form, Input, Typography, Result, theme,
@@ -148,7 +149,7 @@ function FilesView() {
             {t('Move')}
           </Typography.Link>
         ),
-        icon: <EditOutlined />,
+        icon: <MdOutlineDriveFileMove size={token.fontSize} />,
       },
       {
         key: '2',
@@ -297,7 +298,7 @@ function FilesView() {
             {t('Move')}
           </Typography.Link>
         ),
-        icon: <EditOutlined />,
+        icon: <MdOutlineDriveFileMove size={token.fontSize} />,
       },
       {
         key: '3',
