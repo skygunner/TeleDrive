@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { MdOutlineDriveFileMove } from 'react-icons/md';
 import {
-  Dropdown, Modal, List, Skeleton, Avatar,
+  Dropdown, Modal, List, Skeleton, Checkbox,
   Form, Input, Typography, Result, theme,
 } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
@@ -56,6 +56,27 @@ function FilesView() {
 
   const folderMenuItems = (folder) => {
     const handleDeleteFolder = () => {
+      form.resetFields();
+
+      const onOk = async () => {
+        form
+          .validateFields()
+          .then(async (values) => {
+            setModalConfirmLoading(true);
+
+            const { deleteFromTelegramChat } = values;
+
+            const ok = await del(`/v1/tdlib/folder/${folder.folder_id}?delete_from_telegram_chat=${deleteFromTelegramChat}`, authHeaders);
+            if (ok) {
+              dispatch(folderDeleted(folder.folder_id));
+            }
+
+            setModalConfirmLoading(false);
+            setModalConfig({});
+          })
+          .catch(() => {});
+      };
+
       setModalConfig({
         open: true,
         title: t('Delete folder'),
@@ -64,18 +85,23 @@ function FilesView() {
         onCancel: () => {
           setModalConfig({});
         },
-        onOk: async () => {
-          setModalConfirmLoading(true);
-
-          const ok = await del(`/v1/tdlib/folder/${folder.folder_id}`, authHeaders);
-          if (ok) {
-            dispatch(folderDeleted(folder.folder_id));
-          }
-
-          setModalConfirmLoading(false);
-          setModalConfig({});
-        },
-        body: <p>{t('Are you sure you want to delete {{ folderName }}?', { folderName: folder.folder_name })}</p>,
+        onOk,
+        body: (
+          <div>
+            <p>
+              {t('Are you sure you want to delete {{ folderName }}?', { folderName: folder.folder_name })}
+            </p>
+            <Form form={form}>
+              <Form.Item
+                initialValue={false}
+                valuePropName="checked"
+                name="deleteFromTelegramChat"
+              >
+                <Checkbox>{t('Delete files inside from Telegram chat')}</Checkbox>
+              </Form.Item>
+            </Form>
+          </div>
+        ),
       });
     };
 
@@ -206,6 +232,27 @@ function FilesView() {
 
   const fileMenuItems = (file) => {
     const handleDeleteFile = () => {
+      form.resetFields();
+
+      const onOk = async () => {
+        form
+          .validateFields()
+          .then(async (values) => {
+            setModalConfirmLoading(true);
+
+            const { deleteFromTelegramChat } = values;
+
+            const ok = await del(`/v1/tdlib/file/${file.file_id}?delete_from_telegram_chat=${deleteFromTelegramChat}`, authHeaders);
+            if (ok) {
+              dispatch(fileDeleted(file.file_id));
+            }
+
+            setModalConfirmLoading(false);
+            setModalConfig({});
+          })
+          .catch(() => {});
+      };
+
       setModalConfig({
         open: true,
         title: t('Delete file'),
@@ -214,18 +261,23 @@ function FilesView() {
         onCancel: () => {
           setModalConfig({});
         },
-        onOk: async () => {
-          setModalConfirmLoading(true);
-
-          const ok = await del(`/v1/tdlib/file/${file.file_id}`, authHeaders);
-          if (ok) {
-            dispatch(fileDeleted(file.file_id));
-          }
-
-          setModalConfirmLoading(false);
-          setModalConfig({});
-        },
-        body: <p>{t('Are you sure you want to delete {{ fileName }}?', { fileName: file.file_name })}</p>,
+        onOk,
+        body: (
+          <div>
+            <p>
+              {t('Are you sure you want to delete {{ fileName }}?', { fileName: file.file_name })}
+            </p>
+            <Form form={form}>
+              <Form.Item
+                initialValue={false}
+                valuePropName="checked"
+                name="deleteFromTelegramChat"
+              >
+                <Checkbox>{t('Delete file from Telegram chat')}</Checkbox>
+              </Form.Item>
+            </Form>
+          </div>
+        ),
       });
     };
 

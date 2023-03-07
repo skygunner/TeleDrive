@@ -179,15 +179,30 @@ def update_folder(request: Request, folder_id: int) -> Response:
     return api_success(FolderSerializer(folder).data)
 
 
+@request_validator
+def validate_delete_folder_request(errors, request_data):
+    delete_from_telegram_chat = request_data.get("delete_from_telegram_chat", "false")
+
+    if delete_from_telegram_chat is None or not (
+        delete_from_telegram_chat == "true" or delete_from_telegram_chat == "false"
+    ):
+        errors.append(_("Invalid delete_from_telegram_chat."))
+
+
 def delete_folder(request: Request, folder_id: int) -> Response:
     if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
         return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
+
+    request_data = request.query_params
+    validate_delete_folder_request(request_data)
+
+    delete_from_telegram_chat = request_data.get("delete_from_telegram_chat", "false") == "true"
 
     folder = Folder.find_by_user_and_id(user=request.user, id=folder_id)
     if folder is None:
         return api_error(_("Folder not found."), status.HTTP_404_NOT_FOUND)
 
-    folder.delete()
+    folder.delete(delete_from_telegram_chat=delete_from_telegram_chat)
 
     return api_success({})
 
@@ -240,15 +255,30 @@ def update_file(request: Request, file_id: int) -> Response:
     return api_success(FileSerializer(file).data)
 
 
+@request_validator
+def validate_delete_file_request(errors, request_data):
+    delete_from_telegram_chat = request_data.get("delete_from_telegram_chat", "false")
+
+    if delete_from_telegram_chat is None or not (
+        delete_from_telegram_chat == "true" or delete_from_telegram_chat == "false"
+    ):
+        errors.append(_("Invalid delete_from_telegram_chat."))
+
+
 def delete_file(request: Request, file_id: int) -> Response:
     if file_id is None or not isinstance(file_id, int) or file_id < 1:
         return api_error(_("Invalid file id."), status.HTTP_400_BAD_REQUEST)
+
+    request_data = request.query_params
+    validate_delete_file_request(request_data)
+
+    delete_from_telegram_chat = request_data.get("delete_from_telegram_chat", "false") == "true"
 
     file = File.find_by_user_and_id(user=request.user, file_id=file_id)
     if file is None or not file.is_uploaded:
         return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
 
-    file.delete()
+    file.delete(delete_from_telegram_chat=delete_from_telegram_chat)
 
     return api_success({})
 

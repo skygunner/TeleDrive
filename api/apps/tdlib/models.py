@@ -1,4 +1,5 @@
 import base64
+import logging
 import os
 
 from django.db import models
@@ -9,6 +10,8 @@ from simple_history.models import HistoricalRecords
 from telethon.extensions import BinaryReader
 from telethon.tl import functions, types
 from utils.models import BaseModelMixin, make_uuid
+
+logger = logging.getLogger(__name__)
 
 
 class Folder(BaseModelMixin):
@@ -59,9 +62,16 @@ class Folder(BaseModelMixin):
         self.folder_name = folder_name
         self.save()
 
-    def delete(self, *args, **kwargs):
-        File.objects.filter(parent=self).update(deleted_at=timezone.now())
-        return super().delete(*args, **kwargs)
+    def delete(self, delete_from_telegram_chat: bool):
+        folders = Folder.objects.filter(parent=self)
+        for folder in folders:
+            folder.delete(delete_from_telegram_chat=delete_from_telegram_chat)
+
+        files = File.objects.filter(parent=self)
+        for file in files:
+            file.delete(delete_from_telegram_chat=delete_from_telegram_chat)
+
+        return super().delete()
 
 
 class File(BaseModelMixin):
@@ -111,6 +121,17 @@ class File(BaseModelMixin):
     @property
     def is_uploaded(self):
         return self.uploaded_at is not None
+
+    def delete(self, delete_from_telegram_chat: bool):
+        from tdlib.wrapper import TD_CLIENT
+
+        if delete_from_telegram_chat:
+            try:
+                TD_CLIENT.delete_messages(entity=self.user.id, message_ids=self.message, revoke=True)
+            except Exception as exp:
+                logger.error("Filed to delete file from Telegram chat: %s", exp)
+
+        return super().delete()
 
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
