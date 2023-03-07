@@ -92,11 +92,16 @@ function MoveEntityModal() {
       centered
       title={(
         <Breadcrumb
+          modal
           folderId={parentId}
           setFolderId={(folderId) => {
             dispatch(changeMoveEntityModalParentId(folderId));
           }}
-          style={{ fontWeight: 600, fontSize: '16px' }}
+          style={{
+            fontWeight: 600,
+            fontSize: 16,
+            marginLeft: 0,
+          }}
         />
       )}
       okText={t('Move here')}
