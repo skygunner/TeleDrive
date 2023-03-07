@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { MdOutlineDriveFileMove } from 'react-icons/md';
 import {
-  Dropdown, Modal, List, Skeleton,
+  Dropdown, Modal, List, Skeleton, Avatar,
   Form, Input, Typography, Result, theme,
 } from 'antd';
 import React, { useEffect, useState, useRef } from 'react';
@@ -178,14 +178,28 @@ function FilesView() {
     const extension = fileExtension(file.file_name);
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ maxWidth: 36, marginRight: 10 }}>
-          <FileIcon
-            labelUppercase
-            extension={extension}
-            {...defaultStyles[extension]}
-          />
-        </div>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        maxWidth: 36,
+        marginRight: 10,
+      }}
+      >
+        {file.thumbnail
+          ? (
+            <img
+              style={{ maxWidth: '100%' }}
+              alt={file.file_name}
+              src={file.thumbnail}
+            />
+          )
+          : (
+            <FileIcon
+              labelUppercase
+              extension={extension}
+              {...defaultStyles[extension]}
+            />
+          )}
       </div>
     );
   };

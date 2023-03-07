@@ -19,12 +19,13 @@ export const fileExtension = (fileName) => {
 
 export const folderAvatar = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <FolderTwoTone style={{
-      fontSize: 38,
-      padding: '6px 0',
-      maxWidth: 36,
-      marginRight: 10,
-    }}
+    <FolderTwoTone
+      style={{
+        fontSize: 38,
+        padding: '6px 0',
+        maxWidth: 36,
+        marginRight: 10,
+      }}
     />
   </div>
 );
