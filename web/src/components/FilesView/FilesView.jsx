@@ -4,6 +4,7 @@ import {
   EditOutlined,
   EllipsisOutlined,
   FolderOpenOutlined,
+  ShareAltOutlined,
 } from '@ant-design/icons';
 import { MdOutlineDriveFileMove } from 'react-icons/md';
 import {
@@ -22,6 +23,7 @@ import {
 import { openMoveEntityModal } from '../MoveEntityModal/MoveEntityModalSlice';
 import MoveEntityModal from '../MoveEntityModal/MoveEntityModal';
 import Breadcrumb from '../Breadcrumb';
+import FileShareModal from '../FileShareModal';
 
 import { del, put, getAuthHeaders } from '../../api';
 import cfg from '../../config';
@@ -46,6 +48,7 @@ function FilesView() {
   const [form] = Form.useForm();
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
+  const [fileToShare, setFileToShare] = useState();
 
   const refresh = () => {
     dispatch(resetState(parentId));
@@ -360,6 +363,15 @@ function FilesView() {
       {
         key: '2',
         label: (
+          <Typography.Link tabIndex={-1} onClick={() => { setFileToShare(file); }}>
+            {t('Share')}
+          </Typography.Link>
+        ),
+        icon: <ShareAltOutlined />,
+      },
+      {
+        key: '3',
+        label: (
           <Typography.Link tabIndex={-1} onClick={() => { dispatch(openMoveEntityModal(file)); }}>
             {t('Move')}
           </Typography.Link>
@@ -367,7 +379,7 @@ function FilesView() {
         icon: <MdOutlineDriveFileMove size={token.fontSize} />,
       },
       {
-        key: '3',
+        key: '4',
         label: (
           <Typography.Link tabIndex={-1} onClick={handleRenameFile}>
             {t('Rename')}
@@ -377,7 +389,7 @@ function FilesView() {
       },
       { type: 'divider' },
       {
-        key: '4',
+        key: '5',
         danger: true,
         label: (
           <Typography.Link tabIndex={-1} onClick={handleDeleteFile}>
@@ -522,6 +534,14 @@ function FilesView() {
         {modalConfig.body}
       </Modal>
       <MoveEntityModal />
+      {fileToShare ? (
+        <FileShareModal
+          file={fileToShare}
+          close={() => {
+            setFileToShare();
+          }}
+        />
+      ) : null}
     </>
   );
 }

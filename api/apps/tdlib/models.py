@@ -1,10 +1,13 @@
 import base64
 import logging
 import os
+from datetime import timedelta
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+import jwt
 from auth.models import User
 from simple_history.models import HistoricalRecords
 from telethon.extensions import BinaryReader
@@ -82,8 +85,7 @@ class File(BaseModelMixin):
         to=Folder, to_field="id", db_column="parent_id", on_delete=models.CASCADE, null=True, blank=True, db_index=True
     )
     file_id = models.PositiveBigIntegerField()
-    file_uuid = models.CharField(max_length=255, unique=True, default=make_uuid)
-    file_name = models.CharField(max_length=255)
+    file_name = models.CharField(max_length=255, db_index=True)
     file_size = models.PositiveBigIntegerField()
     part_size = models.PositiveBigIntegerField()
     total_parts = models.PositiveIntegerField()
@@ -96,10 +98,7 @@ class File(BaseModelMixin):
     class Meta:
         db_table = "files"
         unique_together = (("user", "file_id"),)
-        index_together = (
-            ("user", "file_id"),
-            ("file_id", "file_uuid"),
-        )
+        index_together = (("user", "file_id"),)
 
     @property
     def message(self):
@@ -122,6 +121,29 @@ class File(BaseModelMixin):
     def is_uploaded(self):
         return self.uploaded_at is not None
 
+    @property
+    def file_token(self):
+        if not self.is_uploaded:
+            return None
+
+        now = timezone.now()
+        exp = now + timedelta(hours=settings.FILE_TOKEN_EXP_HOURS)
+
+        payload = {
+            "iat": now,
+            "exp": exp,
+            "jti": make_uuid(),
+            "uid": self.user.id,
+            "fid": self.file_id,
+            "scope": "user/Consent.read",
+            "iss": "https://teledrive.io",
+        }
+        headers = {
+            "kid": settings.FILE_TOKEN_KEY_ID,
+        }
+
+        return jwt.encode(payload=payload, key=settings.FILE_TOKEN_KEY, algorithm="HS256", headers=headers)
+
     def delete(self, delete_from_telegram_chat: bool):
         from tdlib.wrapper import TD_CLIENT
 
@@ -136,10 +158,6 @@ class File(BaseModelMixin):
     @classmethod
     def find_by_user_and_id(self, user: User, file_id: str):
         return self.objects.filter(user=user, file_id=file_id).first()
-
-    @classmethod
-    def find_by_id_and_token(self, file_id: str, file_token: str):
-        return self.objects.filter(file_id=file_id, file_uuid=file_token).first()
 
     @classmethod
     def create(
@@ -254,3 +272,28 @@ class File(BaseModelMixin):
 
             yielded_size += chunk_len
             yield chunk
+
+
+class ShortURL(BaseModelMixin):
+    REASON_SHARE_FILE = "ShareFile"
+    REASONS = ((REASON_SHARE_FILE, REASON_SHARE_FILE),)
+
+    share_token = models.CharField(primary_key=True, max_length=255)
+    file = models.ForeignKey(
+        to=File, to_field="id", db_column="file_id", on_delete=models.CASCADE, null=True, blank=True
+    )
+    folder = models.ForeignKey(
+        to=Folder, to_field="id", db_column="folder_id", on_delete=models.CASCADE, null=True, blank=True
+    )
+    reason = models.CharField(max_length=255, choices=REASONS)
+    expire_at = models.DateTimeField(null=True, blank=True)
+
+    @classmethod
+    def create_file_share_token(self, file: File, expire_at: any):
+        short_url = ShortURL(share_token=make_uuid(), file=file, reason=self.REASON_SHARE_FILE, expire_at=expire_at)
+        short_url.save()
+        return short_url.share_token
+
+    @classmethod
+    def find_by_share_token(self, share_token: str):
+        return self.objects.filter(share_token=share_token).first()

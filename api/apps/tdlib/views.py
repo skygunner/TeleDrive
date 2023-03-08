@@ -1,18 +1,25 @@
 import os
 import re
+from datetime import timedelta
 
+from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 from django.http import StreamingHttpResponse
+from django.utils import timezone
 from django.utils.http import quote_etag
 from django.utils.translation import gettext as _
 
+import jwt
+from auth.models import User
 from rest_framework import status
+from rest_framework.authentication import BaseAuthentication
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.parsers import FileUploadParser
 from rest_framework.request import Request
 from rest_framework.response import Response
-from tdlib.models import File, Folder
+from tdlib.models import File, Folder, ShortURL
 from tdlib.serializers import FileSerializer, FolderSerializer
 from utils.views import is_integer, request_validator
 
@@ -402,17 +409,34 @@ def upload(request: Request) -> Response:
     return api_success(FileSerializer(file).data)
 
 
+class FileTokenAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        request_data = request.query_params
+        auth = request_data.get("secret", None)
+
+        try:
+            payload = jwt.decode(jwt=auth, key=settings.FILE_TOKEN_KEY, algorithms=["HS256"])
+        except jwt.InvalidTokenError:
+            raise AuthenticationFailed()
+
+        user = User.find_by_id(payload["uid"])
+        if user is None:
+            raise AuthenticationFailed()
+
+        file = File.find_by_user_and_id(user, payload["fid"])
+        if file is None or not file.is_uploaded:
+            raise AuthenticationFailed()
+
+        request.file = file
+
+        return (user, payload)
+
+
 @api_view(["GET"])
-@authentication_classes([])
+@authentication_classes([FileTokenAuthentication])
 @transaction.atomic
-def download(request: Request, file_id: int) -> Response:
-    request_data = request.query_params
-
-    file_token = request_data.get("secret", None)
-
-    file = File.find_by_id_and_token(file_id=file_id, file_token=file_token)
-    if file is None or not file.is_uploaded:
-        return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
+def download(request: Request) -> Response:
+    file = request.file
 
     start = 0
     end = file.file_size - 1
@@ -448,3 +472,61 @@ def download(request: Request, file_id: int) -> Response:
     response["ETag"] = etag
 
     return response
+
+
+@request_validator
+def validate_get_file_share_token_request(errors, request_data):
+    expire_in_hours = request_data.get("expire_in_hours", "24")
+
+    if expire_in_hours is None or not is_integer(expire_in_hours) or int(expire_in_hours) < 1:
+        errors.append(_("Invalid expiry."))
+
+
+@api_view(["GET"])
+@transaction.atomic
+def get_file_share_token(request: Request, file_id: int) -> Response:
+    if file_id is None or not isinstance(file_id, int) or file_id < 1:
+        return api_error(_("Invalid file id."), status.HTTP_400_BAD_REQUEST)
+
+    request_data = request.query_params
+    validate_get_file_share_token_request(request_data)
+
+    expire_in_hours = int(request_data.get("expire_in_hours", "24"))
+
+    file = File.find_by_user_and_id(user=request.user, file_id=file_id)
+    if file is None or not file.is_uploaded:
+        return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
+
+    expire_at = timezone.now() + timedelta(hours=expire_in_hours)
+    share_token = ShortURL.create_file_share_token(file=file, expire_at=expire_at)
+
+    return api_success({"share_token": share_token})
+
+
+@request_validator
+def validate_get_file_token_from_shared_token_request(errors, request_data):
+    shared_token = request_data.get("shared_token", None)
+
+    if shared_token is None:
+        errors.append(_("Invalid shared token."))
+
+
+@api_view(["GET"])
+@transaction.atomic
+def get_file_token_from_shared_token(request: Request) -> Response:
+    request_data = request.query_params
+    validate_get_file_token_from_shared_token_request(request_data)
+
+    shared_token = request_data["shared_token"]
+
+    short_url = ShortURL.find_by_share_token(share_token=shared_token)
+
+    if (
+        short_url is None
+        or short_url.file is None
+        or not short_url.file.is_uploaded
+        or short_url.file.deleted_at is not None
+    ):
+        return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
+
+    return api_success({"file_token": short_url.file.file_token})

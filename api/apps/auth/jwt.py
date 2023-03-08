@@ -20,8 +20,9 @@ def generate_user_token(user: User) -> Tuple[str, int]:
     payload = {
         "iat": now,
         "exp": exp,
-        "jti": make_uuid(),
         "uid": user.id,
+        "jti": make_uuid(),
+        "iss": "https://teledrive.io",
     }
     headers = {
         "kid": settings.JWT_TOKEN_KEY_ID,

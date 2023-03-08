@@ -21,8 +21,6 @@ LANGUAGES = [
     ("en-US", _("English")),
 ]
 
-APP_NAME = "TeleDrive"
-
 SECRET_KEY = env.str("SECRET_KEY", default="secret")
 
 DEBUG = False
@@ -102,6 +100,10 @@ TELEGRAM_BOT_SESSION = env.str("TELEGRAM_BOT_SESSION", default=None)
 JWT_TOKEN_KEY = env.str("JWT_TOKEN_KEY", default="secret")
 JWT_TOKEN_KEY_ID = "1"
 JWT_TOKEN_EXP_HOURS = 5 * 365 * 24  # 5 years
+
+FILE_TOKEN_KEY = env.str("FILE_TOKEN_KEY", default="secret")
+FILE_TOKEN_KEY_ID = "1"
+FILE_TOKEN_EXP_HOURS = 1  # 1 hour
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_METHODS = list(default_methods)

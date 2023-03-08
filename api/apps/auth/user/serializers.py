@@ -5,7 +5,7 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     user_id = serializers.SerializerMethodField()
 
-    def get_user_id(self, obj):
+    def get_user_id(self, obj: User):
         return str(obj.id)  # JavaScript issue with BigInt
 
     class Meta:
