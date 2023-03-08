@@ -44,7 +44,7 @@ function Breadcrumb({
       {modal ? (
         <div
           style={{
-            height: 32,
+            height: 24,
             display: 'flex',
             alignItems: 'center',
           }}
