@@ -534,14 +534,12 @@ function FilesView() {
         {modalConfig.body}
       </Modal>
       <MoveEntityModal />
-      {fileToShare ? (
-        <FileShareModal
-          file={fileToShare}
-          close={() => {
-            setFileToShare();
-          }}
-        />
-      ) : null}
+      <FileShareModal
+        file={fileToShare}
+        close={() => {
+          setFileToShare();
+        }}
+      />
     </>
   );
 }

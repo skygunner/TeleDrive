@@ -11,7 +11,7 @@
   "Done": "Done",
   "Copy": "Copy",
   "Link copied to clipboard.": "Link copied to clipboard.",
-  "People with this link can download your file for": "People with this link can download your file for",
+  "People with this link can download your file for ": "People with this link can download your file for ",
   "Delete folder": "Delete folder",
   "Delete": "Delete",
   "Are you sure you want to delete {{ folderName }}?": "Are you sure you want to delete {{ folderName }}?",

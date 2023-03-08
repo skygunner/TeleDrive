@@ -77,8 +77,15 @@ function FileShareModal({ file, close }) {
   };
 
   useEffect(() => {
-    getShareableLink(selectedItem);
-  }, [selectedItem]);
+    if (file) {
+      getShareableLink(selectedItem);
+    }
+  }, [selectedItem, file]);
+
+  if (!file) {
+    // Avoid unnecessary render
+    return <Modal />;
+  }
 
   return (
     <Modal
@@ -114,9 +121,6 @@ function FileShareModal({ file, close }) {
             color: token.colorTextSecondary,
           }}
         >
-          <p style={{ marginRight: 5 }}>
-            {t('People with this link can download your file for')}
-          </p>
           <Dropdown
             menu={{
               items,
@@ -127,6 +131,7 @@ function FileShareModal({ file, close }) {
             trigger="click"
           >
             <p>
+              {t('People with this link can download your file for ')}
               {items[selectedItem].label}
               <DownOutlined style={{ color: token.colorPrimary, marginLeft: 3 }} />
             </p>

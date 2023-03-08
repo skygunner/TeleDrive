@@ -35,7 +35,7 @@ function MoveEntityModal() {
 
   if (!entity) {
     // Avoid unnecessary render
-    return null;
+    return <Modal centered />;
   }
 
   const entityType = entity.folder_id ? 'folder' : 'file';
