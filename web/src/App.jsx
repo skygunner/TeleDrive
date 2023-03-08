@@ -11,6 +11,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import FooterMenu from './components/FooterMenu';
 import SupportPage from './pages/SupportPage';
 import DesignProvider from './components/DesignProvider';
+import DownloadPage from './pages/DownloadPage';
 
 import './App.css';
 
@@ -45,6 +46,7 @@ function App() {
                   <Route path="login" element={<LoginPage />} />
                   <Route path="privacy" element={<PrivacyPage />} />
                   <Route path="support" element={<SupportPage />} />
+                  <Route path="file/download/:shareToken" element={<DownloadPage />} />
                   <Route path="*" element={<NoPage />} />
                 </Routes>
               </div>

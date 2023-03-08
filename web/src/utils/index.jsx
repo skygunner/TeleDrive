@@ -42,3 +42,14 @@ export const alertError = (description) => {
     />,
   });
 };
+
+export const alertInfo = (description) => {
+  message.open({
+    duration: 1,
+    content: <Alert
+      showIcon
+      type="info"
+      description={description}
+    />,
+  });
+};

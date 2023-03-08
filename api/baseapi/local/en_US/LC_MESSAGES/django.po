@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 13:11+0000\n"
+"POT-Creation-Date: 2023-03-08 16:35+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -59,7 +59,7 @@ msgid "Invalid file name."
 msgstr ""
 
 #: apps/tdlib/views.py:252 apps/tdlib/views.py:286 apps/tdlib/views.py:381
-#: apps/tdlib/views.py:498 apps/tdlib/views.py:530
+#: apps/tdlib/views.py:498
 msgid "File not found."
 msgstr ""
 
@@ -127,8 +127,8 @@ msgstr ""
 msgid "Invalid expiry."
 msgstr ""
 
-#: apps/tdlib/views.py:511
-msgid "Invalid shared token."
+#: apps/tdlib/views.py:519
+msgid "Not found."
 msgstr ""
 
 #: baseapi/settings.py:21

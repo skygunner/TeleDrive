@@ -5,6 +5,7 @@ import {
 import { CopyOutlined, DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { getAuthHeaders, get } from '../api';
+import { alertInfo } from '../utils';
 
 const { useToken } = theme;
 
@@ -100,6 +101,7 @@ function FileShareModal({ file, close }) {
                 icon={<CopyOutlined />}
                 onClick={() => {
                   window.navigator.clipboard.writeText(shareLink);
+                  alertInfo(t('Link copied to clipboard.'));
                 }}
               />
             </Tooltip>

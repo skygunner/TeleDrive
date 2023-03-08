@@ -20,7 +20,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 from tdlib.models import File, Folder, ShortURL
-from tdlib.serializers import FileSerializer, FolderSerializer
+from tdlib.serializers import FileSerializer, FolderSerializer, SharedFileSerializer
 from utils.views import is_integer, request_validator
 
 from api.views import api_error, api_success
@@ -503,30 +503,19 @@ def get_file_share_token(request: Request, file_id: int) -> Response:
     return api_success({"share_token": share_token})
 
 
-@request_validator
-def validate_get_file_token_from_shared_token_request(errors, request_data):
-    shared_token = request_data.get("shared_token", None)
-
-    if shared_token is None:
-        errors.append(_("Invalid shared token."))
-
-
 @api_view(["GET"])
+@authentication_classes([])
 @transaction.atomic
-def get_file_token_from_shared_token(request: Request) -> Response:
-    request_data = request.query_params
-    validate_get_file_token_from_shared_token_request(request_data)
-
-    shared_token = request_data["shared_token"]
-
-    short_url = ShortURL.find_by_share_token(share_token=shared_token)
+def get_shared_file_info(request: Request, share_token: str) -> Response:
+    short_url = ShortURL.find_by_share_token(share_token=share_token)
 
     if (
         short_url is None
         or short_url.file is None
         or not short_url.file.is_uploaded
         or short_url.file.deleted_at is not None
+        or short_url.expire_at < timezone.now()
     ):
-        return api_error(_("File not found."), status.HTTP_404_NOT_FOUND)
+        return api_error(_("Not found."), status.HTTP_404_NOT_FOUND)
 
-    return api_success({"file_token": short_url.file.file_token})
+    return api_success(SharedFileSerializer(short_url.file).data)

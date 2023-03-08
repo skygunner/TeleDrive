@@ -21,6 +21,18 @@ class FileSerializer(serializers.ModelSerializer):
         ]
 
 
+class SharedFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = [
+            "file_token",
+            "file_name",
+            "file_size",
+            "md5_checksum",
+            "thumbnail",
+        ]
+
+
 class FolderSerializer(serializers.ModelSerializer):
     folder_id = serializers.SerializerMethodField()
 

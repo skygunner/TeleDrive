@@ -19,7 +19,11 @@ const responseData = (resp) => {
   throw unknownError;
 };
 
-const handleError = (error) => {
+const handleError = (error, alert) => {
+  if (!alert) {
+    return;
+  }
+
   if (axios.isAxiosError(error)) {
     const detailsLength = error.response?.data?.details?.length;
     if (detailsLength > 0) {
@@ -71,38 +75,38 @@ export const getAuthHeaders = () => {
   return {};
 };
 
-export const post = async (url, data, headers = {}) => {
+export const post = async (url, data, headers = {}, alert = true) => {
   try {
     return responseData(await baseAPI.post(url, data, { headers }));
   } catch (error) {
-    handleError(error);
+    handleError(error, alert);
     return null;
   }
 };
 
-export const get = async (url, headers = {}) => {
+export const get = async (url, headers = {}, alert = true) => {
   try {
     return responseData(await baseAPI.get(url, { headers }));
   } catch (error) {
-    handleError(error);
+    handleError(error, alert);
     return null;
   }
 };
 
-export const put = async (url, data, headers = {}) => {
+export const put = async (url, data, headers = {}, alert = true) => {
   try {
     return responseData(await baseAPI.put(url, data, { headers }));
   } catch (error) {
-    handleError(error);
+    handleError(error, alert);
     return null;
   }
 };
 
-export const del = async (url, headers = {}) => {
+export const del = async (url, headers = {}, alert = true) => {
   try {
     return responseData(await baseAPI.delete(url, { headers }));
   } catch (error) {
-    handleError(error);
+    handleError(error, alert);
     return null;
   }
 };
