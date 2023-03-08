@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Modal, Input, Tooltip, Button, theme, Dropdown, Typography, Spin,
+  Modal, Input, Tooltip, Button, theme, Spin, Select,
 } from 'antd';
-import { CopyOutlined, DownOutlined } from '@ant-design/icons';
+import { CopyOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { getAuthHeaders, get } from '../api';
 import { alertInfo } from '../utils';
@@ -17,55 +17,12 @@ function FileShareModal({ file, close }) {
 
   const [loading, setLoading] = useState(false);
   const [shareLink, setShareLink] = useState();
-  const [selectedItem, setSelectedItem] = useState(0);
+  const [expireInDays, setExpireInDays] = useState('1');
 
-  const items = [
-    {
-      key: '1',
-      label: (
-        <Typography.Link tabIndex={-1} onClick={() => { setSelectedItem(0); }}>
-          {t('1 day')}
-        </Typography.Link>
-      ),
-    },
-    {
-      key: '3',
-      label: (
-        <Typography.Link tabIndex={-1} onClick={() => { setSelectedItem(1); }}>
-          {t('3 day')}
-        </Typography.Link>
-      ),
-    },
-    {
-      key: '5',
-      label: (
-        <Typography.Link tabIndex={-1} onClick={() => { setSelectedItem(2); }}>
-          {t('5 day')}
-        </Typography.Link>
-      ),
-    },
-    {
-      key: '7',
-      label: (
-        <Typography.Link tabIndex={-1} onClick={() => { setSelectedItem(3); }}>
-          {t('1 week')}
-        </Typography.Link>
-      ),
-    },
-    {
-      key: '30',
-      label: (
-        <Typography.Link tabIndex={-1} onClick={() => { setSelectedItem(4); }}>
-          {t('1 month')}
-        </Typography.Link>
-      ),
-    },
-  ];
-
-  const getShareableLink = async (index) => {
+  const getShareableLink = async (expiry) => {
     setLoading(true);
 
-    const expireInHours = parseInt(items[index].key, 10) * 24;
+    const expireInHours = parseInt(expiry, 10) * 24;
     const data = await get(`/v1/tdlib/file/${file.file_id}/share?expire_in_hours=${expireInHours}`, authHeaders);
     if (data) {
       const { protocol, host } = window.location;
@@ -78,9 +35,9 @@ function FileShareModal({ file, close }) {
 
   useEffect(() => {
     if (file) {
-      getShareableLink(selectedItem);
+      getShareableLink(expireInDays);
     }
-  }, [selectedItem, file]);
+  }, [expireInDays, file]);
 
   if (!file) {
     // Avoid unnecessary render
@@ -105,37 +62,39 @@ function FileShareModal({ file, close }) {
             <Input readOnly value={shareLink} />
             <Tooltip title={t('Copy')}>
               <Button
-                icon={<CopyOutlined />}
+                style={{ padding: '0px 10px', alignItems: 'center' }}
                 onClick={() => {
                   window.navigator.clipboard.writeText(shareLink);
                   alertInfo(t('Link copied to clipboard.'));
                 }}
-              />
+              >
+                <CopyOutlined />
+              </Button>
             </Tooltip>
           </Input.Group>
         </Spin>
         <div
           style={{
-            display: 'flex',
+            marginTop: 10,
             padding: '0px 10px',
             color: token.colorTextSecondary,
           }}
         >
-          <Dropdown
-            menu={{
-              items,
-              selectable: true,
-              defaultSelectedKeys: ['1'],
+          {t('People with this link can download your file for')}
+          <Select
+            bordered={false}
+            defaultValue={expireInDays}
+            style={{
+              width: 95, marginLeft: -5, color: token.colorPrimary,
             }}
-            type="text"
-            trigger="click"
+            onChange={(expiry) => setExpireInDays(expiry)}
           >
-            <p>
-              {t('People with this link can download your file for ')}
-              {items[selectedItem].label}
-              <DownOutlined style={{ color: token.colorPrimary, marginLeft: 3 }} />
-            </p>
-          </Dropdown>
+            <Select.Option value="1">{t('1 day')}</Select.Option>
+            <Select.Option value="3">{t('3 days')}</Select.Option>
+            <Select.Option value="5">{t('5 days')}</Select.Option>
+            <Select.Option value="7">{t('1 week')}</Select.Option>
+            <Select.Option value="30">{t('1 month')}</Select.Option>
+          </Select>
         </div>
       </div>
     </Modal>

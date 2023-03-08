@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 
 import { UploadOutlined, PlusOutlined, FolderAddOutlined } from '@ant-design/icons';
 import {
-  FloatButton, Upload, Form, Input, Modal,
+  FloatButton, Upload, Form, Input, Modal, Tooltip,
 } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +22,7 @@ function FloatButtonGroup() {
 
   const textInput = useRef();
   const [form] = Form.useForm();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({});
   const [modalConfirmLoading, setModalConfirmLoading] = useState(false);
 
@@ -105,22 +106,35 @@ function FloatButtonGroup() {
         type="primary"
         style={{ right: 40, marginBottom: -20 }}
         icon={<PlusOutlined />}
+        onOpenChange={(open) => {
+          setTimeout(() => {
+            setTooltipOpen(open);
+          }, 300);
+        }}
       >
-        <FloatButton
-          icon={<FolderAddOutlined />}
-          tooltip={t('Create folder')}
-          onClick={handleCreateFolder}
-        />
+        <Tooltip
+          open={tooltipOpen}
+          placement="left"
+          title={t('Create folder')}
+        >
+          <FloatButton
+            icon={<FolderAddOutlined />}
+            onClick={handleCreateFolder}
+          />
+        </Tooltip>
         <Upload
           multiple
           showUploadList={false}
           customRequest={uploadFile}
           onChange={onStatusChange}
         >
-          <FloatButton
-            icon={<UploadOutlined />}
-            tooltip={t('Upload file')}
-          />
+          <Tooltip
+            open={tooltipOpen}
+            placement="left"
+            title={t('Upload file')}
+          >
+            <FloatButton icon={<UploadOutlined />} />
+          </Tooltip>
         </Upload>
       </FloatButton.Group>
       <Modal

@@ -110,6 +110,7 @@ function FilesView() {
 
     const handleRenameFolder = () => {
       form.resetFields();
+      form.setFieldValue('folder_name', folder.folder_name);
 
       const onOk = async () => {
         form
@@ -145,7 +146,6 @@ function FilesView() {
             <Form.Item
               style={{ marginTop: 20 }}
               name="folder_name"
-              initialValue={folder.folder_name}
               rules={[{
                 required: true,
                 message: t('Please input the folder name.'),
@@ -286,6 +286,7 @@ function FilesView() {
 
     const handleRenameFile = () => {
       form.resetFields();
+      form.setFieldValue('file_name', file.file_name);
 
       const onOk = async () => {
         form
@@ -321,7 +322,6 @@ function FilesView() {
             <Form.Item
               style={{ marginTop: 20 }}
               name="file_name"
-              initialValue={file.file_name}
               rules={[{
                 required: true,
                 message: t('Please input the file name.'),
