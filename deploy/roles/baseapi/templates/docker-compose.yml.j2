@@ -14,6 +14,7 @@ services:
       DATABASE_PASSWORD: "{{ postgresql_password }}"
       DATABASE_HOST: "10.110.32.2"
       JWT_TOKEN_KEY: "{{ jwt_secret_key }}"
+      FILE_TOKEN_KEY: "{{ file_token_key }}"
       TELEGRAM_API_ID: {{ telepram_api_id }}
       TELEGRAM_API_HASH: "{{ telepram_api_hash }}"
       TELEGRAM_BOT_TOKEN: "{{ telepram_bot_token }}"

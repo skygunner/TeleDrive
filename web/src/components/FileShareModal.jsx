@@ -69,7 +69,7 @@ function FileShareModal({ file, close }) {
     const data = await get(`/v1/tdlib/file/${file.file_id}/share?expire_in_hours=${expireInHours}`, authHeaders);
     if (data) {
       const { protocol, host } = window.location;
-      const generatedShareLink = `${protocol}://${host}/file/download/${data.share_token}`;
+      const generatedShareLink = `${protocol}//${host}/file/download/${data.share_token}`;
       setShareLink(generatedShareLink);
     }
 

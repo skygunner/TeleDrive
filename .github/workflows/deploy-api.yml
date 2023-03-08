@@ -37,6 +37,7 @@ jobs:
           -e "django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
           -e "postgresql_password=${{ secrets.POSTGRESQL_PASSWORD }}"
           -e "jwt_secret_key=${{ secrets.JWT_SECRET_KEY }}"
+          -e "file_token_key=${{ secrets.FILE_TOKEN_KEY }}"
           -e "telepram_api_id=${{ secrets.TELEGRAM_API_ID }}"
           -e "telepram_api_hash=${{ secrets.TELEGRAM_API_HASH }}"
           -e "telepram_bot_token=${{ secrets.TELEGRAM_BOT_TOKEN }}"
