@@ -1,6 +1,5 @@
 import React from 'react';
 import { Result } from 'antd';
-import { FrownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 function OfflinePage() {
@@ -8,7 +7,7 @@ function OfflinePage() {
 
   return (
     <Result
-      icon={<FrownOutlined />}
+      status="500"
       title={t('Offline')}
       subTitle={t('You are offline!')}
     />

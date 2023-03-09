@@ -8,6 +8,7 @@
 body {
   padding: 0px;
   margin: 0px;
+  /* background: #f5f5f5; */
   overscroll-behavior-x: none;
 }
 
@@ -50,12 +51,4 @@ body {
     > a:hover {
     color: inherit;
   }
-}
-
-.ant-select-single .ant-select-selector {
-  color: inherit;
-}
-
-.ant-select .ant-select-arrow {
-  color: inherit;
 }
