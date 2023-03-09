@@ -128,6 +128,9 @@ def create_folder(request: Request) -> Response:
 @api_view(["GET", "PUT", "DELETE"])
 @transaction.atomic
 def rud_folder(request: Request, folder_id: int) -> Response:
+    if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
+        return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
+
     if request.method == "GET":
         return get_folder(request=request, folder_id=folder_id)
     elif request.method == "PUT":
@@ -137,9 +140,6 @@ def rud_folder(request: Request, folder_id: int) -> Response:
 
 
 def get_folder(request: Request, folder_id: int) -> Response:
-    if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
-        return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
-
     folder = Folder.find_by_user_and_id(user=request.user, id=folder_id)
     if folder is None:
         return api_error(_("Folder not found."), status.HTTP_404_NOT_FOUND)
@@ -149,12 +149,8 @@ def get_folder(request: Request, folder_id: int) -> Response:
 
 @request_validator
 def validate_update_folder_request(errors, request_data):
-    folder_id = request_data.get("folder_id", None)
     folder_name = request_data.get("folder_name", None)
     parent_id = request_data.get("parent_id", None)
-
-    if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
-        errors.append(_("Invalid folder id."))
 
     if not isinstance(folder_name, str) or len(folder_name) < 1 or len(folder_name) > 255:
         errors.append(_("Invalid folder name."))
@@ -165,7 +161,6 @@ def validate_update_folder_request(errors, request_data):
 
 def update_folder(request: Request, folder_id: int) -> Response:
     request_data = request.data
-    request_data["folder_id"] = folder_id
     validate_update_folder_request(request_data)
 
     folder_name = request_data["folder_name"]
@@ -197,9 +192,6 @@ def validate_delete_folder_request(errors, request_data):
 
 
 def delete_folder(request: Request, folder_id: int) -> Response:
-    if folder_id is None or not isinstance(folder_id, int) or folder_id < 1:
-        return api_error(_("Invalid folder id."), status.HTTP_400_BAD_REQUEST)
-
     request_data = request.query_params
     validate_delete_folder_request(request_data)
 
@@ -217,6 +209,9 @@ def delete_folder(request: Request, folder_id: int) -> Response:
 @api_view(["PUT", "DELETE"])
 @transaction.atomic
 def ud_file(request: Request, file_id: int) -> Response:
+    if file_id is None or not isinstance(file_id, int) or file_id < 1:
+        return api_error(_("Invalid file id."), status.HTTP_400_BAD_REQUEST)
+
     if request.method == "PUT":
         return update_file(request=request, file_id=file_id)
     elif request.method == "DELETE":
@@ -225,12 +220,8 @@ def ud_file(request: Request, file_id: int) -> Response:
 
 @request_validator
 def validate_update_file_request(errors, request_data):
-    file_id = request_data.get("file_id", None)
     file_name = request_data.get("file_name", None)
     parent_id = request_data.get("parent_id", None)
-
-    if file_id is None or not isinstance(file_id, int) or file_id < 1:
-        errors.append(_("Invalid file id."))
 
     if not isinstance(file_name, str) or len(file_name) < 1 or len(file_name) > 255:
         errors.append(_("Invalid file name."))
@@ -241,7 +232,6 @@ def validate_update_file_request(errors, request_data):
 
 def update_file(request: Request, file_id: int) -> Response:
     request_data = request.data
-    request_data["file_id"] = file_id
     validate_update_file_request(request_data)
 
     file_name = request_data["file_name"]
@@ -273,9 +263,6 @@ def validate_delete_file_request(errors, request_data):
 
 
 def delete_file(request: Request, file_id: int) -> Response:
-    if file_id is None or not isinstance(file_id, int) or file_id < 1:
-        return api_error(_("Invalid file id."), status.HTTP_400_BAD_REQUEST)
-
     request_data = request.query_params
     validate_delete_file_request(request_data)
 

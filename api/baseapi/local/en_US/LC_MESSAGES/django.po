@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 16:35+0000\n"
+"POT-Creation-Date: 2023-03-09 10:03+0000\n"
 "Language: en-US\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -23,111 +23,110 @@ msgstr ""
 msgid "Invalid limit."
 msgstr ""
 
-#: apps/tdlib/views.py:43 apps/tdlib/views.py:105 apps/tdlib/views.py:163
-#: apps/tdlib/views.py:239 apps/tdlib/views.py:352
+#: apps/tdlib/views.py:43 apps/tdlib/views.py:105 apps/tdlib/views.py:159
+#: apps/tdlib/views.py:230 apps/tdlib/views.py:339
 msgid "Invalid parent id."
 msgstr ""
 
 #: apps/tdlib/views.py:60 apps/tdlib/views.py:85 apps/tdlib/views.py:121
-#: apps/tdlib/views.py:182 apps/tdlib/views.py:258 apps/tdlib/views.py:356
+#: apps/tdlib/views.py:177 apps/tdlib/views.py:248 apps/tdlib/views.py:343
 msgid "Parent folder not found."
 msgstr ""
 
-#: apps/tdlib/views.py:102 apps/tdlib/views.py:160
+#: apps/tdlib/views.py:102 apps/tdlib/views.py:156
 msgid "Invalid folder name."
 msgstr ""
 
-#: apps/tdlib/views.py:141 apps/tdlib/views.py:157 apps/tdlib/views.py:201
+#: apps/tdlib/views.py:132
 msgid "Invalid folder id."
 msgstr ""
 
-#: apps/tdlib/views.py:145 apps/tdlib/views.py:176 apps/tdlib/views.py:210
+#: apps/tdlib/views.py:145 apps/tdlib/views.py:171 apps/tdlib/views.py:202
 msgid "Folder not found."
 msgstr ""
 
-#: apps/tdlib/views.py:196 apps/tdlib/views.py:272
+#: apps/tdlib/views.py:191 apps/tdlib/views.py:262
 msgid "Invalid delete_from_telegram_chat."
 msgstr ""
 
-#: apps/tdlib/views.py:233 apps/tdlib/views.py:277 apps/tdlib/views.py:376
-#: apps/tdlib/views.py:489
+#: apps/tdlib/views.py:213 apps/tdlib/views.py:363 apps/tdlib/views.py:476
 msgid "Invalid file id."
 msgstr ""
 
-#: apps/tdlib/views.py:236 apps/tdlib/views.py:359 apps/tdlib/views.py:389
+#: apps/tdlib/views.py:227 apps/tdlib/views.py:346 apps/tdlib/views.py:376
 msgid "Invalid file name."
 msgstr ""
 
-#: apps/tdlib/views.py:252 apps/tdlib/views.py:286 apps/tdlib/views.py:381
-#: apps/tdlib/views.py:498
+#: apps/tdlib/views.py:242 apps/tdlib/views.py:273 apps/tdlib/views.py:368
+#: apps/tdlib/views.py:485
 msgid "File not found."
 msgstr ""
 
-#: apps/tdlib/views.py:302
+#: apps/tdlib/views.py:289
 msgid "Invalid file part."
 msgstr ""
 
-#: apps/tdlib/views.py:307
+#: apps/tdlib/views.py:294
 msgid "Invalid file object."
 msgstr ""
 
-#: apps/tdlib/views.py:312
+#: apps/tdlib/views.py:299
 msgid "Invalid total parts."
 msgstr ""
 
-#: apps/tdlib/views.py:317 apps/tdlib/views.py:331
+#: apps/tdlib/views.py:304 apps/tdlib/views.py:318
 msgid "Invalid file size."
 msgstr ""
 
-#: apps/tdlib/views.py:320
+#: apps/tdlib/views.py:307
 msgid "The file size must be less or equal to 2 GB."
 msgstr ""
 
-#: apps/tdlib/views.py:324
+#: apps/tdlib/views.py:311
 msgid "The file part size must be less or equal to 512 KiB."
 msgstr ""
 
-#: apps/tdlib/views.py:328
+#: apps/tdlib/views.py:315
 msgid "The file part size must be evenly divisible by 1024."
 msgstr ""
 
-#: apps/tdlib/views.py:336
+#: apps/tdlib/views.py:323
 msgid "total_parts must be {}."
 msgstr ""
 
-#: apps/tdlib/views.py:341
+#: apps/tdlib/views.py:328
 msgid "Provided file_size is not equal to the actual file size."
 msgstr ""
 
-#: apps/tdlib/views.py:346
+#: apps/tdlib/views.py:333
 msgid "Invalid md5 checksum."
 msgstr ""
 
-#: apps/tdlib/views.py:385
+#: apps/tdlib/views.py:372
 msgid "File with id {} successfully uploaded before."
 msgstr ""
 
-#: apps/tdlib/views.py:393
+#: apps/tdlib/views.py:380
 msgid "You must upload part {} now."
 msgstr ""
 
-#: apps/tdlib/views.py:398
+#: apps/tdlib/views.py:385
 msgid "The file part size must be equal to {} KiB."
 msgstr ""
 
-#: apps/tdlib/views.py:403
+#: apps/tdlib/views.py:390
 msgid "The file part size must be less or equal to {} KiB."
 msgstr ""
 
-#: apps/tdlib/views.py:458
+#: apps/tdlib/views.py:445
 msgid "Invalid Range header."
 msgstr ""
 
-#: apps/tdlib/views.py:482
+#: apps/tdlib/views.py:469
 msgid "Invalid expiry."
 msgstr ""
 
-#: apps/tdlib/views.py:519
+#: apps/tdlib/views.py:506
 msgid "Not found."
 msgstr ""
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Modal, Input, Tooltip, Button, theme, Spin, Select,
+  Modal, Input, Tooltip, Button, theme, Spin, Typography, Dropdown,
 } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
+import { CopyOutlined, DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { getAuthHeaders, get } from '../api';
 import { alertInfo } from '../utils';
@@ -17,12 +17,20 @@ function FileShareModal({ file, close }) {
 
   const [loading, setLoading] = useState(false);
   const [shareLink, setShareLink] = useState();
-  const [expireInDays, setExpireInDays] = useState('1');
+  const [expiryIndex, setExpiryIndex] = useState(0);
 
-  const getShareableLink = async (expiry) => {
+  const availableExpiries = [
+    { key: '1', label: t('1 day') },
+    { key: '3', label: t('3 days') },
+    { key: '5', label: t('5 days') },
+    { key: '7', label: t('1 week') },
+    { key: '30', label: t('1 month') },
+  ];
+
+  const getShareableLink = async (index) => {
     setLoading(true);
 
-    const expireInHours = parseInt(expiry, 10) * 24;
+    const expireInHours = parseInt(availableExpiries[index].key, 10) * 24;
     const data = await get(`/v1/tdlib/file/${file.file_id}/share?expire_in_hours=${expireInHours}`, authHeaders);
     if (data) {
       const { protocol, host } = window.location;
@@ -35,14 +43,23 @@ function FileShareModal({ file, close }) {
 
   useEffect(() => {
     if (file) {
-      getShareableLink(expireInDays);
+      getShareableLink(expiryIndex);
     }
-  }, [expireInDays, file]);
+  }, [expiryIndex, file]);
 
   if (!file) {
     // Avoid unnecessary render
     return <Modal />;
   }
+
+  const dropdownItems = availableExpiries.map((expiry, index) => ({
+    key: expiry.key,
+    label: (
+      <Typography.Link tabIndex={-1} onClick={() => { setExpiryIndex(index); }}>
+        {expiry.label}
+      </Typography.Link>
+    ),
+  }));
 
   return (
     <Modal
@@ -75,26 +92,27 @@ function FileShareModal({ file, close }) {
         </Spin>
         <div
           style={{
-            marginTop: 10,
+            marginTop: 20,
+            marginBottom: 25,
             padding: '0px 10px',
             color: token.colorTextSecondary,
           }}
         >
-          {t('People with this link can download your file for')}
-          <Select
-            bordered={false}
-            defaultValue={expireInDays}
-            style={{
-              width: 95, marginLeft: -5, color: token.colorPrimary,
+          {t('People with this link can download your file for ')}
+          <Dropdown
+            menu={{
+              selectable: true,
+              items: dropdownItems,
+              defaultSelectedKeys: [expiryIndex],
             }}
-            onChange={(expiry) => setExpireInDays(expiry)}
+            type="text"
+            trigger="click"
           >
-            <Select.Option value="1">{t('1 day')}</Select.Option>
-            <Select.Option value="3">{t('3 days')}</Select.Option>
-            <Select.Option value="5">{t('5 days')}</Select.Option>
-            <Select.Option value="7">{t('1 week')}</Select.Option>
-            <Select.Option value="30">{t('1 month')}</Select.Option>
-          </Select>
+            <span>
+              {dropdownItems[expiryIndex].label}
+              <DownOutlined style={{ color: token.colorPrimary, marginLeft: 3 }} />
+            </span>
+          </Dropdown>
         </div>
       </div>
     </Modal>
