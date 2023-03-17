@@ -29,7 +29,7 @@ function DownloadPage() {
               type="primary"
               onClick={() => {
                 const a = document.createElement('a');
-                a.href = `${cfg.apiBaseUrl}/v1/tdlib/download?secret=${file.file_token}`;
+                a.href = `${cfg.apiBaseUrl}/v1/tdlib/file/${file.file_token}/download`;
                 a.download = file.file_name;
                 document.body.appendChild(a);
                 a.click();

@@ -352,7 +352,7 @@ function FilesView() {
         label: (
           <Typography.Link
             tabIndex={-1}
-            href={`${cfg.apiBaseUrl}/v1/tdlib/download?secret=${file.file_token}`}
+            href={`${cfg.apiBaseUrl}/v1/tdlib/file/${file.file_token}/download`}
             download={file.file_name}
           >
             {t('Download')}

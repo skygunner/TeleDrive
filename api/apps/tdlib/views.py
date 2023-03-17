@@ -13,9 +13,8 @@ from django.utils.translation import gettext as _
 import jwt
 from auth.models import User
 from rest_framework import status
-from rest_framework.authentication import BaseAuthentication
 from rest_framework.decorators import api_view, authentication_classes, parser_classes
-from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import FileUploadParser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -396,34 +395,22 @@ def upload(request: Request) -> Response:
     return api_success(FileSerializer(file).data)
 
 
-class FileTokenAuthentication(BaseAuthentication):
-    def authenticate(self, request):
-        request_data = request.query_params
-        auth = request_data.get("secret", None)
-
-        try:
-            payload = jwt.decode(jwt=auth, key=settings.FILE_TOKEN_KEY, algorithms=["HS256"])
-        except jwt.InvalidTokenError:
-            raise AuthenticationFailed()
-
-        user = User.find_by_id(payload["uid"])
-        if user is None:
-            raise AuthenticationFailed()
-
-        file = File.find_by_user_and_id(user, payload["fid"])
-        if file is None or not file.is_uploaded:
-            raise AuthenticationFailed()
-
-        request.file = file
-
-        return (user, payload)
-
-
 @api_view(["GET"])
-@authentication_classes([FileTokenAuthentication])
+@authentication_classes([])
 @transaction.atomic
-def download(request: Request) -> Response:
-    file = request.file
+def download(request: Request, file_token: str) -> Response:
+    try:
+        payload = jwt.decode(jwt=file_token, key=settings.FILE_TOKEN_KEY, algorithms=["HS256"])
+    except jwt.InvalidTokenError:
+        raise PermissionDenied()
+
+    user = User.find_by_id(payload["uid"])
+    if user is None:
+        raise PermissionDenied()
+
+    file = File.find_by_user_and_id(user, payload["fid"])
+    if file is None or not file.is_uploaded:
+        raise PermissionDenied()
 
     start = 0
     end = file.file_size - 1

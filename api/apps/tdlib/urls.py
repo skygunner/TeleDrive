@@ -14,12 +14,12 @@ from tdlib.views import (
 
 urlpatterns = [
     path("/upload", upload, name="upload"),
-    path("/download", download, name="download"),
     path("/files", list_files, name="list_files"),
     path("/folders", list_folders, name="list_folders"),
     path("/folder", create_folder, name="create_folder"),
     path("/file/<int:file_id>", ud_file, name="ud_file"),
     path("/folder/<int:folder_id>", rud_folder, name="rud_folder"),
+    path("/file/<str:file_token>/download", download, name="download"),
     path("/file/<int:file_id>/share", get_file_share_token, name="get_file_share_token"),
     path("/file/<str:share_token>/shared", get_shared_file_info, name="get_shared_file_info"),
 ]
