@@ -8,7 +8,7 @@ function NoPage() {
   return (
     <Result
       status="404"
-      title="404 Not Found"
+      title="Not Found"
       subTitle={t('Sorry, the page you visited does not exist.')}
     />
   );
