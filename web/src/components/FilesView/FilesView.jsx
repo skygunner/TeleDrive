@@ -27,7 +27,9 @@ import FileShareModal from '../FileShareModal';
 
 import { del, put, getAuthHeaders } from '../../api';
 import cfg from '../../config';
-import { fileExtension, humanReadableDate, folderAvatar } from '../../utils';
+import {
+  fileExtension, humanReadableDate, folderAvatar, isMoreThan48HoursAgo,
+} from '../../utils';
 
 const { useToken } = theme;
 
@@ -100,7 +102,7 @@ function FilesView() {
                 valuePropName="checked"
                 name="deleteFromTelegramChat"
               >
-                <Checkbox>{t('Delete files inside from Telegram chat')}</Checkbox>
+                <Checkbox>{t('Delete files inside Telegram chat if possible')}</Checkbox>
               </Form.Item>
             </Form>
           </div>
@@ -276,7 +278,9 @@ function FilesView() {
                 valuePropName="checked"
                 name="deleteFromTelegramChat"
               >
-                <Checkbox>{t('Delete file from Telegram chat')}</Checkbox>
+                <Checkbox disabled={isMoreThan48HoursAgo(file.uploaded_at)}>
+                  {t('Delete the file from the Telegram chat')}
+                </Checkbox>
               </Form.Item>
             </Form>
           </div>

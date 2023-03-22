@@ -17,6 +17,8 @@ export const fileExtension = (fileName) => {
   return split.length > 1 ? split.pop() : '';
 };
 
+export const isMoreThan48HoursAgo = (date) => Date.now() - Date.parse(date) > 2 * 24 * 60 * 60 * 60;
+
 export const folderAvatar = () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <FolderTwoTone
