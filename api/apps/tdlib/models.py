@@ -288,6 +288,9 @@ class ShortURL(BaseModelMixin):
     reason = models.CharField(max_length=255, choices=REASONS)
     expire_at = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        db_table = "short_urls"
+
     @classmethod
     def create_file_share_token(self, file: File, expire_at: any):
         short_url = ShortURL(share_token=make_uuid(), file=file, reason=self.REASON_SHARE_FILE, expire_at=expire_at)
