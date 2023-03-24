@@ -25,5 +25,5 @@ variable "cloudflare_api_token" {
 
 variable "cloudflare_zone_id" {
   description = "Cloudflare Zone"
-  default     = "e140975e16b0c88a3e96e218aeccc3fb"
+  sensitive   = true
 }

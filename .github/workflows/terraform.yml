@@ -8,13 +8,20 @@ on:
     branches:
       - master
 
+env:
+  TF_VAR_digitalocean_api_token: ${{ secrets.DIGITALOCEAN_API_TOKEN }}
+  TF_VAR_digitalocean_space_access_id: ${{ secrets.DIGITALOCEAN_SPACE_ACCESS_ID }}
+  TF_VAR_digitalocean_space_secret_key: ${{ secrets.DIGITALOCEAN_SPACE_SECRET_KEY }}
+  TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  TF_VAR_cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+
 jobs:
   terraform:
     name: Plan / Apply
     runs-on: ubuntu-20.04
     defaults:
       run:
-        working-directory: infra
+        working-directory: terraform
     permissions:
       pull-requests: write
     steps:
