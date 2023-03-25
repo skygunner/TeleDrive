@@ -9,26 +9,9 @@ on:
       - master
 
 jobs:
-  lint:
-    name: Lint
+  build:
+    name: Build
     runs-on: ubuntu-20.04
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install Dependencies
-      run: cd api && ./install_python_packages.sh
-    - name: Lint
-      run: cd api && make lint
-
-  test:
-    name: Test
-    runs-on: ubuntu-20.04
-    needs:
-      - lint
     services:
       postgres:
         image: postgres:13.2
@@ -48,5 +31,7 @@ jobs:
         python-version: 3.8
     - name: Install Dependencies
       run: cd api && ./install_python_packages.sh
+    - name: Lint
+      run: cd api && make lint
     - name: Test
       run: cd api && make test
