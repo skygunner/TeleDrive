@@ -1,7 +1,6 @@
 # TeleDrive
 
-[![Build API](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build-api.yml/badge.svg?branch=master)](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build-api.yml)
-[![Build Web](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build-web.yml/badge.svg?branch=master)](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build-web.yml)
+[![Build](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/RashadAnsari/TeleDrive/actions/workflows/build.yml)
 
 The ultimate solution for managing your Telegram unlimited cloud storage.
 
