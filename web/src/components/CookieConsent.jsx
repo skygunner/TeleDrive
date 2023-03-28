@@ -1,13 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme, Typography } from 'antd';
-import CookieConsent from 'react-cookie-consent';
+import CookieConsent, { getCookieConsentValue, Cookies } from 'react-cookie-consent';
+import ReactGA from 'react-ga';
+import config from '../config';
 
 const { useToken } = theme;
 
 function FooterMenu() {
   const { t } = useTranslation();
   const { token } = useToken();
+
+  const handleAcceptCookie = () => {
+    if (config.googleAnalyticsId) {
+      ReactGA.initialize(config.googleAnalyticsId);
+    }
+  };
+
+  const handleDeclineCookie = () => {
+    Cookies.remove('_ga');
+    Cookies.remove('_gat');
+    Cookies.remove('_gid');
+  };
+
+  useEffect(() => {
+    const isConsent = getCookieConsentValue();
+    if (isConsent === 'true') {
+      handleAcceptCookie();
+    }
+  }, []);
 
   const fontSettings = {
     fontSize: token.fontSize,
@@ -22,6 +43,8 @@ function FooterMenu() {
       cookieName="cookie_consent"
       buttonStyle={{ ...fontSettings }}
       declineButtonStyle={{ ...fontSettings }}
+      onAccept={handleAcceptCookie}
+      onDecline={handleDeclineCookie}
       style={{
         ...fontSettings,
         display: 'flex',

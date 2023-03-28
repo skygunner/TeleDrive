@@ -54,7 +54,7 @@ jobs:
           NODE_ENV=production
           REACT_APP_TELEGRAM_BOT_NAME=TeleDriveAppBot
           REACT_APP_API_BASE_URL=https://api.teledrive.io
-          REACT_APP_PIWIK_PRO_CONTAINER_ID=${{ secrets.PIWIK_PRO_CONTAINER_ID }}
+          REACT_APP_GOOGLE_ANALYTICS_ID=${{ secrets.GOOGLE_ANALYTICS_ID }}
 
     - name: API Docker Save
       if: ${{ github.event.inputs.playbook_file == 'baseapi.yaml' }}
