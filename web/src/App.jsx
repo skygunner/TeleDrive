@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import CookieConsent from './components/CookieConsent';
 import NavigationMenu from './components/NavigationMenu';
 import FilesPage from './pages/FilesPage';
 import HomePage from './pages/HomePage';
@@ -55,6 +56,7 @@ function App() {
           </BrowserRouter>
         )
         : <OfflinePage />}
+      <CookieConsent />
     </DesignProvider>
   );
 }
