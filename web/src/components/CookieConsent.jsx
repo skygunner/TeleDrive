@@ -11,6 +11,8 @@ function FooterMenu() {
   const { t } = useTranslation();
   const { token } = useToken();
 
+  const cookieName = 'cookie_consent';
+
   const handleAcceptCookie = () => {
     if (config.googleAnalyticsId) {
       ReactGA.initialize(config.googleAnalyticsId);
@@ -24,7 +26,7 @@ function FooterMenu() {
   };
 
   useEffect(() => {
-    const isConsent = getCookieConsentValue();
+    const isConsent = getCookieConsentValue(cookieName);
     if (isConsent === 'true') {
       handleAcceptCookie();
     }
@@ -40,7 +42,7 @@ function FooterMenu() {
       enableDeclineButton
       buttonText={t('Accept')}
       declineButtonText={t('Decline')}
-      cookieName="cookie_consent"
+      cookieName={cookieName}
       buttonStyle={{ ...fontSettings }}
       declineButtonStyle={{ ...fontSettings }}
       onAccept={handleAcceptCookie}
