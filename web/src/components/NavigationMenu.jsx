@@ -78,24 +78,6 @@ function NavigationMenu() {
         closeDrawer();
       },
     },
-    {
-      key: '/privacy',
-      label: t('Privacy'),
-      icon: <LockOutlined />,
-      onClick: () => {
-        navigate('/privacy');
-        closeDrawer();
-      },
-    },
-    {
-      key: '/support',
-      label: t('Support'),
-      icon: <CustomerServiceOutlined />,
-      onClick: () => {
-        navigate('/support');
-        closeDrawer();
-      },
-    },
   ];
 
   if (isLoggedIn) {
@@ -142,6 +124,26 @@ function NavigationMenu() {
       },
     });
   }
+
+  mainMenuItems.push({
+    key: '/privacy',
+    label: t('Privacy'),
+    icon: <LockOutlined />,
+    onClick: () => {
+      navigate('/privacy');
+      closeDrawer();
+    },
+  });
+
+  mainMenuItems.push({
+    key: '/support',
+    label: t('Support'),
+    icon: <CustomerServiceOutlined />,
+    onClick: () => {
+      navigate('/support');
+      closeDrawer();
+    },
+  });
 
   return (
     <div style={{
