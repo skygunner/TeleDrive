@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { theme, Typography } from 'antd';
-import CookieConsent, { getCookieConsentValue, Cookies } from 'react-cookie-consent';
-import ReactGA from 'react-ga';
+import CookieConsent, { getCookieConsentValue } from 'react-cookie-consent';
+import ReactGA from 'react-ga4';
 import config from '../config';
 
 const { useToken } = theme;
@@ -17,12 +17,6 @@ function FooterMenu() {
     if (config.googleAnalyticsId) {
       ReactGA.initialize(config.googleAnalyticsId);
     }
-  };
-
-  const handleDeclineCookie = () => {
-    Cookies.remove('_ga');
-    Cookies.remove('_gat');
-    Cookies.remove('_gid');
   };
 
   useEffect(() => {
@@ -46,7 +40,6 @@ function FooterMenu() {
       buttonStyle={{ ...fontSettings }}
       declineButtonStyle={{ ...fontSettings }}
       onAccept={handleAcceptCookie}
-      onDecline={handleDeclineCookie}
       style={{
         ...fontSettings,
         display: 'flex',
