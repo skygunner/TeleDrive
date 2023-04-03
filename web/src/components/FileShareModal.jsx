@@ -6,6 +6,7 @@ import { CopyOutlined, DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { getAuthHeaders, get } from '../api';
 import { alertInfo } from '../utils';
+import { sendEvent, FILE_EVENTS, SHARE_FILE } from '../analytics';
 
 const { useToken } = theme;
 
@@ -36,6 +37,7 @@ function FileShareModal({ file, close }) {
       const { protocol, host } = window.location;
       const generatedShareLink = `${protocol}//${host}/file/download/${data.share_token}`;
       setShareLink(generatedShareLink);
+      sendEvent(FILE_EVENTS, SHARE_FILE);
     }
 
     setLoading(false);

@@ -3,6 +3,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { get, getAuthHeaders } from '../../api';
 import config from '../../config';
+import {
+  sendEvent, FILE_EVENTS, RENAME_FILE, RENAME_FOLDER,
+  MOVE_FILE, MOVE_FOLDER, DELETE_FILE, DELETE_FOLDER,
+  CREATE_FOLDER, UPLOAD_FILE,
+} from '../../analytics';
 
 const initialState = {
   parentId: null,
@@ -96,11 +101,13 @@ export const filesViewTableSlice = createSlice({
         state.filesOffset += 1;
         state.files = [action.payload].concat(state.files);
       }
+      sendEvent(FILE_EVENTS, UPLOAD_FILE);
     },
     fileRenamed: (state, action) => {
       state.files = state.files.map((file) => (
         file.file_id === action.payload.file_id ? action.payload : file
       ));
+      sendEvent(FILE_EVENTS, RENAME_FILE);
     },
     fileMoved: (state, action) => {
       const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
@@ -108,19 +115,23 @@ export const filesViewTableSlice = createSlice({
         state.filesOffset -= 1;
         state.files = state.files.filter((file) => file.file_id !== action.payload.file_id);
       }
+      sendEvent(FILE_EVENTS, MOVE_FILE);
     },
     fileDeleted: (state, action) => {
       state.filesOffset -= 1;
       state.files = state.files.filter((file) => file.file_id !== action.payload);
+      sendEvent(FILE_EVENTS, DELETE_FILE);
     },
     folderCreated: (state, action) => {
       state.foldersOffset += 1;
       state.folders = [action.payload].concat(state.folders);
+      sendEvent(FILE_EVENTS, CREATE_FOLDER);
     },
     folderRenamed: (state, action) => {
       state.folders = state.folders.map((folder) => (
         folder.folder_id === action.payload.folder_id ? action.payload : folder
       ));
+      sendEvent(FILE_EVENTS, RENAME_FOLDER);
     },
     folderMoved: (state, action) => {
       const parentId = state.parentId ? parseInt(state.parentId, 10) : null;
@@ -130,10 +141,12 @@ export const filesViewTableSlice = createSlice({
           (folder) => folder.folder_id !== action.payload.folder_id,
         );
       }
+      sendEvent(FILE_EVENTS, MOVE_FOLDER);
     },
     folderDeleted: (state, action) => {
       state.foldersOffset -= 1;
       state.folders = state.folders.filter((folder) => folder.folder_id !== action.payload);
+      sendEvent(FILE_EVENTS, DELETE_FOLDER);
     },
   },
   extraReducers: (builder) => {

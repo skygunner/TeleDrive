@@ -5,6 +5,7 @@ import TelegramLoginButton from 'react-telegram-login';
 
 import { post, storeUserCredential } from '../api';
 import cfg from '../config';
+import { sendEvent, USER_EVENTS, TELEGRAM_LOGIN } from '../analytics';
 
 function LoginButton() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function LoginButton() {
     if (userCredential) {
       storeUserCredential(userCredential);
       navigate('/files', { replace: true });
+      sendEvent(USER_EVENTS, TELEGRAM_LOGIN);
     }
     setLoading(false);
   };
