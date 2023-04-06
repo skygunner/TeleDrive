@@ -43,3 +43,13 @@ sudo certbot certonly --manual --preferred-challenges dns -d teledrive.io -d www
 * https://core.telegram.org/api/obtaining_api_id
 * https://github.com/LonamiWebs/Telethon/wiki/MTProto-vs-HTTP-Bot-API
 * https://docs.telethon.dev/en/stable/concepts/botapi-vs-mtproto.html#botapi
+
+# Donate
+
+If you found this project useful, please consider supporting its development with a donation in ETH to the following address:
+
+`
+0xcAA98CD5BA25AE1fA064813B41952d0716892381
+`
+
+Your donation will help cover the costs of maintaining and improving this project, as well as motivate me to continue working on it. Thank you for your support!
