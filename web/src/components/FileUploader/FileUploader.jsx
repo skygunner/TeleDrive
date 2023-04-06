@@ -19,7 +19,7 @@ function FileUploader() {
 
   // https://ant.design/components/layout#breakpoint-width
   const mediaQueryMatch = useMediaQuery(
-    { query: '(min-width: 768px)' },
+    { query: '(min-width: 992px)' },
     null,
     (match) => {
       // eslint-disable-next-line no-use-before-define

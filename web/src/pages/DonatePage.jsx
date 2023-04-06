@@ -1,5 +1,5 @@
 import React from 'react';
-import { theme } from 'antd';
+import { theme, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import config from '../config';
 
@@ -26,13 +26,9 @@ function DonatePage() {
         <b> ETH </b>
         {t('to the following address:')}
       </p>
-      <p>
-        <code>
-          <b>
-            0xcAA98CD5BA25AE1fA064813B41952d0716892381
-          </b>
-        </code>
-      </p>
+      <Typography.Paragraph copyable strong>
+        0xcAA98CD5BA25AE1fA064813B41952d0716892381
+      </Typography.Paragraph>
       <p>
         {t('Your donation will help cover the costs of maintaining and improving this project, as well as motivate us to continue working on it.')}
       </p>
