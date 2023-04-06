@@ -11,6 +11,7 @@ import {
 import {
   Avatar, Button, Col, Divider, Drawer, Menu, Typography, theme,
 } from 'antd';
+import { RiMoneyDollarCircleLine } from 'react-icons/ri';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery } from 'react-responsive';
@@ -141,6 +142,16 @@ function NavigationMenu() {
     icon: <CustomerServiceOutlined />,
     onClick: () => {
       navigate('/support');
+      closeDrawer();
+    },
+  });
+
+  mainMenuItems.push({
+    key: '/donate',
+    label: t('Donate'),
+    icon: <RiMoneyDollarCircleLine />,
+    onClick: () => {
+      navigate('/donate');
       closeDrawer();
     },
   });
