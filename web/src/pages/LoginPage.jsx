@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
-import config from '../config';
+import cfg from '../config';
 
 const { useToken } = theme;
 
@@ -24,7 +24,7 @@ function LoginPage() {
     <div
       style={{
         textAlign: 'left',
-        margin: config.pageMargin,
+        margin: cfg.pageMargin,
         fontSize: token.fontSize,
         color: token.colorTextSecondary,
       }}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, theme } from 'antd';
 import { useTranslation } from 'react-i18next';
-import config from '../config';
+import cfg from '../config';
 
 const { useToken } = theme;
 
@@ -15,7 +15,7 @@ function SupportPage() {
     <div
       style={{
         textAlign: 'left',
-        margin: config.pageMargin,
+        margin: cfg.pageMargin,
         fontSize: token.fontSize,
         color: token.colorTextSecondary,
       }}

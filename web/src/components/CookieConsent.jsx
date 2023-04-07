@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { theme, Typography } from 'antd';
 import CookieConsent, { getCookieConsentValue } from 'react-cookie-consent';
 import ReactGA from 'react-ga4';
-import config from '../config';
+import cfg from '../config';
 
 const { useToken } = theme;
 
@@ -14,8 +14,8 @@ function FooterMenu() {
   const cookieName = 'cookie_consent';
 
   const handleAcceptCookie = () => {
-    if (config.googleAnalyticsId) {
-      ReactGA.initialize(config.googleAnalyticsId);
+    if (cfg.googleAnalyticsId) {
+      ReactGA.initialize(cfg.googleAnalyticsId);
     }
   };
 

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { FileSyncOutlined } from '@ant-design/icons';
 import { isUserLoggedIn } from '../api';
 import LoginButton from '../components/LoginButton';
-import config from '../config';
+import cfg from '../config';
 
 const { useToken } = theme;
 
@@ -21,7 +21,7 @@ function HomePage() {
   return (
     <div style={{
       textAlign: 'left',
-      margin: config.pageMargin,
+      margin: cfg.pageMargin,
       fontSize: token.fontSize,
       color: token.colorTextSecondary,
     }}
