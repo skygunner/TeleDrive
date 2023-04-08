@@ -48,9 +48,9 @@ sudo certbot certonly --manual --preferred-challenges dns -d teledrive.io -d www
 
 If you found this project useful, please consider supporting its development with a donation in ETH to the following address:
 
-`
-0xcAA98CD5BA25AE1fA064813B41952d0716892381
-`
+`0xcAA98CD5BA25AE1fA064813B41952d0716892381`
+
+Or you can donate any amount you want using [PayPal](https://www.paypal.me/RashadAnsari).
 
 Your donation will help cover the costs of maintaining and improving this project, as well as motivate me to continue working on it.
 
