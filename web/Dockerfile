@@ -1,4 +1,4 @@
-FROM node:14.19.0-alpine as build
+FROM node:14.19.0-alpine
 
 ARG NODE_ENV \
     REACT_APP_TELEGRAM_BOT_NAME \
@@ -13,18 +13,10 @@ ENV NODE_ENV=$NODE_ENV \
 RUN apk add --update --no-cache
 
 WORKDIR /app
-COPY . ./
+COPY . /app
 
-RUN npm ci
-RUN npm run build
+RUN npm ci \
+    && npm run build \
+    && npm install -g serve
 
-# ==================================================
-
-FROM nginx:1.23.3-alpine
-
-RUN apk add --update --no-cache
-
-COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD [ "serve", "-s", "/app/build", "-L", "-l", "8080" ]
