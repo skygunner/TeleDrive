@@ -11,23 +11,10 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apk add --update --no-cache \
     libc6-compat ca-certificates bash build-base gcc \
     python3-dev libpq postgresql-dev musl-dev libffi-dev \
-    clang libjpeg-turbo-dev libwebp-dev zlib-dev rust cargo curl
+    clang libjpeg-turbo-dev libwebp-dev zlib-dev rust cargo curl \
+    postgresql-client
 
-ENV HOME=/home/app
-RUN mkdir -p $HOME \
-    && addgroup -S app \
-    && adduser -S app -G app
+WORKDIR /app
+COPY . /app
 
-ENV APP_HOME=$HOME/baseapi
-RUN mkdir -p $APP_HOME
-
-WORKDIR $APP_HOME
-
-COPY install_python_packages.sh $APP_HOME
-COPY poetry.lock pyproject.toml $APP_HOME
-RUN $APP_HOME/install_python_packages.sh
-
-COPY . $APP_HOME
-RUN chown -R app:app $APP_HOME
-
-USER app
+RUN install_python_packages.sh

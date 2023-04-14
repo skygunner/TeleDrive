@@ -28,7 +28,7 @@ services:
     environment:
       DATABASE_HOST: postgres
     volumes:
-      - ${PWD}:/home/app/baseapi
+      - ${PWD}:/app
     command: bash -c "while !</dev/tcp/postgres/5432; do sleep 1; done; make db-migrate && make runserver"
     ports:
       - 8000:8000
