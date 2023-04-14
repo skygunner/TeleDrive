@@ -17,4 +17,4 @@ RUN apk add --update --no-cache \
 WORKDIR /app
 COPY . /app
 
-RUN install_python_packages.sh
+RUN /app/install_python_packages.sh
