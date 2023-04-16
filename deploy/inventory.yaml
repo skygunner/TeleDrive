@@ -1,27 +1,17 @@
 all:
   children:
-    droplet:
+    vm:
       hosts:
-        all-in-one.teledrive.io:
-          ansible_host: 167.71.1.123
-          ansible_user: root
-    postgresql:
+        web-server-1:
+          ansible_host: 52.48.79.96
+          ansible_user: ubuntu
+    api:
       hosts:
-        all-in-one.teledrive.io:
-          ansible_host: 167.71.1.123
-          ansible_user: root
-    baseapi:
-      hosts:
-        all-in-one.teledrive.io:
-          ansible_host: 167.71.1.123
-          ansible_user: root
+        web-server-1:
+          ansible_host: 52.48.79.96
+          ansible_user: ubuntu
     web:
       hosts:
-        all-in-one.teledrive.io:
-          ansible_host: 167.71.1.123
-          ansible_user: root
-    nginx:
-      hosts:
-        all-in-one.teledrive.io:
-          ansible_host: 167.71.1.123
-          ansible_user: root
+        web-server-1:
+          ansible_host: 52.48.79.96
+          ansible_user: ubuntu

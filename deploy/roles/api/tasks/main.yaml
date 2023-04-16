@@ -1,30 +1,30 @@
 - name: Creates configuration directory
   file:
-    path: /etc/baseapi
+    path: /etc/api
     state: directory
 
 - name: Copy docker image to host
   copy:
-    src: "{{ baseapi_image_path }}"
-    dest: /etc/baseapi/baseapi-image.tar
+    src: "{{ api_image_path }}"
+    dest: /etc/api/api-image.tar
 
 - name: load docker image from .tar file
   shell: |
-    docker load < /etc/baseapi/baseapi-image.tar
+    docker load < /etc/api/api-image.tar
 
 - name: Delete docker image .tar file
   file:
-    path: /etc/baseapi/baseapi-image.tar
+    path: /etc/api/api-image.tar
     state: absent
 
 - name: Copy docker-compose file
   template:
     src: docker-compose.yml.j2
-    dest: /etc/baseapi/docker-compose.yml
+    dest: /etc/api/docker-compose.yml
 
 - name: docker-compose up -d
   shell: |
-    docker-compose -f /etc/baseapi/docker-compose.yml up -d
+    docker-compose -f /etc/api/docker-compose.yml up -d
 
 - name: Remove unused docker images
   shell: |

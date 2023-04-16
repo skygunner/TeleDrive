@@ -1,7 +1,0 @@
-- name: Manage entries in sysctl.conf
-  sysctl:
-    name: "{{ item.key }}"
-    value: "{{ item.value }}"
-    sysctl_set: yes
-    reload: yes
-  with_dict: "{{ sysctl_config }}"

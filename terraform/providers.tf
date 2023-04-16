@@ -1,18 +1,9 @@
 terraform {
-  cloud {
-    organization = "TeleDrive"
-    workspaces {
-      name = "TeleDrive"
-    }
-  }
-
   required_providers {
-    # https://registry.terraform.io/providers/digitalocean/digitalocean/latest/docs
-    digitalocean = {
-      source  = "digitalocean/digitalocean"
-      version = "~> 2.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
     }
-    # https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs
     cloudflare = {
       source  = "cloudflare/cloudflare"
       version = "~> 3.0"
@@ -20,10 +11,22 @@ terraform {
   }
 }
 
-provider "digitalocean" {
-  token = var.digitalocean_api_token
+terraform {
+  backend "s3" {
+    key = "terraform.tfstate"
+  }
 }
 
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
+provider "aws" {
+  region = var.aws_region
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+provider "cloudflare" {}
+
+data "cloudflare_zone" "main" {
+  name = var.app_domain
 }

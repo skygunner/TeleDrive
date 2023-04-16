@@ -7,11 +7,9 @@ on:
         type: choice
         description: Deploy playbook
         options: 
-        - droplet.yaml
-        - postgresql.yaml
-        - baseapi.yaml
+        - vm.yaml
+        - api.yaml
         - web.yaml
-        - nginx.yaml
       commit_hash:
         description: 'Deploy commit hash'
         required: true
@@ -29,21 +27,13 @@ jobs:
     - name: Checkout hash
       run: git checkout ${{ github.event.inputs.commit_hash }}
 
-    - name: Generate SSL Files
-      run: |
-        echo "$SSL_CERTIFICATE_PRIVATE_KEY" >> /tmp/ssl-privkey.pem
-        echo "$SSL_CERTIFICATE_FULL_CHAIN" >> /tmp/ssl-fullchain.pem
-      env:
-        SSL_CERTIFICATE_PRIVATE_KEY: ${{ secrets.SSL_CERTIFICATE_PRIVATE_KEY }}
-        SSL_CERTIFICATE_FULL_CHAIN: ${{ secrets.SSL_CERTIFICATE_FULL_CHAIN }}
-
     - name: API Docker Build
-      if: ${{ github.event.inputs.playbook_file == 'baseapi.yaml' }}
+      if: ${{ github.event.inputs.playbook_file == 'api.yaml' }}
       uses: docker/build-push-action@v2
       with:
         file: api/Dockerfile
         context: api
-        tags: baseapi:${{ github.event.inputs.commit_hash }}
+        tags: api:${{ github.event.inputs.commit_hash }}
 
     - name: Web Docker Build
       if: ${{ github.event.inputs.playbook_file == 'web.yaml' }}
@@ -53,14 +43,13 @@ jobs:
         context: web
         tags: web:${{ github.event.inputs.commit_hash }}
         build-args: |
-          NODE_ENV=production
-          REACT_APP_TELEGRAM_BOT_NAME=TeleDriveAppBot
-          REACT_APP_API_BASE_URL=https://api.teledrive.io
-          REACT_APP_GOOGLE_ANALYTICS_ID=${{ secrets.GOOGLE_ANALYTICS_ID }}
+          API_BASE_URL=https://api.teledrive.io
+          GOOGLE_ANALYTICS_ID=${{ secrets.GOOGLE_ANALYTICS_ID }}
+          TELEGRAM_BOT_NAME=TeleDriveAppBot
 
     - name: API Docker Save
-      if: ${{ github.event.inputs.playbook_file == 'baseapi.yaml' }}
-      run: docker save baseapi:${{ github.event.inputs.commit_hash }} > /tmp/baseapi-image.tar
+      if: ${{ github.event.inputs.playbook_file == 'api.yaml' }}
+      run: docker save api:${{ github.event.inputs.commit_hash }} > /tmp/api-image.tar
 
     - name: Web Docker Save
       if: ${{ github.event.inputs.playbook_file == 'web.yaml' }}
@@ -76,15 +65,14 @@ jobs:
         options: |
           -e "web_image_path=/tmp/web-image.tar"
           -e "web_version=${{ github.event.inputs.commit_hash }}"
-          -e "baseapi_image_path=/tmp/baseapi-image.tar"
-          -e "baseapi_version=${{ github.event.inputs.commit_hash }}"
-          -e "ssl_certificate_private_key_path=/tmp/ssl-privkey.pem"
-          -e "ssl_certificate_full_chain_path=/tmp/ssl-fullchain.pem"
+          -e "api_image_path=/tmp/api-image.tar"
+          -e "api_version=${{ github.event.inputs.commit_hash }}"
+          -e "postgresql_host=${{ secrets.POSTGRESQL_HOST }}"
           -e "postgresql_password=${{ secrets.POSTGRESQL_PASSWORD }}"
           -e "django_secret_key=${{ secrets.DJANGO_SECRET_KEY }}"
           -e "jwt_secret_key=${{ secrets.JWT_SECRET_KEY }}"
           -e "file_token_key=${{ secrets.FILE_TOKEN_KEY }}"
-          -e "telepram_api_id=${{ secrets.TELEGRAM_API_ID }}"
-          -e "telepram_api_hash=${{ secrets.TELEGRAM_API_HASH }}"
-          -e "telepram_bot_token=${{ secrets.TELEGRAM_BOT_TOKEN }}"
-          -e "telepram_bot_session=${{ secrets.TELEGRAM_BOT_SESSION }}"
+          -e "telegram_api_id=${{ secrets.TELEGRAM_API_ID }}"
+          -e "telegram_api_hash=${{ secrets.TELEGRAM_API_HASH }}"
+          -e "telegram_bot_token=${{ secrets.TELEGRAM_BOT_TOKEN }}"
+          -e "telegram_bot_session=${{ secrets.TELEGRAM_BOT_SESSION }}"

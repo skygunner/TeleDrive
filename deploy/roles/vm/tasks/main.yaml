@@ -1,0 +1,2 @@
+- include_tasks: apt.yaml
+- include_tasks: pkgs.yaml

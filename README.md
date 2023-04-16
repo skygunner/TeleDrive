@@ -28,15 +28,6 @@ The ultimate solution for managing your Telegram unlimited cloud storage.
         127.0.0.1 teledrive.local
     ```
 
-# SSL Certificate
-
-To generate an SSL certificate, you need to use the below commands:
-
-``` bash
-brew install certbot
-sudo certbot certonly --manual --preferred-challenges dns -d teledrive.io -d www.teledrive.io -d api.teledrive.io
-```
-
 # References
 
 * https://github.com/tdlib/telegram-bot-api

@@ -5,4 +5,5 @@ services:
     image: web:{{ web_version }}
     hostname: web
     container_name: web
-    network_mode: host
+    ports:
+      - 8080:8080

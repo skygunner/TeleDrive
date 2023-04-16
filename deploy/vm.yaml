@@ -1,0 +1,6 @@
+- name: Configure vm
+  become: true
+  hosts: vm
+  roles:
+    - vm
+    - docker

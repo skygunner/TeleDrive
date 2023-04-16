@@ -1,6 +1,6 @@
-- name: Install basic packages
+- name: Install packages
   package:
     name: "{{ item }}"
     state: present
     update_cache: yes
-  with_items: "{{ basic_pkgs }}"
+  with_items: "{{ packages }}"

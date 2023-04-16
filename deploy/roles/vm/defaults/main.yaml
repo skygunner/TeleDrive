@@ -1,0 +1,9 @@
+packages:
+  - curl
+  - htop
+  - jq
+  - telnet
+  - vim
+  - unzip
+  - net-tools
+  - postgresql-client
