@@ -98,3 +98,9 @@ variable "web_server_count" {
   description = "Number of web servers"
   default     = 1
 }
+
+variable "cloudwatch_alarms" {
+  type        = bool
+  description = "Enable CloudWatch alarms"
+  default     = true
+}
