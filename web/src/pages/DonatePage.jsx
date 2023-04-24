@@ -26,13 +26,9 @@ function DonatePage() {
         <b> ETH </b>
         {t('to the following address:')}
       </p>
-      <Typography.Paragraph copyable strong style={{ lineHeight: 1 }}>
+      <Typography.Paragraph copyable strong>
         0xcAA98CD5BA25AE1fA064813B41952d0716892381
       </Typography.Paragraph>
-      <p>
-        {t('Or you can donate any amount you want using ')}
-        <Typography.Link target="blank" href="https://www.paypal.me/RashadAnsari" style={{ lineHeight: 1 }}>PayPal.</Typography.Link>
-      </p>
       <p>
         {t('Your donation will help cover the costs of maintaining and improving this project, as well as motivate us to continue working on it.')}
       </p>

@@ -41,8 +41,6 @@ If you found this project useful, please consider supporting its development wit
 
 `0xcAA98CD5BA25AE1fA064813B41952d0716892381`
 
-Or you can donate any amount you want using [PayPal](https://www.paypal.me/RashadAnsari).
-
 Your donation will help cover the costs of maintaining and improving this project, as well as motivate me to continue working on it.
 
 Thank you for your support!
