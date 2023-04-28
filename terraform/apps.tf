@@ -1,7 +1,7 @@
 module "app" {
-  source = "git::https://github.com/RashadAnsari/aws-free-tier-app-terraform.git?ref=v1.0.4"
+  source = "git::https://github.com/RashadAnsari/aws-free-tier-app-terraform.git?ref=v1.0.5"
 
-  app_name              = "TeleDrive"
+  tags                  = {}
   app_env               = "production"
   app_domain            = "teledrive.io"
   web_app_port          = 8080
